@@ -81,8 +81,8 @@ class NetGeoIp
             );
         }
 
-        $this->geoLiteCountry = Net_GeoIP::getInstance($dbPath . 'GeoIP.dat');
-        $this->geoLiteCity    = Net_GeoIP::getInstance($dbPath . 'GeoLiteCity.dat');
+        $this->geoLiteCountry = \Net_GeoIP::getInstance($dbPath . 'GeoIP.dat');
+        $this->geoLiteCity    = \Net_GeoIP::getInstance($dbPath . 'GeoLiteCity.dat');
         $this->ip             = $ip;
     }
 
@@ -157,7 +157,7 @@ class NetGeoIp
             if ($threeLetterCode) {
                 $location = $this->geoLiteCity->lookupLocation($this->ip);
 
-                if ($location instanceof Net_GeoIP_Location) {
+                if ($location instanceof \Net_GeoIP_Location) {
                     $data = $location->getData();
                     return $data['countryCode3'];
                 }
