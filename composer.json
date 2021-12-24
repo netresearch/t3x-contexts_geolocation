@@ -20,7 +20,7 @@
       "homepage": "https://www.netresearch.de"
     }
   ],
-  "license": "GPL-2.0+",
+  "license": "AGPL-3.0-or-later",
   "require": {
     "netresearch/contexts": "^1.0"
   },
