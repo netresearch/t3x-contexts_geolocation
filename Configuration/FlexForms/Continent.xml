@@ -11,6 +11,7 @@
          <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/flexform.xml:continent.field_continents</label>
          <config>
            <type>select</type>
+           <renderType>selectSingle</renderType>
            <items type="array">
             <numIndex index="0" type="array">
              <numIndex index="0">- unknown -</numIndex>

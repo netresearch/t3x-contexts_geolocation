@@ -11,6 +11,7 @@
          <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/flexform.xml:country.field_countries</label>
          <config>
            <type>select</type>
+           <renderType>selectSingle</renderType>
            <size>10</size>
            <itemsProcFunc>Netresearch\ContextsGeolocation\Backend-&gt;getCountries</itemsProcFunc>
            <minitems>1</minitems>
