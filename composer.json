@@ -42,7 +42,6 @@
     }
   },
   "replace": {
-    "netresearch/contexts_geolocation": "self.version",
     "typo3-ter/contexts_geolocation": "self.version"
   },
   "config": {
