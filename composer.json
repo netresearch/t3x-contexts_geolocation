@@ -22,7 +22,7 @@
   ],
   "license": "AGPL-3.0-or-later",
   "require": {
-    "netresearch/contexts": "^1.0"
+    "netresearch/contexts": "^1.0 || ^3.0"
   },
   "require-dev": {
     "namelesscoder/typo3-repository-client": "^1.2",
