@@ -1,3 +1,9 @@
+2025-11-13  Sebastian Altenburg  <sebastian.altenburg@netresearch.de>
+
+	* Update version in ext_emconf
+	* Add extension icon for displaying on TER
+	* Version 1.0.4
+
 2015-06-22  Christian Weiske  <christian.weiske@netresearch.de>
 
 	* Fix class names to for TYPO3 4.5 autoloader
