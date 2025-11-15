@@ -1,9 +1,9 @@
 # Geolocation contexts
 
-[![Latest Stable Version](https://typo3-badges.dev/badge/contexts_geolocation/version/shields)](https://extensions.typo3.org/extension/contexts_geolocation)
-[![Total Downloads](https://typo3-badges.dev/badge/contexts_geolocation/downloads/shields)](https://extensions.typo3.org/extension/contexts_geolocation)
+[![Latest Stable Version](https://img.shields.io/endpoint?url=https://typo3-badges.dev/badge/contexts_geolocation/version/shields)](https://extensions.typo3.org/extension/contexts_geolocation)
+[![Total Downloads](https://img.shields.io/endpoint?url=https://typo3-badges.dev/badge/contexts_geolocation/downloads/shields)](https://extensions.typo3.org/extension/contexts_geolocation)
 [![License](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue.svg)](LICENSE)
-[![TYPO3 Versions](https://typo3-badges.dev/badge/contexts_geolocation/typo3/shields)](https://extensions.typo3.org/extension/contexts_geolocation)
+[![TYPO3 Versions](https://img.shields.io/endpoint?url=https://typo3-badges.dev/badge/contexts_geolocation/typo3/shields)](https://extensions.typo3.org/extension/contexts_geolocation)
 
 Allows you to show pages and content elements for people in certain
 countries, continents or within a given area.
