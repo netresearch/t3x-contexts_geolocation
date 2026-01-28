@@ -148,7 +148,8 @@ Full documentation is available at [docs.typo3.org](https://docs.typo3.org/p/net
 
 ## Contributing
 
-Contributions are welcome! Please see our [Contributing Guide](https://github.com/netresearch/t3x-contexts_geolocation/blob/main/CONTRIBUTING.md).
+Contributions are welcome! Please submit issues and pull requests on
+[GitHub](https://github.com/netresearch/t3x-contexts_geolocation).
 
 ## License
 
