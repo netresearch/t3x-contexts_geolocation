@@ -1,0 +1,33 @@
+#!/bin/bash
+
+## Description: Install both TYPO3 v12 and v13 with contexts_geolocation
+## Usage: install-all
+## Example: ddev install-all
+
+set -e
+
+echo "=============================================="
+echo "  Installing TYPO3 v12 and v13 Environments"
+echo "=============================================="
+echo ""
+
+echo ">>> Starting TYPO3 v12 installation..."
+/var/www/html/.ddev/commands/web/install-v12
+echo ""
+
+echo ">>> Starting TYPO3 v13 installation..."
+/var/www/html/.ddev/commands/web/install-v13
+echo ""
+
+echo "=============================================="
+echo "  All Installations Complete!"
+echo "=============================================="
+echo ""
+echo "Available environments:"
+echo "  - TYPO3 v12: https://v12.contexts-geolocation.ddev.site/typo3"
+echo "  - TYPO3 v13: https://v13.contexts-geolocation.ddev.site/typo3"
+echo ""
+echo "Credentials:"
+echo "  - Backend: admin / joh316"
+echo "  - Install Tool: password"
+echo ""

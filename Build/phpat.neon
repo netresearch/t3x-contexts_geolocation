@@ -1,0 +1,8 @@
+includes:
+    - ../.Build/vendor/phpat/phpat/extension.neon
+
+services:
+    -
+        class: Netresearch\ContextsGeolocation\Tests\Architecture\LayerTest
+        tags:
+            - phpat.test
