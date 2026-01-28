@@ -84,10 +84,10 @@ abstract class AbstractGeolocationContext extends AbstractContext
 
         return array_filter(
             array_map(
-                static fn (string $item): string => strtoupper(trim($item)),
+                static fn(string $item): string => strtoupper(trim($item)),
                 explode(',', $value),
             ),
-            static fn (string $item): bool => $item !== '',
+            static fn(string $item): bool => $item !== '',
         );
     }
 }

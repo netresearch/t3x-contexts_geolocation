@@ -70,7 +70,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
         try {
             $record = $this->getReader()->city($ipAddress);
             return $record->country->isoCode;
-        } catch (AddressNotFoundException | InvalidDatabaseException) {
+        } catch (AddressNotFoundException|InvalidDatabaseException) {
             return null;
         }
     }
@@ -80,7 +80,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
         try {
             $record = $this->getReader()->city($ipAddress);
             return $record->country->name;
-        } catch (AddressNotFoundException | InvalidDatabaseException) {
+        } catch (AddressNotFoundException|InvalidDatabaseException) {
             return null;
         }
     }
@@ -90,7 +90,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
         try {
             $record = $this->getReader()->city($ipAddress);
             return $record->continent->code;
-        } catch (AddressNotFoundException | InvalidDatabaseException) {
+        } catch (AddressNotFoundException|InvalidDatabaseException) {
             return null;
         }
     }
@@ -100,7 +100,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
         try {
             $record = $this->getReader()->city($ipAddress);
             return $record->location->latitude;
-        } catch (AddressNotFoundException | InvalidDatabaseException) {
+        } catch (AddressNotFoundException|InvalidDatabaseException) {
             return null;
         }
     }
@@ -110,7 +110,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
         try {
             $record = $this->getReader()->city($ipAddress);
             return $record->location->longitude;
-        } catch (AddressNotFoundException | InvalidDatabaseException) {
+        } catch (AddressNotFoundException|InvalidDatabaseException) {
             return null;
         }
     }
@@ -120,7 +120,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
         try {
             $record = $this->getReader()->city($ipAddress);
             return $record->city->name;
-        } catch (AddressNotFoundException | InvalidDatabaseException) {
+        } catch (AddressNotFoundException|InvalidDatabaseException) {
             return null;
         }
     }

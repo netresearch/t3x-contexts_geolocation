@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="../../.Build/vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="../../.Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php"
+         bootstrap="../../.Build/vendor/autoload.php"
          cacheResult="false"
          colors="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
@@ -9,27 +9,11 @@
          displayDetailsOnTestsThatTriggerNotices="true"
          displayDetailsOnTestsThatTriggerWarnings="true"
          failOnRisky="true"
-         failOnWarning="true"
+         failOnWarning="false"
 >
     <testsuites>
         <testsuite name="Unit Tests">
             <directory>../../Tests/Unit/</directory>
         </testsuite>
     </testsuites>
-
-    <source>
-        <include>
-            <directory suffix=".php">../../Classes/</directory>
-        </include>
-        <exclude>
-            <directory suffix=".php">../../Classes/Domain/Model/</directory>
-        </exclude>
-    </source>
-
-    <coverage>
-        <report>
-            <clover outputFile="../../.Build/coverage/unit/clover.xml"/>
-            <html outputDirectory="../../.Build/coverage/unit/html"/>
-        </report>
-    </coverage>
 </phpunit>

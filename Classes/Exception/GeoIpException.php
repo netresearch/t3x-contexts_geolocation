@@ -7,6 +7,4 @@ namespace Netresearch\ContextsGeolocation\Exception;
 /**
  * Exception thrown when GeoIP operations fail.
  */
-final class GeoIpException extends \RuntimeException
-{
-}
+final class GeoIpException extends \RuntimeException {}
