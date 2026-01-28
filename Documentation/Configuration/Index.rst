@@ -6,6 +6,15 @@
 Configuration
 =============
 
+This section covers configuration of the Contexts Geolocation extension,
+including database setup, service configuration, and environment variables.
+
+.. toctree::
+   :maxdepth: 2
+   :titlesonly:
+
+   GeoIP
+
 .. _configuration-environment:
 
 Environment variables
