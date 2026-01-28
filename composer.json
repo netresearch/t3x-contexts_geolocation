@@ -1,7 +1,7 @@
 {
     "name": "netresearch/contexts-geolocation",
     "type": "typo3-cms-extension",
-    "description": "Geolocation context types for the contexts extension - match content by country, continent, or distance",
+    "description": "Geolocation context types for the contexts extension - match content by country, continent, or distance - by Netresearch",
     "license": "AGPL-3.0-or-later",
     "homepage": "https://github.com/netresearch/t3x-contexts_geolocation",
     "support": {
@@ -11,8 +11,8 @@
     "authors": [
         {
             "name": "Netresearch DTT GmbH",
-            "email": "info@netresearch.de",
-            "homepage": "https://www.netresearch.de",
+            "email": "typo3@netresearch.de",
+            "homepage": "https://www.netresearch.de/",
             "role": "Developer"
         }
     ],
