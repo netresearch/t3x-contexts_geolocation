@@ -1,70 +1,72 @@
 {
-  "name": "netresearch/contexts_geolocation",
-  "type": "typo3-cms-extension",
-  "description": "Multi-channel contexts: Geolocation - Use the user's geographic location as context",
-  "keywords": [
-    "TYPO3",
-    "extension",
-    "contexts_geolocation",
-    "contexts"
-  ],
-  "homepage": "https://www.netresearch.de",
-  "support": {
-    "issues": "https://github.com/netresearch/t3x-contexts_geolocation/issues"
-  },
-  "authors": [
-    {
-      "name": "Andre Hähnel, Christian Opitz, Christian Weiske, Marian Pollzien, Rico Sonntag",
-      "email": "typo3.org@netresearch.de",
-      "role": "Developer",
-      "homepage": "https://www.netresearch.de"
-    }
-  ],
-  "license": "AGPL-3.0-or-later",
-  "require": {
-    "netresearch/contexts": "^1.0"
-  },
-  "require-dev": {
-    "namelesscoder/typo3-repository-client": "^1.2",
-    "mikey179/vfsstream": "^1.4",
-    "phpunit/phpunit": "^4.7 || ^5.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Netresearch\\ContextsGeolocation\\": "Classes"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Netresearch\\ContextsGeolocation\\Tests\\": "Tests",
-      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-      "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
-    }
-  },
-  "replace": {
-    "typo3-ter/contexts_geolocation": "self.version"
-  },
-  "config": {
-    "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin",
-    "preferred-install": {
-      "typo3/cms": "source"
-    }
-  },
-  "scripts": {
-    "post-autoload-dump": [
-      "mkdir -p .Build/Web/typo3conf/ext/",
-      "[ -L .Build/Web/typo3conf/ext/contexts_geolocation ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/contexts_geolocation"
-    ]
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0.x-dev"
+    "name": "netresearch/contexts-geolocation",
+    "type": "typo3-cms-extension",
+    "description": "Geolocation context types for the contexts extension - match content by country, continent, or distance",
+    "license": "AGPL-3.0-or-later",
+    "homepage": "https://github.com/netresearch/t3x-contexts_geolocation",
+    "support": {
+        "issues": "https://github.com/netresearch/t3x-contexts_geolocation/issues",
+        "source": "https://github.com/netresearch/t3x-contexts_geolocation"
     },
-    "typo3/cms": {
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": ".Build/Web",
-      "extension-key": "contexts_geolocation"
+    "authors": [
+        {
+            "name": "Netresearch DTT GmbH",
+            "email": "info@netresearch.de",
+            "homepage": "https://www.netresearch.de",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "geoip2/geoip2": "^3.0",
+        "netresearch/contexts": "^4.0",
+        "typo3/cms-backend": "^12.4 || ^13.4",
+        "typo3/cms-core": "^12.4 || ^13.4",
+        "typo3/cms-extbase": "^12.4 || ^13.4",
+        "typo3/cms-frontend": "^12.4 || ^13.4"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "infection/infection": "^0.29",
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^10.5 || ^11.0 || ^12.0",
+        "saschaegerer/phpstan-typo3": "^2.0",
+        "ssch/typo3-rector": "^2.0",
+        "typo3/testing-framework": "^8.0 || ^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Netresearch\\ContextsGeolocation\\": "Classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Netresearch\\ContextsGeolocation\\Tests\\": "Tests/"
+        }
+    },
+    "replace": {
+        "typo3-ter/contexts-geolocation": "self.version"
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        },
+        "bin-dir": ".Build/bin",
+        "sort-packages": true,
+        "vendor-dir": ".Build/vendor"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "contexts_geolocation"
+        }
+    },
+    "scripts": {
+        "analyze": ".Build/bin/phpstan analyse -c Build/phpstan.neon",
+        "lint": ".Build/bin/php-cs-fixer fix --dry-run --diff",
+        "lint:fix": ".Build/bin/php-cs-fixer fix",
+        "test:coverage": "XDEBUG_MODE=coverage .Build/bin/phpunit -c Build/phpunit/UnitTests.xml --coverage-html .Build/coverage",
+        "test:functional": ".Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml",
+        "test:unit": ".Build/bin/phpunit -c Build/phpunit/UnitTests.xml"
     }
-  }
 }

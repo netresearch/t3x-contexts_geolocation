@@ -1,1 +1,34 @@
-README.html
+# Build artifacts
+/.Build/
+/vendor/
+/composer.lock
+
+# IDE
+/.idea/
+/.vscode/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PHP
+*.cache
+*.log
+
+# Testing
+/phpunit.xml
+/.phpunit.result.cache
+/coverage/
+
+# DDEV
+/.ddev/.ddev-docker-compose-*
+/.ddev/.global_commands
+/.ddev/.homeadditions
+/.ddev/.sso-files
+
+# Documentation build
+/Documentation-GENERATED-temp/
+
+# GeoIP database (user must provide)
+/Resources/Private/GeoIP/*.mmdb
