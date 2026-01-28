@@ -2,6 +2,7 @@
 /.Build/
 /vendor/
 /composer.lock
+/public/
 
 # IDE
 /.idea/
