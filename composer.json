@@ -19,7 +19,7 @@
     "require": {
         "php": "^8.2",
         "geoip2/geoip2": "^3.0",
-        "netresearch/contexts": "^4.0",
+        "netresearch/contexts": "dev-main",
         "typo3/cms-backend": "^12.4 || ^13.4",
         "typo3/cms-core": "^12.4 || ^13.4",
         "typo3/cms-extbase": "^12.4 || ^13.4",
@@ -27,12 +27,9 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.64",
-        "infection/infection": "^0.29",
-        "phpstan/phpstan": "^2.0",
-        "phpunit/phpunit": "^10.5 || ^11.0 || ^12.0",
-        "saschaegerer/phpstan-typo3": "^2.0",
-        "ssch/typo3-rector": "^2.0",
-        "typo3/testing-framework": "^8.0 || ^9.0"
+        "phpstan/phpstan": "^1.10 || ^2.0",
+        "phpunit/phpunit": "^10.5 || ^11.0",
+        "saschaegerer/phpstan-typo3": "^1.9 || ^2.0"
     },
     "autoload": {
         "psr-4": {
