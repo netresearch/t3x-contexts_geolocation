@@ -16,6 +16,12 @@ use Psr\Http\Message\ServerRequestInterface;
 #[CoversClass(GeoLocationService::class)]
 final class GeoLocationServiceTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TYPO3_REQUEST']);
+        parent::tearDown();
+    }
+
     #[Test]
     public function getLocationForIpReturnsLocationFromAdapter(): void
     {
