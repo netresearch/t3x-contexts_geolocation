@@ -1,0 +1,124 @@
+includes:
+    - ../.Build/vendor/phpstan/phpstan-strict-rules/rules.neon
+    - ../.Build/vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - ../.Build/vendor/phpstan/phpstan-phpunit/extension.neon
+    - ../.Build/vendor/saschaegerer/phpstan-typo3/extension.neon
+
+parameters:
+    # Level 8: Strict boolean conditions and nullability checks
+    level: 8
+
+    paths:
+        - ../Classes/
+        - ../Configuration/
+        - ../Tests/
+        - ../ext_localconf.php
+
+    excludePaths:
+        - ../.Build/*
+
+    # TYPO3-specific configuration (PHPStan 2.x compatible)
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+
+    # Temporary ignores for TYPO3 v12/v13 compatibility
+    ignoreErrors:
+        # Legacy code array type specifications
+        - '#no value type specified in iterable type array#'
+        - '#return type has no value type specified in iterable type#'
+        - '#type has no value type specified in iterable type#'
+
+        # TYPO3 TCA/GLOBALS access patterns - inherently untyped
+        - '#Cannot access offset .* on mixed#'
+        - '#Parameter .* of function array_key_exists expects array, mixed given#'
+        - '#Parameter .* of function array_merge expects array, mixed given#'
+        - '#Parameter .* of function in_array expects array, mixed given#'
+        - '#Argument of an invalid type mixed supplied for foreach#'
+        - '#Cannot cast mixed to int#'
+        - '#Cannot cast mixed to string#'
+        - '#Possibly invalid array key type#'
+
+        # PHPDoc type issues with Doctrine exceptions
+        - '#PHPDoc tag @throws with type Doctrine\\DBAL\\.*Exception is not subtype of Throwable#'
+
+        # TYPO3 v12/v13 API changes
+        - '#deprecated class TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController#'
+        - '#Call to an undefined method TYPO3\\CMS\\Core\\Database\\Query\\QueryBuilder::execute#'
+        - '#Unable to resolve the template type T in call to static method#'
+        # Doctrine DBAL 4.x type parameter changes (int -> ParameterType enum)
+        - '~Parameter \#2 \$type of method .* expects .*, int given~'
+
+        # PHPStan strict rules violations in legacy code
+        - '#Construct empty\(\) is not allowed#'
+        - '#Strict comparison using .* will always evaluate to#'
+        - '#is never read, only written#'
+        - '#should return .* but return statement is missing#'
+        - '#is not covariant with return type#'
+        - '#invoked with .* parameters, .* required#'
+        - '#should return .* but returns#'
+        - '#requires parameter .* to be passed to avoid loose comparison#'
+
+        # PHPUnit test issues
+        - '#has no return type specified#'
+        - '#Dynamic call to static method PHPUnit#'
+        - '#Call to deprecated method .* of class PHPUnit#'
+
+        # Mock object type inference issues in tests
+        -
+            message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockObject::(.*).$#'
+            paths:
+                - ../Tests/*
+
+        # Test assertions with known types
+        -
+            message: '#will always evaluate to true#'
+            paths:
+                - ../Tests/*
+
+        # Offset access on array|false patterns in tests
+        -
+            message: '#Cannot access offset .* on array.*\|false#'
+            paths:
+                - ../Tests/*
+
+        # Parent constructor not called (intentional in test stubs)
+        -
+            message: '#does not call parent constructor#'
+            paths:
+                - ../Tests/*
+
+        # Test file offset access
+        -
+            message: '#Offset .* does not exist on array#'
+            paths:
+                - ../Tests/*
+
+        # Dynamic call to static method (test patterns)
+        -
+            message: '#Dynamic call to static method#'
+            paths:
+                - ../Tests/*
+
+        # Unused constructor parameters (test stubs)
+        -
+            message: '#has an unused parameter#'
+            paths:
+                - ../Tests/*
+
+        # Deprecated method calls in tests (testing deprecated APIs)
+        -
+            message: '#Call to deprecated method#'
+            paths:
+                - ../Tests/*
+
+        # Anonymous class constructor type mismatches (test mocks)
+        -
+            message: '#constructor expects .*, .* given#'
+            paths:
+                - ../Tests/*
+
+        # TYPO3 globals access patterns
+        -
+            message: '#^Variable \$GLOBALS is never used.$#'
+            paths:
+                - ../ext_localconf.php
