@@ -78,8 +78,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         Container::get()
@@ -101,8 +104,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         Container::get()
@@ -121,8 +127,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         Container::get()
@@ -149,8 +158,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         Container::get()
@@ -169,8 +181,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         Container::get()
@@ -213,8 +228,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -253,8 +271,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -293,8 +314,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Normal match would be true (GB in GB), but inverted should be false
@@ -334,8 +358,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -372,8 +399,11 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '192.168.1.1'; // Private IP
 
-        $request = new ServerRequest('http://localhost/', 'GET');
-        $request = $request->withServerParams(['REMOTE_ADDR' => '192.168.1.1']);
+        $request = new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: ['REMOTE_ADDR' => '192.168.1.1'],
+        );
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(

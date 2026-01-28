@@ -5,8 +5,8 @@ includes:
     - ../.Build/vendor/saschaegerer/phpstan-typo3/extension.neon
 
 parameters:
-    # Level 8: Strict boolean conditions and nullability checks
-    level: 8
+    # Level 10: Strictest type checking
+    level: 10
 
     paths:
         - ../Classes/

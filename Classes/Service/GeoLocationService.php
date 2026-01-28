@@ -84,7 +84,9 @@ final class GeoLocationService
         }
 
         $serverParams = $request->getServerParams();
-        $remoteAddr = $serverParams['REMOTE_ADDR'] ?? null;
+        $remoteAddr = isset($serverParams['REMOTE_ADDR'])
+            ? (string) $serverParams['REMOTE_ADDR']
+            : null;
 
         if ($remoteAddr !== null && $this->isValidIpAddress($remoteAddr)) {
             return $remoteAddr;

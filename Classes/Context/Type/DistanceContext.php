@@ -54,7 +54,7 @@ class DistanceContext extends AbstractGeolocationContext
         // Check session cache first
         [$bUseSession, $bMatch] = $this->getMatchFromSession();
         if ($bUseSession) {
-            return $this->invert($bMatch);
+            return $this->invert((bool) $bMatch);
         }
 
         // Get configuration
