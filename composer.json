@@ -27,6 +27,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.64",
+        "infection/infection": "*",
         "phpstan/phpstan": "^1.10 || ^2.0",
         "phpstan/phpstan-deprecation-rules": "^1.2 || ^2.0",
         "phpstan/phpstan-phpunit": "^1.4 || ^2.0",
@@ -51,7 +52,8 @@
     "config": {
         "allow-plugins": {
             "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true
+            "typo3/cms-composer-installers": true,
+            "infection/extension-installer": true
         },
         "bin-dir": ".Build/bin",
         "sort-packages": true,
@@ -68,6 +70,7 @@
         "lint:fix": ".Build/bin/php-cs-fixer fix",
         "test:coverage": "XDEBUG_MODE=coverage .Build/bin/phpunit -c Build/phpunit/UnitTests.xml --coverage-html .Build/coverage",
         "test:functional": ".Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml",
+        "test:mutation": ".Build/bin/infection --threads=4 --show-mutations",
         "test:unit": ".Build/bin/phpunit -c Build/phpunit/UnitTests.xml"
     }
 }
