@@ -19,7 +19,7 @@
     "require": {
         "php": "^8.2",
         "geoip2/geoip2": "^3.0",
-        "netresearch/contexts": "dev-main",
+        "netresearch/contexts": "^3.1.1 || ^4.0 || dev-main",
         "typo3/cms-backend": "^12.4 || ^13.4",
         "typo3/cms-core": "^12.4 || ^13.4",
         "typo3/cms-extbase": "^12.4 || ^13.4",
