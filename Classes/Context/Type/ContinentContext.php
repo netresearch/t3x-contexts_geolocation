@@ -38,8 +38,10 @@ class ContinentContext extends AbstractGeolocationContext
 {
     /**
      * Valid continent codes.
+     *
+     * @var string[]
      */
-    private const array VALID_CONTINENT_CODES = ['AF', 'AN', 'AS', 'EU', 'NA', 'OC', 'SA'];
+    private const VALID_CONTINENT_CODES = ['AF', 'AN', 'AS', 'EU', 'NA', 'OC', 'SA'];
 
     /**
      * @param array<string, mixed> $arRow Database context row

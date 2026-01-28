@@ -33,7 +33,7 @@ class DistanceContext extends AbstractGeolocationContext
     /**
      * Earth's radius in kilometers.
      */
-    private const float EARTH_RADIUS_KM = 6371.0;
+    private const EARTH_RADIUS_KM = 6371.0;
 
     /**
      * @param array<string, mixed> $arRow Database context row
