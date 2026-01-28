@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2026-01-28T00:00:00Z" product-name="contexts_geolocation">
+        <header/>
+        <body>
+            <!-- Context Type Titles -->
+            <trans-unit id="context.type.country">
+                <source>Geolocation: Country</source>
+            </trans-unit>
+            <trans-unit id="context.type.continent">
+                <source>Geolocation: Continent</source>
+            </trans-unit>
+            <trans-unit id="context.type.distance">
+                <source>Geolocation: Distance</source>
+            </trans-unit>
+
+            <!-- Country FlexForm -->
+            <trans-unit id="flexform.country.field_countries">
+                <source>Countries</source>
+            </trans-unit>
+            <trans-unit id="flexform.country.unknown">
+                <source>Unknown location (*unknown*)</source>
+            </trans-unit>
+
+            <!-- Continent FlexForm -->
+            <trans-unit id="flexform.continent.field_continents">
+                <source>Continents</source>
+            </trans-unit>
+            <trans-unit id="flexform.continent.unknown">
+                <source>Unknown location (*unknown*)</source>
+            </trans-unit>
+            <trans-unit id="flexform.continent.AF">
+                <source>Africa (AF)</source>
+            </trans-unit>
+            <trans-unit id="flexform.continent.AN">
+                <source>Antarctica (AN)</source>
+            </trans-unit>
+            <trans-unit id="flexform.continent.AS">
+                <source>Asia (AS)</source>
+            </trans-unit>
+            <trans-unit id="flexform.continent.EU">
+                <source>Europe (EU)</source>
+            </trans-unit>
+            <trans-unit id="flexform.continent.NA">
+                <source>North America (NA)</source>
+            </trans-unit>
+            <trans-unit id="flexform.continent.OC">
+                <source>Oceania (OC)</source>
+            </trans-unit>
+            <trans-unit id="flexform.continent.SA">
+                <source>South America (SA)</source>
+            </trans-unit>
+
+            <!-- Distance FlexForm -->
+            <trans-unit id="flexform.distance.field_latitude">
+                <source>Latitude</source>
+            </trans-unit>
+            <trans-unit id="flexform.distance.field_latitude.description">
+                <source>Latitude of center point in decimal degrees (-90 to 90). Example: 51.3397 for Leipzig</source>
+            </trans-unit>
+            <trans-unit id="flexform.distance.field_longitude">
+                <source>Longitude</source>
+            </trans-unit>
+            <trans-unit id="flexform.distance.field_longitude.description">
+                <source>Longitude of center point in decimal degrees (-180 to 180). Example: 12.3731 for Leipzig</source>
+            </trans-unit>
+            <trans-unit id="flexform.distance.field_radius">
+                <source>Radius (km)</source>
+            </trans-unit>
+            <trans-unit id="flexform.distance.field_radius.description">
+                <source>Maximum distance from center point in kilometers</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
