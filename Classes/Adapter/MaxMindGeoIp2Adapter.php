@@ -29,7 +29,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
     {
         if (!$this->isAvailable()) {
             throw new GeoIpException(
-                sprintf('GeoIP2 database not available at path: %s', $this->databasePath)
+                \sprintf('GeoIP2 database not available at path: %s', $this->databasePath),
             );
         }
 
@@ -53,9 +53,9 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
             return null;
         } catch (InvalidDatabaseException $e) {
             throw new GeoIpException(
-                sprintf('Invalid GeoIP2 database: %s', $e->getMessage()),
+                \sprintf('Invalid GeoIP2 database: %s', $e->getMessage()),
                 (int) $e->getCode(),
-                $e
+                $e,
             );
         }
     }
@@ -137,9 +137,9 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
                 $this->reader = new Reader($this->databasePath);
             } catch (InvalidDatabaseException $e) {
                 throw new GeoIpException(
-                    sprintf('Cannot read GeoIP2 database: %s', $e->getMessage()),
+                    \sprintf('Cannot read GeoIP2 database: %s', $e->getMessage()),
                     (int) $e->getCode(),
-                    $e
+                    $e,
                 );
             }
         }

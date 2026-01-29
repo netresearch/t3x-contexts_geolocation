@@ -110,20 +110,12 @@ final class GeoLocationService
         // FILTER_FLAG_NO_RES_RANGE excludes reserved ranges (loopback, link-local, etc.)
         $result = filter_var(
             $ip,
-            FILTER_VALIDATE_IP,
-            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+            \FILTER_VALIDATE_IP,
+            \FILTER_FLAG_NO_PRIV_RANGE | \FILTER_FLAG_NO_RES_RANGE,
         );
 
         // If filter returns false, the IP is either invalid or private/reserved
         return $result === false;
-    }
-
-    /**
-     * Check if a string is a valid IP address (IPv4 or IPv6).
-     */
-    private function isValidIpAddress(string $ip): bool
-    {
-        return filter_var($ip, FILTER_VALIDATE_IP) !== false;
     }
 
     /**
@@ -132,5 +124,13 @@ final class GeoLocationService
     public function isAvailable(): bool
     {
         return $this->adapter->isAvailable();
+    }
+
+    /**
+     * Check if a string is a valid IP address (IPv4 or IPv6).
+     */
+    private function isValidIpAddress(string $ip): bool
+    {
+        return filter_var($ip, \FILTER_VALIDATE_IP) !== false;
     }
 }

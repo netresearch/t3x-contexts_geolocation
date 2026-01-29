@@ -22,6 +22,20 @@ final class CountryContextTest extends TestCase
         unset($GLOBALS['TYPO3_REQUEST']);
     }
 
+    /**
+     * @return iterable<string, array{string, string, bool}>
+     */
+    public static function countryCodesToMatchDataProvider(): iterable
+    {
+        yield 'single country match' => ['DE', 'DE', true];
+        yield 'multiple countries with match' => ['DE, US, FR', 'US', true];
+        yield 'multiple countries no match' => ['DE, US, FR', 'GB', false];
+        yield 'whitespace handling' => ['  DE  ,  US  ', 'DE', true];
+        yield 'case insensitive configured' => ['de, us', 'DE', true];
+        yield 'case insensitive detected' => ['DE, US', 'de', true];
+        yield 'comma-separated no spaces' => ['DE,US,FR', 'US', true];
+    }
+
     #[Test]
     public function matchReturnsTrueWhenCountryMatches(): void
     {
@@ -269,20 +283,6 @@ final class CountryContextTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{string, string, bool}>
-     */
-    public static function countryCodesToMatchDataProvider(): iterable
-    {
-        yield 'single country match' => ['DE', 'DE', true];
-        yield 'multiple countries with match' => ['DE, US, FR', 'US', true];
-        yield 'multiple countries no match' => ['DE, US, FR', 'GB', false];
-        yield 'whitespace handling' => ['  DE  ,  US  ', 'DE', true];
-        yield 'case insensitive configured' => ['de, us', 'DE', true];
-        yield 'case insensitive detected' => ['DE, US', 'de', true];
-        yield 'comma-separated no spaces' => ['DE,US,FR', 'US', true];
-    }
-
-    /**
      * Create a testable CountryContext that bypasses TYPO3 dependencies.
      */
     private function createTestableCountryContext(
@@ -292,6 +292,7 @@ final class CountryContextTest extends TestCase
     ): CountryContext {
         return new class ($countries, $service, $invert) extends CountryContext {
             private string $testCountries;
+
             private bool $testInvert;
 
             public function __construct(

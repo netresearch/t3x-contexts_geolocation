@@ -22,6 +22,27 @@ final class DistanceContextTest extends TestCase
         unset($GLOBALS['TYPO3_REQUEST']);
     }
 
+    /**
+     * @return iterable<string, array{float, float, float, float, float, float}>
+     */
+    public static function distanceCalculationDataProvider(): iterable
+    {
+        // Known distances for testing Haversine formula accuracy
+        // Format: [lat1, lon1, lat2, lon2, expected_distance_km, tolerance_km]
+
+        // Leipzig to Berlin: ~153 km
+        yield 'Leipzig to Berlin' => [51.3397, 12.3731, 52.5200, 13.4050, 153.0, 5.0];
+
+        // Same point (distance = 0)
+        yield 'Same point' => [51.3397, 12.3731, 51.3397, 12.3731, 0.0, 1.0];
+
+        // London to Paris: ~344 km
+        yield 'London to Paris' => [51.5074, -0.1278, 48.8566, 2.3522, 344.0, 10.0];
+
+        // New York to Los Angeles: ~3936 km
+        yield 'New York to Los Angeles' => [40.7128, -74.0060, 34.0522, -118.2437, 3936.0, 50.0];
+    }
+
     #[Test]
     public function matchReturnsTrueWhenWithinRadius(): void
     {
@@ -261,27 +282,6 @@ final class DistanceContextTest extends TestCase
         self::assertFalse($context2->match(), "Should not match with radius {$expectedDistance} - {$tolerance}km");
     }
 
-    /**
-     * @return iterable<string, array{float, float, float, float, float, float}>
-     */
-    public static function distanceCalculationDataProvider(): iterable
-    {
-        // Known distances for testing Haversine formula accuracy
-        // Format: [lat1, lon1, lat2, lon2, expected_distance_km, tolerance_km]
-
-        // Leipzig to Berlin: ~153 km
-        yield 'Leipzig to Berlin' => [51.3397, 12.3731, 52.5200, 13.4050, 153.0, 5.0];
-
-        // Same point (distance = 0)
-        yield 'Same point' => [51.3397, 12.3731, 51.3397, 12.3731, 0.0, 1.0];
-
-        // London to Paris: ~344 km
-        yield 'London to Paris' => [51.5074, -0.1278, 48.8566, 2.3522, 344.0, 10.0];
-
-        // New York to Los Angeles: ~3936 km
-        yield 'New York to Los Angeles' => [40.7128, -74.0060, 34.0522, -118.2437, 3936.0, 50.0];
-    }
-
     #[Test]
     public function matchHandlesZeroRadius(): void
     {
@@ -421,8 +421,11 @@ final class DistanceContextTest extends TestCase
     ): DistanceContext {
         return new class ($latitude, $longitude, $radius, $service, $invert) extends DistanceContext {
             private string $testLatitude;
+
             private string $testLongitude;
+
             private string $testRadius;
+
             private bool $testInvert;
 
             public function __construct(

@@ -52,6 +52,16 @@ class ContinentContext extends AbstractGeolocationContext
     }
 
     /**
+     * Get valid continent codes.
+     *
+     * @return array<int, string>
+     */
+    public static function getValidContinentCodes(): array
+    {
+        return self::VALID_CONTINENT_CODES;
+    }
+
+    /**
      * Check if the context matches the current request.
      *
      * @param array<int|string, mixed> $arDependencies Array of dependent context objects
@@ -95,18 +105,8 @@ class ContinentContext extends AbstractGeolocationContext
 
         // Check if visitor's continent is in the configured list
         $visitorContinent = strtoupper($continentCode);
-        $bMatch = in_array($visitorContinent, $configuredContinents, true);
+        $bMatch = \in_array($visitorContinent, $configuredContinents, true);
 
         return $this->storeInSession($this->invert($bMatch));
-    }
-
-    /**
-     * Get valid continent codes.
-     *
-     * @return array<int, string>
-     */
-    public static function getValidContinentCodes(): array
-    {
-        return self::VALID_CONTINENT_CODES;
     }
 }

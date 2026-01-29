@@ -22,6 +22,42 @@ final class GeoLocationServiceTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function privateIpAddressesDataProvider(): iterable
+    {
+        // IPv4 private ranges
+        yield '10.0.0.0/8' => ['10.0.0.1'];
+        yield '10.255.255.255' => ['10.255.255.255'];
+        yield '172.16.0.0/12' => ['172.16.0.1'];
+        yield '172.31.255.255' => ['172.31.255.255'];
+        yield '192.168.0.0/16' => ['192.168.0.1'];
+        yield '192.168.255.255' => ['192.168.255.255'];
+
+        // Loopback
+        yield 'IPv4 loopback' => ['127.0.0.1'];
+        yield 'IPv6 loopback' => ['::1'];
+
+        // Link-local
+        yield 'IPv4 link-local' => ['169.254.1.1'];
+        yield 'IPv6 link-local' => ['fe80::1'];
+
+        // IPv6 unique local (fc00::/7)
+        yield 'IPv6 unique local' => ['fd00::1'];
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function publicIpAddressesDataProvider(): iterable
+    {
+        yield 'Google DNS' => ['8.8.8.8'];
+        yield 'Cloudflare DNS' => ['1.1.1.1'];
+        yield 'Public IPv4' => ['203.0.113.50'];
+        yield 'Public IPv6' => ['2001:db8::1'];
+    }
+
     #[Test]
     public function getLocationForIpReturnsLocationFromAdapter(): void
     {
@@ -57,31 +93,6 @@ final class GeoLocationServiceTest extends TestCase
         self::assertTrue($service->isPrivateIp($ip));
     }
 
-    /**
-     * @return iterable<string, array{string}>
-     */
-    public static function privateIpAddressesDataProvider(): iterable
-    {
-        // IPv4 private ranges
-        yield '10.0.0.0/8' => ['10.0.0.1'];
-        yield '10.255.255.255' => ['10.255.255.255'];
-        yield '172.16.0.0/12' => ['172.16.0.1'];
-        yield '172.31.255.255' => ['172.31.255.255'];
-        yield '192.168.0.0/16' => ['192.168.0.1'];
-        yield '192.168.255.255' => ['192.168.255.255'];
-
-        // Loopback
-        yield 'IPv4 loopback' => ['127.0.0.1'];
-        yield 'IPv6 loopback' => ['::1'];
-
-        // Link-local
-        yield 'IPv4 link-local' => ['169.254.1.1'];
-        yield 'IPv6 link-local' => ['fe80::1'];
-
-        // IPv6 unique local (fc00::/7)
-        yield 'IPv6 unique local' => ['fd00::1'];
-    }
-
     #[Test]
     #[DataProvider('publicIpAddressesDataProvider')]
     public function isPrivateIpReturnsFalseForPublicAddresses(string $ip): void
@@ -90,17 +101,6 @@ final class GeoLocationServiceTest extends TestCase
         $service = new GeoLocationService($adapter);
 
         self::assertFalse($service->isPrivateIp($ip));
-    }
-
-    /**
-     * @return iterable<string, array{string}>
-     */
-    public static function publicIpAddressesDataProvider(): iterable
-    {
-        yield 'Google DNS' => ['8.8.8.8'];
-        yield 'Cloudflare DNS' => ['1.1.1.1'];
-        yield 'Public IPv4' => ['203.0.113.50'];
-        yield 'Public IPv6' => ['2001:db8::1'];
     }
 
     #[Test]
@@ -222,7 +222,7 @@ final class GeoLocationServiceTest extends TestCase
         $service = new GeoLocationService(
             $adapter,
             trustProxyHeaders: true,
-            proxyHeaders: ['CF-Connecting-IP', 'True-Client-IP']
+            proxyHeaders: ['CF-Connecting-IP', 'True-Client-IP'],
         );
 
         $request = $this->createMock(ServerRequestInterface::class);

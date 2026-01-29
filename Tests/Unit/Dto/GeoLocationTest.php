@@ -13,6 +13,21 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(GeoLocation::class)]
 final class GeoLocationTest extends TestCase
 {
+    /**
+     * @return iterable<string, array{?float, ?float, bool}>
+     */
+    public static function coordinatesDataProvider(): iterable
+    {
+        yield 'valid coordinates' => [51.3397, 12.3731, true];
+        yield 'null latitude' => [null, 12.3731, false];
+        yield 'null longitude' => [51.3397, null, false];
+        yield 'both null' => [null, null, false];
+        yield 'zero coordinates (null island)' => [0.0, 0.0, false];
+        yield 'negative coordinates (valid)' => [-33.8688, 151.2093, true];
+        yield 'zero latitude only (equator, valid)' => [0.0, 12.3731, true];
+        yield 'zero longitude only (prime meridian, valid)' => [51.3397, 0.0, true];
+    }
+
     #[Test]
     public function constructorSetsAllProperties(): void
     {
@@ -66,7 +81,7 @@ final class GeoLocationTest extends TestCase
     public function hasCoordinatesReturnsExpectedResult(
         ?float $latitude,
         ?float $longitude,
-        bool $expected
+        bool $expected,
     ): void {
         $location = new GeoLocation(
             latitude: $latitude,
@@ -74,20 +89,5 @@ final class GeoLocationTest extends TestCase
         );
 
         self::assertSame($expected, $location->hasCoordinates());
-    }
-
-    /**
-     * @return iterable<string, array{?float, ?float, bool}>
-     */
-    public static function coordinatesDataProvider(): iterable
-    {
-        yield 'valid coordinates' => [51.3397, 12.3731, true];
-        yield 'null latitude' => [null, 12.3731, false];
-        yield 'null longitude' => [51.3397, null, false];
-        yield 'both null' => [null, null, false];
-        yield 'zero coordinates (null island)' => [0.0, 0.0, false];
-        yield 'negative coordinates (valid)' => [-33.8688, 151.2093, true];
-        yield 'zero latitude only (equator, valid)' => [0.0, 12.3731, true];
-        yield 'zero longitude only (prime meridian, valid)' => [51.3397, 0.0, true];
     }
 }

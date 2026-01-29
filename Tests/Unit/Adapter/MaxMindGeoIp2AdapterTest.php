@@ -7,7 +7,6 @@ namespace Netresearch\ContextsGeolocation\Tests\Unit\Adapter;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use GeoIp2\Model\City;
-use MaxMind\Db\Reader\InvalidDatabaseException;
 use Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface;
 use Netresearch\ContextsGeolocation\Adapter\MaxMindGeoIp2Adapter;
 use Netresearch\ContextsGeolocation\Dto\GeoLocation;
@@ -15,10 +14,24 @@ use Netresearch\ContextsGeolocation\Exception\GeoIpException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 #[CoversClass(MaxMindGeoIp2Adapter::class)]
 final class MaxMindGeoIp2AdapterTest extends TestCase
 {
+    private ?string $tempFilePath = null;
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        // Clean up any temp file created during the test
+        if ($this->tempFilePath !== null && file_exists($this->tempFilePath)) {
+            unlink($this->tempFilePath);
+            $this->tempFilePath = null;
+        }
+    }
+
     #[Test]
     public function implementsGeoIpAdapterInterface(): void
     {
@@ -76,7 +89,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
                 'postal_code' => '94035',
                 'region_code' => 'CA',
                 'region_name' => 'California',
-            ])
+            ]),
         );
 
         $result = $adapter->lookup('8.8.8.8');
@@ -112,7 +125,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     public function getCountryCodeReturnsCodeOnSuccess(): void
     {
         $adapter = $this->createAdapterWithMockedReader(
-            $this->createMockCityRecord(['country_code' => 'DE'])
+            $this->createMockCityRecord(['country_code' => 'DE']),
         );
 
         $result = $adapter->getCountryCode('8.8.8.8');
@@ -135,7 +148,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     public function getCountryNameReturnsNameOnSuccess(): void
     {
         $adapter = $this->createAdapterWithMockedReader(
-            $this->createMockCityRecord(['country_name' => 'Germany'])
+            $this->createMockCityRecord(['country_name' => 'Germany']),
         );
 
         $result = $adapter->getCountryName('8.8.8.8');
@@ -147,7 +160,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     public function getContinentCodeReturnsCodeOnSuccess(): void
     {
         $adapter = $this->createAdapterWithMockedReader(
-            $this->createMockCityRecord(['continent_code' => 'EU'])
+            $this->createMockCityRecord(['continent_code' => 'EU']),
         );
 
         $result = $adapter->getContinentCode('8.8.8.8');
@@ -159,7 +172,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     public function getLatitudeReturnsLatitudeOnSuccess(): void
     {
         $adapter = $this->createAdapterWithMockedReader(
-            $this->createMockCityRecord(['latitude' => 51.3397])
+            $this->createMockCityRecord(['latitude' => 51.3397]),
         );
 
         $result = $adapter->getLatitude('8.8.8.8');
@@ -171,7 +184,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     public function getLongitudeReturnsLongitudeOnSuccess(): void
     {
         $adapter = $this->createAdapterWithMockedReader(
-            $this->createMockCityRecord(['longitude' => 12.3731])
+            $this->createMockCityRecord(['longitude' => 12.3731]),
         );
 
         $result = $adapter->getLongitude('8.8.8.8');
@@ -183,7 +196,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     public function getCityReturnsCityOnSuccess(): void
     {
         $adapter = $this->createAdapterWithMockedReader(
-            $this->createMockCityRecord(['city' => 'Leipzig'])
+            $this->createMockCityRecord(['city' => 'Leipzig']),
         );
 
         $result = $adapter->getCity('8.8.8.8');
@@ -250,19 +263,6 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
         return $this->createAdapterWithReader($reader);
     }
 
-    private ?string $tempFilePath = null;
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        // Clean up any temp file created during the test
-        if ($this->tempFilePath !== null && file_exists($this->tempFilePath)) {
-            unlink($this->tempFilePath);
-            $this->tempFilePath = null;
-        }
-    }
-
     /**
      * Create an adapter with a specific Reader instance injected.
      *
@@ -278,7 +278,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
         $adapter = new MaxMindGeoIp2Adapter($this->tempFilePath);
 
         // Use reflection to inject the mocked reader
-        $reflection = new \ReflectionClass($adapter);
+        $reflection = new ReflectionClass($adapter);
         $property = $reflection->getProperty('reader');
         $property->setValue($adapter, $reader);
 

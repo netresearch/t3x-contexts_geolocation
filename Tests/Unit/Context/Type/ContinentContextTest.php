@@ -22,6 +22,27 @@ final class ContinentContextTest extends TestCase
         unset($GLOBALS['TYPO3_REQUEST']);
     }
 
+    /**
+     * @return iterable<string, array{string, string, bool}>
+     */
+    public static function continentCodesToMatchDataProvider(): iterable
+    {
+        // Valid continent codes: AF (Africa), AN (Antarctica), AS (Asia), EU (Europe),
+        // NA (North America), OC (Oceania), SA (South America)
+        yield 'Africa' => ['AF', 'AF', true];
+        yield 'Antarctica' => ['AN', 'AN', true];
+        yield 'Asia' => ['AS', 'AS', true];
+        yield 'Europe' => ['EU', 'EU', true];
+        yield 'North America' => ['NA', 'NA', true];
+        yield 'Oceania' => ['OC', 'OC', true];
+        yield 'South America' => ['SA', 'SA', true];
+        yield 'multiple continents with match' => ['EU, NA, AS', 'NA', true];
+        yield 'multiple continents no match' => ['EU, NA', 'SA', false];
+        yield 'whitespace handling' => ['  EU  ,  NA  ', 'EU', true];
+        yield 'case insensitive configured' => ['eu, na', 'EU', true];
+        yield 'case insensitive detected' => ['EU, NA', 'eu', true];
+    }
+
     #[Test]
     public function matchReturnsTrueWhenContinentMatches(): void
     {
@@ -220,27 +241,6 @@ final class ContinentContextTest extends TestCase
         self::assertSame($expected, $context->match());
     }
 
-    /**
-     * @return iterable<string, array{string, string, bool}>
-     */
-    public static function continentCodesToMatchDataProvider(): iterable
-    {
-        // Valid continent codes: AF (Africa), AN (Antarctica), AS (Asia), EU (Europe),
-        // NA (North America), OC (Oceania), SA (South America)
-        yield 'Africa' => ['AF', 'AF', true];
-        yield 'Antarctica' => ['AN', 'AN', true];
-        yield 'Asia' => ['AS', 'AS', true];
-        yield 'Europe' => ['EU', 'EU', true];
-        yield 'North America' => ['NA', 'NA', true];
-        yield 'Oceania' => ['OC', 'OC', true];
-        yield 'South America' => ['SA', 'SA', true];
-        yield 'multiple continents with match' => ['EU, NA, AS', 'NA', true];
-        yield 'multiple continents no match' => ['EU, NA', 'SA', false];
-        yield 'whitespace handling' => ['  EU  ,  NA  ', 'EU', true];
-        yield 'case insensitive configured' => ['eu, na', 'EU', true];
-        yield 'case insensitive detected' => ['EU, NA', 'eu', true];
-    }
-
     #[Test]
     public function getValidContinentCodesReturnsAllCodes(): void
     {
@@ -266,6 +266,7 @@ final class ContinentContextTest extends TestCase
     ): ContinentContext {
         return new class ($continents, $service, $invert) extends ContinentContext {
             private string $testContinents;
+
             private bool $testInvert;
 
             public function __construct(

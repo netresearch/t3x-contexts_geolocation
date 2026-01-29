@@ -80,7 +80,7 @@ class CountryContext extends AbstractGeolocationContext
 
         // Check if visitor's country is in the configured list
         $visitorCountry = strtoupper($countryCode);
-        $bMatch = in_array($visitorCountry, $configuredCountries, true);
+        $bMatch = \in_array($visitorCountry, $configuredCountries, true);
 
         return $this->storeInSession($this->invert($bMatch));
     }
