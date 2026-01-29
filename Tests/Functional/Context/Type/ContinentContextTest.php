@@ -18,6 +18,7 @@ use Netresearch\ContextsGeolocation\Dto\GeoLocation;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -78,11 +79,7 @@ final class ContinentContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         Container::get()
@@ -104,11 +101,7 @@ final class ContinentContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         Container::get()
@@ -127,11 +120,7 @@ final class ContinentContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         Container::get()
@@ -173,11 +162,7 @@ final class ContinentContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -215,11 +200,7 @@ final class ContinentContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -257,11 +238,7 @@ final class ContinentContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -298,16 +275,28 @@ final class ContinentContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1'; // Private IP
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '10.0.0.1'],
-        );
+        $request = $this->createFrontendRequest('10.0.0.1');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
             $context->match(),
             'Continent context should not match for private IP addresses',
         );
+    }
+
+    /**
+     * Create a ServerRequest configured for frontend mode.
+     *
+     * @param array<string, string> $serverParams
+     */
+    protected function createFrontendRequest(string $remoteAddr = '8.8.8.8', array $serverParams = []): ServerRequest
+    {
+        $serverParams['REMOTE_ADDR'] = $remoteAddr;
+
+        return (new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: $serverParams,
+        ))->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE);
     }
 }
