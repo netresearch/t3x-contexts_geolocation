@@ -4,9 +4,6 @@
 
 Backend PHP code for the Contexts Geolocation extension.
 
-> **Important:** This documents TARGET patterns for the v12/v13 rewrite.
-> Current legacy code uses deprecated patterns (PHP 5.x, TYPO3 6-8) - do not follow them.
-
 ## Overview
 
 This directory contains the core PHP implementation:
@@ -27,7 +24,7 @@ ddev start && ddev install-v13
 
 ```bash
 composer lint              # PHP_CodeSniffer
-composer analyze           # PHPStan level 8
+composer analyze           # PHPStan level 10
 composer test:unit         # Unit tests for this code
 ```
 

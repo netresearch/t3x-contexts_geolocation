@@ -4,11 +4,6 @@
 
 **Project:** netresearch/contexts_geolocation — Geolocation context types for TYPO3
 **Type:** TYPO3 CMS Extension (PHP 8.2+, TYPO3 12.4/13.4)
-**Status:** LEGACY - Complete rewrite planned for TYPO3 v12/v13
-
-> **Important:** This is currently a LEGACY extension (TYPO3 6-8, PHP 5.3-7.1).
-> This AGENTS.md documents the TARGET architecture for the upcoming complete rewrite.
-> Do NOT reference current legacy code patterns during rewrite.
 
 ## Precedence
 
@@ -27,7 +22,7 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 ```bash
 # Automatic on commit (via GrumPHP):
 composer lint          # PHP_CodeSniffer (PSR-12 + TYPO3 CGL)
-composer analyze       # PHPStan level 8
+composer analyze       # PHPStan level 10
 
 # Manual testing:
 composer test:unit        # PHPUnit unit tests
@@ -99,7 +94,7 @@ Documentation/                 # RST documentation
 ## Dependencies
 
 **Required:**
-- `netresearch/contexts` ^2.0 - Base contexts extension
+- `netresearch/contexts` ^4.0 - Base contexts extension
 - `geoip2/geoip2` ^3.0 - MaxMind GeoIP2 PHP library
 
 **Suggested:**
