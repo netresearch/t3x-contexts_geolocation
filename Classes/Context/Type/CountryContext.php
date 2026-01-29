@@ -72,7 +72,12 @@ class CountryContext extends AbstractGeolocationContext
         }
 
         // Get country code from GeoIP
-        $countryCode = $this->getGeoLocationService()->getLocationForIp($clientIp)?->countryCode;
+        $service = $this->getGeoLocationService();
+        if ($service === null) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        $countryCode = $service->getLocationForIp($clientIp)?->countryCode;
 
         if ($countryCode === null) {
             return $this->storeInSession($this->invert(false));

@@ -41,14 +41,24 @@ abstract class AbstractGeolocationContext extends AbstractContext
      *
      * Uses lazy initialization to support context creation by the Container
      * which doesn't use TYPO3's DI container.
+     *
+     * @return GeoLocationService|null Service instance or null if DI container is not available
      */
-    protected function getGeoLocationService(): GeoLocationService
+    protected function getGeoLocationService(): ?GeoLocationService
     {
         if ($this->geoLocationService === null) {
-            // Use the DI container to get the properly configured service
-            $service = GeneralUtility::getContainer()->get(GeoLocationService::class);
-            \assert($service instanceof GeoLocationService);
-            $this->geoLocationService = $service;
+            try {
+                // Use the DI container to get the properly configured service
+                $container = GeneralUtility::getContainer();
+                $service = $container->get(GeoLocationService::class);
+                \assert($service instanceof GeoLocationService);
+                $this->geoLocationService = $service;
+            } catch (\Throwable) {
+                // DI container not available or not properly initialized
+                // This can happen during functional tests when Container::matchAll()
+                // instantiates context types before the DI container is fully warmed up
+                return null;
+            }
         }
 
         return $this->geoLocationService;
@@ -75,7 +85,12 @@ abstract class AbstractGeolocationContext extends AbstractContext
             return null;
         }
 
-        return $this->getGeoLocationService()->getClientIpAddress($request);
+        $service = $this->getGeoLocationService();
+        if ($service === null) {
+            return null;
+        }
+
+        return $service->getClientIpAddress($request);
     }
 
     /**
@@ -83,7 +98,13 @@ abstract class AbstractGeolocationContext extends AbstractContext
      */
     protected function isPrivateIp(string $ip): bool
     {
-        return $this->getGeoLocationService()->isPrivateIp($ip);
+        $service = $this->getGeoLocationService();
+        if ($service === null) {
+            // If service unavailable, treat as private to avoid false positives
+            return true;
+        }
+
+        return $service->isPrivateIp($ip);
     }
 
     /**
