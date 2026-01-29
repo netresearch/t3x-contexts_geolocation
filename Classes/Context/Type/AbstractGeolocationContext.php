@@ -46,7 +46,9 @@ abstract class AbstractGeolocationContext extends AbstractContext
     {
         if ($this->geoLocationService === null) {
             // Use the DI container to get the properly configured service
-            $this->geoLocationService = GeneralUtility::getContainer()->get(GeoLocationService::class);
+            $service = GeneralUtility::getContainer()->get(GeoLocationService::class);
+            \assert($service instanceof GeoLocationService);
+            $this->geoLocationService = $service;
         }
 
         return $this->geoLocationService;
