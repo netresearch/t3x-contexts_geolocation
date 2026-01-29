@@ -1,142 +1,185 @@
 <?php
-namespace Netresearch\ContextsGeolocation\Context\Type;
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2013 Netresearch GmbH & Co. KG <typo3.org@netresearch.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
-use \Netresearch\ContextsGeolocation\AbstractAdapter;
-use \Netresearch\ContextsGeolocation\Exception;
 
 /**
- * Distance between given point and user's IP.
+ * This file is part of the package netresearch/contexts-geolocation.
  *
- * @category   TYPO3-Extensions
- * @package    Contexts
- * @subpackage Geolocation
- * @author     Christian Weiske <christian.weiske@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
- * @link       http://github.com/netresearch/contexts_geolocation
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
  */
-class DistanceContext
-    extends \Netresearch\Contexts\Context\AbstractContext
+
+declare(strict_types=1);
+
+namespace Netresearch\ContextsGeolocation\Context\Type;
+
+use Netresearch\ContextsGeolocation\Service\GeoLocationService;
+
+/**
+ * Context type that matches based on visitor's distance from a point.
+ *
+ * Matches when the visitor's location (detected via GeoIP) is within
+ * a configured radius from a central point. Uses the Haversine formula
+ * for accurate distance calculation on a sphere.
+ *
+ * Configuration:
+ * - field_latitude: Latitude of the center point (decimal degrees)
+ * - field_longitude: Longitude of the center point (decimal degrees)
+ * - field_radius: Radius in kilometers
+ *
+ * @author Netresearch DTT GmbH
+ * @link https://www.netresearch.de
+ */
+class DistanceContext extends AbstractGeolocationContext
 {
     /**
-     * Check if the context is active now.
-     *
-     * @param array $arDependencies Array of dependent context objects
-     *
-     * @return boolean True if the context is active, false if not
+     * Earth's radius in kilometers.
      */
-    public function match(array $arDependencies = array())
-    {
-        list($bUseMatch, $bMatch) = $this->getMatchFromSession();
-        if ($bUseMatch) {
-            return $this->invert($bMatch);
-        }
+    private const EARTH_RADIUS_KM = 6371.0;
 
-        return $this->invert(
-            $this->storeInSession(
-                $this->matchDistance()
-            )
-        );
+    /**
+     * @param array<string, mixed> $arRow Database context row
+     */
+    public function __construct(array $arRow = [], ?GeoLocationService $geoLocationService = null)
+    {
+        parent::__construct($arRow, $geoLocationService);
     }
 
     /**
-     * Detects the user's IP position and checks if it is within
-     * the given radius.
+     * Check if the context matches the current request.
      *
-     * @return boolean True if the user's position is within the given
-     *                 radius around the configured position.
+     * @param array<int|string, mixed> $arDependencies Array of dependent context objects
+     * @return bool True if the visitor is within the configured radius
      */
-    public function matchDistance()
+    public function match(array $arDependencies = []): bool
     {
-        try {
-            $geoip = AbstractAdapter
-                ::getInstance(
-                    $this->getRemoteAddress()
-                );
+        // Check session cache first
+        [$bUseSession, $bMatch] = $this->getMatchFromSession();
+        if ($bUseSession) {
+            return $this->invert((bool) $bMatch);
+        }
 
-            $bUnknown   = (bool) $this->getConfValue('field_unknown');
-            $arPosition = $geoip->getLocation();
+        // Get configuration
+        $centerLatitude = $this->getConfValue('field_latitude');
+        $centerLongitude = $this->getConfValue('field_longitude');
+        $radius = $this->getConfValue('field_radius');
 
-            if ($arPosition === false) {
-                //unknown position
-                return $bUnknown;
-            }
+        // Validate configuration
+        if (!$this->isValidConfiguration($centerLatitude, $centerLongitude, $radius)) {
+            return $this->storeInSession($this->invert(false));
+        }
 
-            if (($arPosition['latitude'] == 0)
-                && ($arPosition['longitude'] == 0)
-            ) {
-                //broken position
-                return $bUnknown;
-            }
+        // Get client IP
+        $clientIp = $this->getClientIpAddress();
 
-            $strPosition    = trim($this->getConfValue('field_position'));
-            $strMaxDistance = trim($this->getConfValue('field_distance'));
+        if ($clientIp === null) {
+            return $this->storeInSession($this->invert(false));
+        }
 
-            if (($strPosition == '') || ($strMaxDistance == '')) {
-                //nothing configured? no match.
-                return false;
-            }
+        // Skip private IPs
+        if ($this->isPrivateIp($clientIp)) {
+            return $this->storeInSession($this->invert(false));
+        }
 
-            list($reqLat, $reqLong) = explode(',', $strPosition);
+        // Get visitor coordinates from GeoIP
+        $location = $this->geoLocationService->getLocationForIp($clientIp);
 
-            $flDistance = $this->getDistance(
-                $reqLat, $reqLong,
-                $arPosition['latitude'], $arPosition['longitude']
-            );
+        if ($location === null || !$location->hasCoordinates()) {
+            return $this->storeInSession($this->invert(false));
+        }
 
-            return $flDistance <= ((float) $strMaxDistance);
-        } catch (Exception $exception) {
+        $visitorLatitude = $location->latitude;
+        $visitorLongitude = $location->longitude;
+
+        if ($visitorLatitude === null || $visitorLongitude === null) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        // Calculate distance using Haversine formula
+        $distance = $this->calculateHaversineDistance(
+            (float) $centerLatitude,
+            (float) $centerLongitude,
+            $visitorLatitude,
+            $visitorLongitude,
+        );
+
+        // Check if within radius
+        $bMatch = $distance <= (float) $radius;
+
+        return $this->storeInSession($this->invert($bMatch));
+    }
+
+    /**
+     * Calculate distance between two points using the Haversine formula.
+     *
+     * The Haversine formula determines the great-circle distance between
+     * two points on a sphere given their latitudes and longitudes.
+     *
+     * @param float $lat1 Latitude of point 1 (decimal degrees)
+     * @param float $lon1 Longitude of point 1 (decimal degrees)
+     * @param float $lat2 Latitude of point 2 (decimal degrees)
+     * @param float $lon2 Longitude of point 2 (decimal degrees)
+     * @return float Distance in kilometers
+     */
+    public function calculateHaversineDistance(
+        float $lat1,
+        float $lon1,
+        float $lat2,
+        float $lon2,
+    ): float {
+        // Convert to radians
+        $lat1Rad = deg2rad($lat1);
+        $lat2Rad = deg2rad($lat2);
+        $deltaLat = deg2rad($lat2 - $lat1);
+        $deltaLon = deg2rad($lon2 - $lon1);
+
+        // Haversine formula
+        $a = sin($deltaLat / 2) ** 2
+            + cos($lat1Rad) * cos($lat2Rad) * sin($deltaLon / 2) ** 2;
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return self::EARTH_RADIUS_KM * $c;
+    }
+
+    /**
+     * Validate that the configuration is complete and valid.
+     */
+    private function isValidConfiguration(
+        string $latitude,
+        string $longitude,
+        string $radius,
+    ): bool {
+        // All values must be non-empty
+        if ($latitude === '' || $longitude === '' || $radius === '') {
             return false;
         }
-    }
 
-    /**
-     * Calculate distance between two points in kilometers.
-     *
-     * @param float $latitude1  Latitude of first point
-     * @param float $longitude1 Longitude of first point
-     * @param float $latitude2  Latitude of second point
-     * @param float $longitude2 Longitude of second point
-     *
-     * @return float Distance in kilometers
-     *
-     * @link http://en.wikipedia.org/wiki/Haversine_formula
-     * @link http://www.codecodex.com/wiki/Calculate_Distance_Between_Two_Points_on_a_Globe#PHP
-     */
-    protected function getDistance($latitude1, $longitude1, $latitude2, $longitude2)
-    {
-        $earth_radius = 6371;
+        // Latitude must be numeric and in range [-90, 90]
+        if (!is_numeric($latitude)) {
+            return false;
+        }
 
-        $dLat = deg2rad($latitude2 - $latitude1);
-        $dLon = deg2rad($longitude2 - $longitude1);
+        $lat = (float) $latitude;
+        if ($lat < -90.0 || $lat > 90.0) {
+            return false;
+        }
 
-        $a = sin($dLat/2) * sin($dLat/2)
-            + cos(deg2rad($latitude1)) * cos(deg2rad($latitude2))
-            * sin($dLon/2) * sin($dLon/2);
-        $c = 2 * asin(sqrt($a));
-        $d = $earth_radius * $c;
+        // Longitude must be numeric and in range [-180, 180]
+        if (!is_numeric($longitude)) {
+            return false;
+        }
 
-        return $d;
+        $lon = (float) $longitude;
+        if ($lon < -180.0 || $lon > 180.0) {
+            return false;
+        }
+
+        // Radius must be numeric and non-negative
+        if (!is_numeric($radius)) {
+            return false;
+        }
+
+        $rad = (float) $radius;
+
+        return $rad >= 0.0;
     }
 }
-?>

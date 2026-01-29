@@ -1,69 +1,58 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <T3DataStructure>
- <meta>
-  <langDisable>1</langDisable>
- </meta>
- <ROOT>
-   <type>array</type>
-   <el>
-     <field_continents>
-       <TCEforms>
-         <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/flexform.xml:continent.field_continents</label>
-         <config>
-           <type>select</type>
-           <renderType>selectSingle</renderType>
-           <items type="array">
-            <numIndex index="0" type="array">
-             <numIndex index="0">- unknown -</numIndex>
-             <numIndex index="1">*unknown*</numIndex>
-            </numIndex>
-            <numIndex index="1" type="array">
-             <numIndex index="0">Africa</numIndex>
-             <numIndex index="1">AF</numIndex>
-            </numIndex>
-            <numIndex index="2" type="array">
-             <numIndex index="0">Antarctica</numIndex>
-             <numIndex index="1">AN</numIndex>
-            </numIndex>
-            <numIndex index="3" type="array">
-             <numIndex index="0">Asia</numIndex>
-             <numIndex index="1">AS</numIndex>
-            </numIndex>
-            <numIndex index="4" type="array">
-             <numIndex index="0">Europe</numIndex>
-             <numIndex index="1">EU</numIndex>
-            </numIndex>
-            <numIndex index="5" type="array">
-             <numIndex index="0">North america</numIndex>
-             <numIndex index="1">NA</numIndex>
-            </numIndex>
-            <numIndex index="6" type="array">
-             <numIndex index="0">Oceania</numIndex>
-             <numIndex index="1">OC</numIndex>
-            </numIndex>
-            <numIndex index="7" type="array">
-             <numIndex index="0">South America</numIndex>
-             <numIndex index="1">SA</numIndex>
-            </numIndex>
-           </items>
-           <size>8</size>
-           <minitems>1</minitems>
-           <maxitems>1000</maxitems>
-         </config>
-       </TCEforms>
-     </field_continents>
-
-     <field_setupCheck>
-       <TCEforms>
-         <label></label>
-         <config>
-           <type>user</type>
-           <form_type>user</form_type>
-           <userFunc>Netresearch\ContextsGeolocation\Backend-&gt;setupCheck</userFunc>
-         </config>
-       </TCEforms>
-     </field_setupCheck>
-
-   </el>
- </ROOT>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <type>array</type>
+                <el>
+                    <field_continents>
+                        <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.continent.field_continents</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectMultipleSideBySide</renderType>
+                            <size>7</size>
+                            <maxitems>7</maxitems>
+                            <items type="array">
+                                <numIndex index="0" type="array">
+                                    <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.continent.unknown</label>
+                                    <value>*unknown*</value>
+                                </numIndex>
+                                <numIndex index="1" type="array">
+                                    <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.continent.AF</label>
+                                    <value>AF</value>
+                                </numIndex>
+                                <numIndex index="2" type="array">
+                                    <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.continent.AN</label>
+                                    <value>AN</value>
+                                </numIndex>
+                                <numIndex index="3" type="array">
+                                    <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.continent.AS</label>
+                                    <value>AS</value>
+                                </numIndex>
+                                <numIndex index="4" type="array">
+                                    <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.continent.EU</label>
+                                    <value>EU</value>
+                                </numIndex>
+                                <numIndex index="5" type="array">
+                                    <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.continent.NA</label>
+                                    <value>NA</value>
+                                </numIndex>
+                                <numIndex index="6" type="array">
+                                    <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.continent.OC</label>
+                                    <value>OC</value>
+                                </numIndex>
+                                <numIndex index="7" type="array">
+                                    <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.continent.SA</label>
+                                    <value>SA</value>
+                                </numIndex>
+                            </items>
+                        </config>
+                    </field_continents>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
 </T3DataStructure>

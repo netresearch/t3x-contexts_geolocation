@@ -1,0 +1,25 @@
+name: contexts-geolocation
+type: php
+docroot: public
+php_version: "8.2"
+webserver_type: apache-fpm
+xdebug_enabled: false
+additional_hostnames:
+    - v12.contexts-geolocation
+    - v13.contexts-geolocation
+additional_fqdns: []
+database:
+    type: mariadb
+    version: "10.11"
+hooks:
+    post-start:
+        - exec: mkdir -p /var/www/html/v12 /var/www/html/v13
+use_dns_when_possible: true
+timezone: Europe/Berlin
+composer_version: "2"
+web_environment:
+    - TYPO3_CONTEXT=Development
+    - COMPOSER_HOME=/var/www/.composer
+    - COMPOSER_CACHE_DIR=/var/www/.composer/cache
+corepack_enable: true
+default_container_timeout: "300"

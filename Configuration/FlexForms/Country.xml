@@ -1,36 +1,171 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <T3DataStructure>
- <meta>
-  <langDisable>1</langDisable>
- </meta>
- <ROOT>
-   <type>array</type>
-   <el>
-     <field_countries>
-       <TCEforms>
-         <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/flexform.xml:country.field_countries</label>
-         <config>
-           <type>select</type>
-           <renderType>selectSingle</renderType>
-           <size>10</size>
-           <itemsProcFunc>Netresearch\ContextsGeolocation\Backend-&gt;getCountries</itemsProcFunc>
-           <minitems>1</minitems>
-           <maxitems>1000</maxitems>
-         </config>
-       </TCEforms>
-     </field_countries>
-
-     <field_setupCheck>
-       <TCEforms>
-         <label></label>
-         <config>
-           <type>user</type>
-           <form_type>user</form_type>
-           <userFunc>Netresearch\ContextsGeolocation\Backend-&gt;setupCheck</userFunc>
-         </config>
-       </TCEforms>
-     </field_setupCheck>
-
-   </el>
- </ROOT>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <type>array</type>
+                <el>
+                    <field_countries>
+                        <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.country.field_countries</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectMultipleSideBySide</renderType>
+                            <size>10</size>
+                            <maxitems>999</maxitems>
+                            <items type="array">
+                                <numIndex index="0" type="array">
+                                    <label>LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:flexform.country.unknown</label>
+                                    <value>*unknown*</value>
+                                </numIndex>
+                                <numIndex index="1" type="array"><label>Afghanistan (AF)</label><value>AF</value></numIndex>
+                                <numIndex index="2" type="array"><label>Albania (AL)</label><value>AL</value></numIndex>
+                                <numIndex index="3" type="array"><label>Algeria (DZ)</label><value>DZ</value></numIndex>
+                                <numIndex index="4" type="array"><label>Andorra (AD)</label><value>AD</value></numIndex>
+                                <numIndex index="5" type="array"><label>Angola (AO)</label><value>AO</value></numIndex>
+                                <numIndex index="6" type="array"><label>Argentina (AR)</label><value>AR</value></numIndex>
+                                <numIndex index="7" type="array"><label>Armenia (AM)</label><value>AM</value></numIndex>
+                                <numIndex index="8" type="array"><label>Australia (AU)</label><value>AU</value></numIndex>
+                                <numIndex index="9" type="array"><label>Austria (AT)</label><value>AT</value></numIndex>
+                                <numIndex index="10" type="array"><label>Azerbaijan (AZ)</label><value>AZ</value></numIndex>
+                                <numIndex index="11" type="array"><label>Bahrain (BH)</label><value>BH</value></numIndex>
+                                <numIndex index="12" type="array"><label>Bangladesh (BD)</label><value>BD</value></numIndex>
+                                <numIndex index="13" type="array"><label>Belarus (BY)</label><value>BY</value></numIndex>
+                                <numIndex index="14" type="array"><label>Belgium (BE)</label><value>BE</value></numIndex>
+                                <numIndex index="15" type="array"><label>Belize (BZ)</label><value>BZ</value></numIndex>
+                                <numIndex index="16" type="array"><label>Benin (BJ)</label><value>BJ</value></numIndex>
+                                <numIndex index="17" type="array"><label>Bhutan (BT)</label><value>BT</value></numIndex>
+                                <numIndex index="18" type="array"><label>Bolivia (BO)</label><value>BO</value></numIndex>
+                                <numIndex index="19" type="array"><label>Bosnia and Herzegovina (BA)</label><value>BA</value></numIndex>
+                                <numIndex index="20" type="array"><label>Botswana (BW)</label><value>BW</value></numIndex>
+                                <numIndex index="21" type="array"><label>Brazil (BR)</label><value>BR</value></numIndex>
+                                <numIndex index="22" type="array"><label>Brunei (BN)</label><value>BN</value></numIndex>
+                                <numIndex index="23" type="array"><label>Bulgaria (BG)</label><value>BG</value></numIndex>
+                                <numIndex index="24" type="array"><label>Burkina Faso (BF)</label><value>BF</value></numIndex>
+                                <numIndex index="25" type="array"><label>Burundi (BI)</label><value>BI</value></numIndex>
+                                <numIndex index="26" type="array"><label>Cambodia (KH)</label><value>KH</value></numIndex>
+                                <numIndex index="27" type="array"><label>Cameroon (CM)</label><value>CM</value></numIndex>
+                                <numIndex index="28" type="array"><label>Canada (CA)</label><value>CA</value></numIndex>
+                                <numIndex index="29" type="array"><label>Central African Republic (CF)</label><value>CF</value></numIndex>
+                                <numIndex index="30" type="array"><label>Chad (TD)</label><value>TD</value></numIndex>
+                                <numIndex index="31" type="array"><label>Chile (CL)</label><value>CL</value></numIndex>
+                                <numIndex index="32" type="array"><label>China (CN)</label><value>CN</value></numIndex>
+                                <numIndex index="33" type="array"><label>Colombia (CO)</label><value>CO</value></numIndex>
+                                <numIndex index="34" type="array"><label>Costa Rica (CR)</label><value>CR</value></numIndex>
+                                <numIndex index="35" type="array"><label>Croatia (HR)</label><value>HR</value></numIndex>
+                                <numIndex index="36" type="array"><label>Cuba (CU)</label><value>CU</value></numIndex>
+                                <numIndex index="37" type="array"><label>Cyprus (CY)</label><value>CY</value></numIndex>
+                                <numIndex index="38" type="array"><label>Czech Republic (CZ)</label><value>CZ</value></numIndex>
+                                <numIndex index="39" type="array"><label>Denmark (DK)</label><value>DK</value></numIndex>
+                                <numIndex index="40" type="array"><label>Dominican Republic (DO)</label><value>DO</value></numIndex>
+                                <numIndex index="41" type="array"><label>Ecuador (EC)</label><value>EC</value></numIndex>
+                                <numIndex index="42" type="array"><label>Egypt (EG)</label><value>EG</value></numIndex>
+                                <numIndex index="43" type="array"><label>El Salvador (SV)</label><value>SV</value></numIndex>
+                                <numIndex index="44" type="array"><label>Estonia (EE)</label><value>EE</value></numIndex>
+                                <numIndex index="45" type="array"><label>Ethiopia (ET)</label><value>ET</value></numIndex>
+                                <numIndex index="46" type="array"><label>Finland (FI)</label><value>FI</value></numIndex>
+                                <numIndex index="47" type="array"><label>France (FR)</label><value>FR</value></numIndex>
+                                <numIndex index="48" type="array"><label>Georgia (GE)</label><value>GE</value></numIndex>
+                                <numIndex index="49" type="array"><label>Germany (DE)</label><value>DE</value></numIndex>
+                                <numIndex index="50" type="array"><label>Ghana (GH)</label><value>GH</value></numIndex>
+                                <numIndex index="51" type="array"><label>Greece (GR)</label><value>GR</value></numIndex>
+                                <numIndex index="52" type="array"><label>Guatemala (GT)</label><value>GT</value></numIndex>
+                                <numIndex index="53" type="array"><label>Honduras (HN)</label><value>HN</value></numIndex>
+                                <numIndex index="54" type="array"><label>Hong Kong (HK)</label><value>HK</value></numIndex>
+                                <numIndex index="55" type="array"><label>Hungary (HU)</label><value>HU</value></numIndex>
+                                <numIndex index="56" type="array"><label>Iceland (IS)</label><value>IS</value></numIndex>
+                                <numIndex index="57" type="array"><label>India (IN)</label><value>IN</value></numIndex>
+                                <numIndex index="58" type="array"><label>Indonesia (ID)</label><value>ID</value></numIndex>
+                                <numIndex index="59" type="array"><label>Iran (IR)</label><value>IR</value></numIndex>
+                                <numIndex index="60" type="array"><label>Iraq (IQ)</label><value>IQ</value></numIndex>
+                                <numIndex index="61" type="array"><label>Ireland (IE)</label><value>IE</value></numIndex>
+                                <numIndex index="62" type="array"><label>Israel (IL)</label><value>IL</value></numIndex>
+                                <numIndex index="63" type="array"><label>Italy (IT)</label><value>IT</value></numIndex>
+                                <numIndex index="64" type="array"><label>Jamaica (JM)</label><value>JM</value></numIndex>
+                                <numIndex index="65" type="array"><label>Japan (JP)</label><value>JP</value></numIndex>
+                                <numIndex index="66" type="array"><label>Jordan (JO)</label><value>JO</value></numIndex>
+                                <numIndex index="67" type="array"><label>Kazakhstan (KZ)</label><value>KZ</value></numIndex>
+                                <numIndex index="68" type="array"><label>Kenya (KE)</label><value>KE</value></numIndex>
+                                <numIndex index="69" type="array"><label>Kuwait (KW)</label><value>KW</value></numIndex>
+                                <numIndex index="70" type="array"><label>Kyrgyzstan (KG)</label><value>KG</value></numIndex>
+                                <numIndex index="71" type="array"><label>Latvia (LV)</label><value>LV</value></numIndex>
+                                <numIndex index="72" type="array"><label>Lebanon (LB)</label><value>LB</value></numIndex>
+                                <numIndex index="73" type="array"><label>Libya (LY)</label><value>LY</value></numIndex>
+                                <numIndex index="74" type="array"><label>Liechtenstein (LI)</label><value>LI</value></numIndex>
+                                <numIndex index="75" type="array"><label>Lithuania (LT)</label><value>LT</value></numIndex>
+                                <numIndex index="76" type="array"><label>Luxembourg (LU)</label><value>LU</value></numIndex>
+                                <numIndex index="77" type="array"><label>Macedonia (MK)</label><value>MK</value></numIndex>
+                                <numIndex index="78" type="array"><label>Malaysia (MY)</label><value>MY</value></numIndex>
+                                <numIndex index="79" type="array"><label>Malta (MT)</label><value>MT</value></numIndex>
+                                <numIndex index="80" type="array"><label>Mexico (MX)</label><value>MX</value></numIndex>
+                                <numIndex index="81" type="array"><label>Moldova (MD)</label><value>MD</value></numIndex>
+                                <numIndex index="82" type="array"><label>Monaco (MC)</label><value>MC</value></numIndex>
+                                <numIndex index="83" type="array"><label>Mongolia (MN)</label><value>MN</value></numIndex>
+                                <numIndex index="84" type="array"><label>Montenegro (ME)</label><value>ME</value></numIndex>
+                                <numIndex index="85" type="array"><label>Morocco (MA)</label><value>MA</value></numIndex>
+                                <numIndex index="86" type="array"><label>Mozambique (MZ)</label><value>MZ</value></numIndex>
+                                <numIndex index="87" type="array"><label>Myanmar (MM)</label><value>MM</value></numIndex>
+                                <numIndex index="88" type="array"><label>Namibia (NA)</label><value>NA</value></numIndex>
+                                <numIndex index="89" type="array"><label>Nepal (NP)</label><value>NP</value></numIndex>
+                                <numIndex index="90" type="array"><label>Netherlands (NL)</label><value>NL</value></numIndex>
+                                <numIndex index="91" type="array"><label>New Zealand (NZ)</label><value>NZ</value></numIndex>
+                                <numIndex index="92" type="array"><label>Nicaragua (NI)</label><value>NI</value></numIndex>
+                                <numIndex index="93" type="array"><label>Nigeria (NG)</label><value>NG</value></numIndex>
+                                <numIndex index="94" type="array"><label>North Korea (KP)</label><value>KP</value></numIndex>
+                                <numIndex index="95" type="array"><label>Norway (NO)</label><value>NO</value></numIndex>
+                                <numIndex index="96" type="array"><label>Oman (OM)</label><value>OM</value></numIndex>
+                                <numIndex index="97" type="array"><label>Pakistan (PK)</label><value>PK</value></numIndex>
+                                <numIndex index="98" type="array"><label>Palestine (PS)</label><value>PS</value></numIndex>
+                                <numIndex index="99" type="array"><label>Panama (PA)</label><value>PA</value></numIndex>
+                                <numIndex index="100" type="array"><label>Paraguay (PY)</label><value>PY</value></numIndex>
+                                <numIndex index="101" type="array"><label>Peru (PE)</label><value>PE</value></numIndex>
+                                <numIndex index="102" type="array"><label>Philippines (PH)</label><value>PH</value></numIndex>
+                                <numIndex index="103" type="array"><label>Poland (PL)</label><value>PL</value></numIndex>
+                                <numIndex index="104" type="array"><label>Portugal (PT)</label><value>PT</value></numIndex>
+                                <numIndex index="105" type="array"><label>Qatar (QA)</label><value>QA</value></numIndex>
+                                <numIndex index="106" type="array"><label>Romania (RO)</label><value>RO</value></numIndex>
+                                <numIndex index="107" type="array"><label>Russia (RU)</label><value>RU</value></numIndex>
+                                <numIndex index="108" type="array"><label>Rwanda (RW)</label><value>RW</value></numIndex>
+                                <numIndex index="109" type="array"><label>Saudi Arabia (SA)</label><value>SA</value></numIndex>
+                                <numIndex index="110" type="array"><label>Senegal (SN)</label><value>SN</value></numIndex>
+                                <numIndex index="111" type="array"><label>Serbia (RS)</label><value>RS</value></numIndex>
+                                <numIndex index="112" type="array"><label>Singapore (SG)</label><value>SG</value></numIndex>
+                                <numIndex index="113" type="array"><label>Slovakia (SK)</label><value>SK</value></numIndex>
+                                <numIndex index="114" type="array"><label>Slovenia (SI)</label><value>SI</value></numIndex>
+                                <numIndex index="115" type="array"><label>South Africa (ZA)</label><value>ZA</value></numIndex>
+                                <numIndex index="116" type="array"><label>South Korea (KR)</label><value>KR</value></numIndex>
+                                <numIndex index="117" type="array"><label>Spain (ES)</label><value>ES</value></numIndex>
+                                <numIndex index="118" type="array"><label>Sri Lanka (LK)</label><value>LK</value></numIndex>
+                                <numIndex index="119" type="array"><label>Sudan (SD)</label><value>SD</value></numIndex>
+                                <numIndex index="120" type="array"><label>Sweden (SE)</label><value>SE</value></numIndex>
+                                <numIndex index="121" type="array"><label>Switzerland (CH)</label><value>CH</value></numIndex>
+                                <numIndex index="122" type="array"><label>Syria (SY)</label><value>SY</value></numIndex>
+                                <numIndex index="123" type="array"><label>Taiwan (TW)</label><value>TW</value></numIndex>
+                                <numIndex index="124" type="array"><label>Tajikistan (TJ)</label><value>TJ</value></numIndex>
+                                <numIndex index="125" type="array"><label>Tanzania (TZ)</label><value>TZ</value></numIndex>
+                                <numIndex index="126" type="array"><label>Thailand (TH)</label><value>TH</value></numIndex>
+                                <numIndex index="127" type="array"><label>Tunisia (TN)</label><value>TN</value></numIndex>
+                                <numIndex index="128" type="array"><label>Turkey (TR)</label><value>TR</value></numIndex>
+                                <numIndex index="129" type="array"><label>Turkmenistan (TM)</label><value>TM</value></numIndex>
+                                <numIndex index="130" type="array"><label>Uganda (UG)</label><value>UG</value></numIndex>
+                                <numIndex index="131" type="array"><label>Ukraine (UA)</label><value>UA</value></numIndex>
+                                <numIndex index="132" type="array"><label>United Arab Emirates (AE)</label><value>AE</value></numIndex>
+                                <numIndex index="133" type="array"><label>United Kingdom (GB)</label><value>GB</value></numIndex>
+                                <numIndex index="134" type="array"><label>United States (US)</label><value>US</value></numIndex>
+                                <numIndex index="135" type="array"><label>Uruguay (UY)</label><value>UY</value></numIndex>
+                                <numIndex index="136" type="array"><label>Uzbekistan (UZ)</label><value>UZ</value></numIndex>
+                                <numIndex index="137" type="array"><label>Venezuela (VE)</label><value>VE</value></numIndex>
+                                <numIndex index="138" type="array"><label>Vietnam (VN)</label><value>VN</value></numIndex>
+                                <numIndex index="139" type="array"><label>Yemen (YE)</label><value>YE</value></numIndex>
+                                <numIndex index="140" type="array"><label>Zambia (ZM)</label><value>ZM</value></numIndex>
+                                <numIndex index="141" type="array"><label>Zimbabwe (ZW)</label><value>ZW</value></numIndex>
+                            </items>
+                        </config>
+                    </field_countries>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
 </T3DataStructure>

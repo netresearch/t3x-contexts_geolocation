@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guides
+    xmlns="https://www.phpdoc.org/guides"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://www.phpdoc.org/guides ../vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
+    theme="typo3docs"
+>
+    <project title="Contexts: Geolocation"
+             version="2.0"
+             release="2.0.0"
+             copyright="Netresearch DTT GmbH"
+    />
+
+    <extension
+        class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+        edit-on-github="netresearch/t3x-contexts_geolocation"
+        edit-on-github-branch="main"
+        project-home="https://github.com/netresearch/t3x-contexts_geolocation"
+        project-contact="https://github.com/netresearch/t3x-contexts_geolocation/issues"
+        project-repository="https://github.com/netresearch/t3x-contexts_geolocation"
+        project-issues="https://github.com/netresearch/t3x-contexts_geolocation/issues"
+        report-issue="https://github.com/netresearch/t3x-contexts_geolocation/issues"
+    />
+
+    <inventory id="t3coreapi"
+               url="https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/"
+    />
+    <inventory id="t3tsconfig"
+               url="https://docs.typo3.org/m/typo3/reference-tsconfig/main/en-us/"
+    />
+    <inventory id="t3tsref"
+               url="https://docs.typo3.org/m/typo3/reference-typoscript/main/en-us/"
+    />
+</guides>

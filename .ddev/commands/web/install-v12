@@ -1,0 +1,93 @@
+#!/bin/bash
+
+## Description: Install TYPO3 v12 with contexts and contexts_geolocation extensions
+## Usage: install-v12
+## Example: ddev install-v12
+
+set -e
+
+TYPO3_VERSION="^12.4"
+INSTALL_DIR="/var/www/html/v12"
+EXTENSION_DIR="/var/www/html"
+SITE_IDENTIFIER="contexts-geolocation"
+SITE_BASE="https://v12.contexts-geolocation.ddev.site/"
+
+echo "=== Installing TYPO3 ${TYPO3_VERSION} with Contexts Geolocation ==="
+
+# Check if already installed
+if [ -f "${INSTALL_DIR}/composer.json" ] && [ -d "${INSTALL_DIR}/vendor" ]; then
+    echo "TYPO3 v12 already installed. Use 'ddev composer update' in v12 directory to update."
+    exit 0
+fi
+
+# Clean up existing directory
+if [ -d "${INSTALL_DIR}" ]; then
+    rm -rf "${INSTALL_DIR}"/* "${INSTALL_DIR}"/.[!.]* 2>/dev/null || true
+fi
+
+# Create TYPO3 project
+echo "Creating TYPO3 ${TYPO3_VERSION} project..."
+TEMP_DIR="/tmp/typo3-v12-install-$$"
+composer create-project "typo3/cms-base-distribution:${TYPO3_VERSION}" "${TEMP_DIR}" --no-interaction
+
+mkdir -p "${INSTALL_DIR}"
+cp -a "${TEMP_DIR}"/. "${INSTALL_DIR}/"
+rm -rf "${TEMP_DIR}"
+cd "${INSTALL_DIR}"
+
+# Configure local extension repository
+echo "Configuring local extension repository..."
+composer config repositories.packagist.org false
+composer config repositories.local path "${EXTENSION_DIR}"
+composer config minimum-stability dev
+composer config prefer-stable true
+
+# Install extensions
+echo "Installing contexts_geolocation extension..."
+composer require "netresearch/contexts-geolocation:*" --no-interaction
+composer require "typo3/cms-fluid-styled-content:${TYPO3_VERSION}" --no-interaction
+
+# Re-enable packagist
+composer config repositories.packagist.org composer https://repo.packagist.org
+
+# Create directories
+mkdir -p public/typo3conf public/fileadmin public/uploads var/log var/cache config/system config/sites/${SITE_IDENTIFIER}
+
+# Database setup
+DB_NAME="db_v12"
+mysql -h db -u db -pdb -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
+
+# Create additional configuration
+cat > config/system/additional.php << 'ADDITIONAL_CONFIG'
+<?php
+$GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default'] = [
+    'charset' => 'utf8mb4',
+    'driver' => 'mysqli',
+    'host' => 'db',
+    'port' => 3306,
+    'dbname' => 'db_v12',
+    'user' => 'db',
+    'password' => 'db',
+];
+$GLOBALS['TYPO3_CONF_VARS']['BE']['debug'] = true;
+$GLOBALS['TYPO3_CONF_VARS']['FE']['debug'] = true;
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['devIPmask'] = '*';
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors'] = 1;
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '.*';
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['security.backend.enforceReferrer'] = false;
+$GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '$argon2i$v=19$m=65536,t=16,p=1$QnRJTjVGWjNaN2o4Y1BIMg$EQ0x8K6FUfLIkGv3F5k0t0ncj7pdBoZSEfjEGYlb7TA';
+ADDITIONAL_CONFIG
+
+# Setup TYPO3
+echo "Setting up TYPO3..."
+./vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db_v12 --username=db --password=db --admin-username=admin --admin-user-password=joh316 --admin-email=admin@example.com --project-name="Contexts Geolocation v12" --server-type=apache --no-interaction --force
+
+./vendor/bin/typo3 extension:setup || true
+./vendor/bin/typo3 cache:flush
+
+echo ""
+echo "=== TYPO3 v12 Installation Complete ==="
+echo "Frontend: ${SITE_BASE}"
+echo "Backend:  ${SITE_BASE}typo3"
+echo "Admin:    admin / joh316"
+echo ""

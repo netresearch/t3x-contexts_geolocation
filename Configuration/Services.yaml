@@ -1,0 +1,24 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Netresearch\ContextsGeolocation\:
+    resource: '../Classes/*'
+    exclude:
+      - '../Classes/Domain/Model/*'
+      - '../Classes/Dto/*'
+      - '../Classes/Exception/*'
+
+  # GeoIP Adapter - uses MaxMind GeoIP2 library
+  # Database path can be configured via extension settings
+  Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface:
+    class: Netresearch\ContextsGeolocation\Adapter\MaxMindGeoIp2Adapter
+    arguments:
+      $databasePath: '%env(GEOIP_DATABASE_PATH)%'
+
+  # GeoLocation Service with configurable proxy header trust
+  Netresearch\ContextsGeolocation\Service\GeoLocationService:
+    arguments:
+      $trustProxyHeaders: '%env(bool:GEOIP_TRUST_PROXY_HEADERS)%'

@@ -1,0 +1,45 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "Classes"
+        ],
+        "excludes": [
+            // Exclude interface files (no testable logic)
+            "Adapter/GeoIpAdapterInterface.php",
+            // Exclude exception classes (simple value objects)
+            "Exception"
+        ]
+    },
+    "phpUnit": {
+        "configDir": "Build/phpunit",
+        "customPath": ".Build/bin/phpunit"
+    },
+    "testFramework": "phpunit",
+    "timeout": 30,
+    "threads": 4,
+    "logs": {
+        "text": ".Build/infection/infection.log",
+        "html": ".Build/infection/infection.html",
+        "summary": ".Build/infection/infection-summary.log",
+        "json": ".Build/infection/infection.json"
+    },
+    "mutators": {
+        "@default": true,
+        // Disable mutators that produce false positives in TYPO3 context
+        "LogicalNot": {
+            "ignore": [
+                // Boolean inversions in context match methods
+                "Netresearch\\ContextsGeolocation\\Context\\Type\\*::match"
+            ]
+        },
+        "MethodCallRemoval": {
+            "ignore": [
+                // Ignore logging calls
+                "Netresearch\\ContextsGeolocation\\*::setLogger"
+            ]
+        }
+    },
+    "minMsi": 70,
+    "minCoveredMsi": 80
+}

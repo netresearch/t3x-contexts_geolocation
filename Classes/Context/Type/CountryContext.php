@@ -1,101 +1,87 @@
 <?php
-namespace Netresearch\ContextsGeolocation\Context\Type;
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2013 Netresearch GmbH & Co. KG <typo3.org@netresearch.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
-use \Netresearch\ContextsGeolocation\AbstractAdapter;
-use \Netresearch\ContextsGeolocation\Exception;
 
 /**
- * Checks that the country of the user is one of the configured ones.
+ * This file is part of the package netresearch/contexts-geolocation.
  *
- * @category   TYPO3-Extensions
- * @package    Contexts
- * @subpackage Geolocation
- * @author     Christian Weiske <christian.weiske@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
- * @link       http://github.com/netresearch/contexts_geolocation
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
  */
-class CountryContext
-    extends \Netresearch\Contexts\Context\AbstractContext
+
+declare(strict_types=1);
+
+namespace Netresearch\ContextsGeolocation\Context\Type;
+
+use Netresearch\ContextsGeolocation\Service\GeoLocationService;
+
+/**
+ * Context type that matches based on visitor's country.
+ *
+ * Matches when the visitor's country code (detected via GeoIP) is in the
+ * configured list of country codes. Country codes are ISO 3166-1 alpha-2
+ * format (e.g., DE, US, FR).
+ *
+ * Configuration:
+ * - field_countries: Comma-separated list of country codes
+ *
+ * @author Netresearch DTT GmbH
+ * @link https://www.netresearch.de
+ */
+class CountryContext extends AbstractGeolocationContext
 {
     /**
-     * Check if the context is active now.
-     *
-     * @param array $arDependencies Array of dependent context objects
-     *
-     * @return boolean True if the context is active, false if not
+     * @param array<string, mixed> $arRow Database context row
      */
-    public function match(array $arDependencies = array())
+    public function __construct(array $arRow = [], ?GeoLocationService $geoLocationService = null)
     {
-        list($bUseMatch, $bMatch) = $this->getMatchFromSession();
-        if ($bUseMatch) {
-            return $this->invert($bMatch);
-        }
-
-        return $this->invert($this->storeInSession(
-            $this->matchCountries()
-        ));
+        parent::__construct($arRow, $geoLocationService);
     }
 
     /**
-     * Detects the current country and matches it against the list
-     * of allowed countries
+     * Check if the context matches the current request.
      *
-     * @return boolean True if the user's country is in the list of
-     *                 allowed countries, false if not
+     * @param array<int|string, mixed> $arDependencies Array of dependent context objects
+     * @return bool True if the visitor's country is in the configured list
      */
-    public function matchCountries()
+    public function match(array $arDependencies = []): bool
     {
-        try {
-            $strCountries = trim($this->getConfValue('field_countries'));
-
-            if ($strCountries == '') {
-                //nothing configured? no match.
-                return false;
-            }
-
-            $geoip = AbstractAdapter
-                ::getInstance(
-                    $this->getRemoteAddress()
-                );
-
-            $arCountries = explode(',', $strCountries);
-            $strCountry  = $geoip->getCountryCode(true);
-
-            if (($strCountry === false)
-                && in_array('*unknown*', $arCountries)
-            ) {
-                return true;
-            }
-            if (($strCountry !== false)
-                && in_array($strCountry, $arCountries)
-            ) {
-                return true;
-            }
-        } catch (Exception $exception) {
+        // Check session cache first
+        [$bUseSession, $bMatch] = $this->getMatchFromSession();
+        if ($bUseSession) {
+            return $this->invert((bool) $bMatch);
         }
 
-        return false;
+        // Get configured countries
+        $configuredCountries = $this->parseCommaSeparatedList(
+            $this->getConfValue('field_countries'),
+        );
+
+        if ($configuredCountries === []) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        // Get client IP
+        $clientIp = $this->getClientIpAddress();
+
+        if ($clientIp === null) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        // Skip private IPs
+        if ($this->isPrivateIp($clientIp)) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        // Get country code from GeoIP
+        $countryCode = $this->geoLocationService->getLocationForIp($clientIp)?->countryCode;
+
+        if ($countryCode === null) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        // Check if visitor's country is in the configured list
+        $visitorCountry = strtoupper($countryCode);
+        $bMatch = in_array($visitorCountry, $configuredCountries, true);
+
+        return $this->storeInSession($this->invert($bMatch));
     }
 }
-?>

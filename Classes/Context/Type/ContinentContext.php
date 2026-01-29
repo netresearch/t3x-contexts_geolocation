@@ -1,102 +1,112 @@
 <?php
-namespace Netresearch\ContextsGeolocation\Context\Type;
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2013 Netresearch GmbH & Co. KG <typo3.org@netresearch.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
-use \Netresearch\ContextsGeolocation\AbstractAdapter;
-use \Netresearch\ContextsGeolocation\Exception;
 
 /**
- * Checks that the continent of the user is one of the configured ones.
+ * This file is part of the package netresearch/contexts-geolocation.
  *
- * @category   TYPO3-Extensions
- * @package    Contexts
- * @subpackage Geolocation
- * @author     Christian Weiske <christian.weiske@netresearch.de>
- * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
- * @link       http://github.com/netresearch/contexts_geolocation
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
  */
-class ContinentContext
-    extends \Netresearch\Contexts\Context\AbstractContext
+
+declare(strict_types=1);
+
+namespace Netresearch\ContextsGeolocation\Context\Type;
+
+use Netresearch\ContextsGeolocation\Service\GeoLocationService;
+
+/**
+ * Context type that matches based on visitor's continent.
+ *
+ * Matches when the visitor's continent code (detected via GeoIP) is in the
+ * configured list of continent codes.
+ *
+ * Valid continent codes:
+ * - AF: Africa
+ * - AN: Antarctica
+ * - AS: Asia
+ * - EU: Europe
+ * - NA: North America
+ * - OC: Oceania
+ * - SA: South America
+ *
+ * Configuration:
+ * - field_continents: Comma-separated list of continent codes
+ *
+ * @author Netresearch DTT GmbH
+ * @link https://www.netresearch.de
+ */
+class ContinentContext extends AbstractGeolocationContext
 {
     /**
-     * Check if the context is active now.
+     * Valid continent codes.
      *
-     * @param array $arDependencies Array of dependent context objects
-     *
-     * @return boolean True if the context is active, false if not
+     * @var string[]
      */
-    public function match(array $arDependencies = array())
-    {
-        list($bUseMatch, $bMatch) = $this->getMatchFromSession();
-        if ($bUseMatch) {
-            return $this->invert($bMatch);
-        }
+    private const VALID_CONTINENT_CODES = ['AF', 'AN', 'AS', 'EU', 'NA', 'OC', 'SA'];
 
-        return $this->invert($this->storeInSession(
-            $this->matchContinents()
-        ));
+    /**
+     * @param array<string, mixed> $arRow Database context row
+     */
+    public function __construct(array $arRow = [], ?GeoLocationService $geoLocationService = null)
+    {
+        parent::__construct($arRow, $geoLocationService);
     }
 
     /**
-     * Detects the current continent and matches it against the list
-     * of allowed continents
+     * Check if the context matches the current request.
      *
-     * @return boolean True if the user's continent is in the list of
-     *                 allowed continents, false if not
+     * @param array<int|string, mixed> $arDependencies Array of dependent context objects
+     * @return bool True if the visitor's continent is in the configured list
      */
-    public function matchContinents()
+    public function match(array $arDependencies = []): bool
     {
-        try {
-            $strContinents = trim($this->getConfValue('field_continents'));
-
-            if ($strContinents == '') {
-                //nothing configured? no match.
-                return false;
-            }
-
-            $geoip = AbstractAdapter
-                ::getInstance(
-                    $this->getRemoteAddress()
-                );
-
-            $arContinents = explode(',', $strContinents);
-            $strContinent = $geoip->getContinentCode();
-
-            if (($strContinent === false)
-                && in_array('*unknown*', $arContinents)
-            ) {
-                return true;
-            }
-
-            if (($strContinent !== false)
-                && in_array($strContinent, $arContinents)
-            ) {
-                return true;
-            }
-        } catch (Exception $exception) {
+        // Check session cache first
+        [$bUseSession, $bMatch] = $this->getMatchFromSession();
+        if ($bUseSession) {
+            return $this->invert((bool) $bMatch);
         }
 
-        return false;
+        // Get configured continents
+        $configuredContinents = $this->parseCommaSeparatedList(
+            $this->getConfValue('field_continents'),
+        );
+
+        if ($configuredContinents === []) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        // Get client IP
+        $clientIp = $this->getClientIpAddress();
+
+        if ($clientIp === null) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        // Skip private IPs
+        if ($this->isPrivateIp($clientIp)) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        // Get continent code from GeoIP
+        $continentCode = $this->geoLocationService->getLocationForIp($clientIp)?->continentCode;
+
+        if ($continentCode === null) {
+            return $this->storeInSession($this->invert(false));
+        }
+
+        // Check if visitor's continent is in the configured list
+        $visitorContinent = strtoupper($continentCode);
+        $bMatch = in_array($visitorContinent, $configuredContinents, true);
+
+        return $this->storeInSession($this->invert($bMatch));
+    }
+
+    /**
+     * Get valid continent codes.
+     *
+     * @return array<int, string>
+     */
+    public static function getValidContinentCodes(): array
+    {
+        return self::VALID_CONTINENT_CODES;
     }
 }
-?>
