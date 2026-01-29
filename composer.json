@@ -36,7 +36,6 @@
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpunit/phpunit": "^10.5 || ^11.0 || ^12.0",
         "rector/rector": "^2.3",
-        "saschaegerer/phpstan-typo3": "^2.0",
         "ssch/typo3-rector": "^3.11",
         "typo3/testing-framework": "^8.2 || ^9.0"
     },

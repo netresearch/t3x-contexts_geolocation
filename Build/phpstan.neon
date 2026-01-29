@@ -2,7 +2,6 @@ includes:
     - ../.Build/vendor/phpstan/phpstan-strict-rules/rules.neon
     - ../.Build/vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - ../.Build/vendor/phpstan/phpstan-phpunit/extension.neon
-    - ../.Build/vendor/saschaegerer/phpstan-typo3/extension.neon
     - phpat.neon
 
 parameters:
