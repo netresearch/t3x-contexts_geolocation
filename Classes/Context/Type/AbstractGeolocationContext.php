@@ -14,6 +14,7 @@ namespace Netresearch\ContextsGeolocation\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -53,7 +54,7 @@ abstract class AbstractGeolocationContext extends AbstractContext
                 $service = $container->get(GeoLocationService::class);
                 \assert($service instanceof GeoLocationService);
                 $this->geoLocationService = $service;
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 // DI container not available or not properly initialized
                 // This can happen during functional tests when Container::matchAll()
                 // instantiates context types before the DI container is fully warmed up
