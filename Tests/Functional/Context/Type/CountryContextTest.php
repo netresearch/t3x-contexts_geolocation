@@ -82,9 +82,11 @@ final class CountryContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
+        // initMatching() would filter out contexts that return false from match()
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         // UID 1 is "Germany Country Context" from fixture
         $context = Container::get()->find(1);
@@ -104,9 +106,10 @@ final class CountryContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find('germany');
 
@@ -123,9 +126,10 @@ final class CountryContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         // Check that multiple contexts are loaded from fixtures
         $germany = Container::get()->find('germany');
@@ -150,9 +154,10 @@ final class CountryContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         // UID 4 is disabled in fixture
         $context = Container::get()->find(4);
@@ -169,9 +174,10 @@ final class CountryContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find(1);
 

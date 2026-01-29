@@ -82,9 +82,10 @@ final class DistanceContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         // UID 7 is "Leipzig Distance Context" from fixture
         $context = Container::get()->find(7);
@@ -104,9 +105,10 @@ final class DistanceContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find('leipzig');
 
@@ -123,9 +125,10 @@ final class DistanceContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find(7);
 
@@ -404,7 +407,7 @@ final class DistanceContextTest extends FunctionalTestCase
         $context = new DistanceContext($row, $service);
 
         // Test known distances
-        // Leipzig to Berlin: approximately 165km
+        // Leipzig to Berlin: approximately 149km (verified with haversine formula)
         $leipzigToBerlin = $context->calculateHaversineDistance(
             51.3397,
             12.3731,
@@ -412,8 +415,8 @@ final class DistanceContextTest extends FunctionalTestCase
             13.405,
         );
 
-        self::assertGreaterThan(160.0, $leipzigToBerlin);
-        self::assertLessThan(170.0, $leipzigToBerlin);
+        self::assertGreaterThan(145.0, $leipzigToBerlin);
+        self::assertLessThan(155.0, $leipzigToBerlin);
 
         // Same point should be 0km
         $samePoint = $context->calculateHaversineDistance(

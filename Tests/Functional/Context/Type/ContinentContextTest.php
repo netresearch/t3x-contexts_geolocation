@@ -82,9 +82,10 @@ final class ContinentContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         // UID 5 is "Europe Continent Context" from fixture
         $context = Container::get()->find(5);
@@ -104,9 +105,10 @@ final class ContinentContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find('europe');
 
@@ -123,9 +125,10 @@ final class ContinentContextTest extends FunctionalTestCase
         $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find(5);
 
