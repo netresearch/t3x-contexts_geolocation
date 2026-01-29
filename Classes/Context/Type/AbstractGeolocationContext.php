@@ -14,6 +14,7 @@ namespace Netresearch\ContextsGeolocation\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Abstract base class for geolocation context types.
@@ -24,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 abstract class AbstractGeolocationContext extends AbstractContext
 {
-    protected GeoLocationService $geoLocationService;
+    protected ?GeoLocationService $geoLocationService = null;
 
     /**
      * @param array<string, mixed> $arRow Database context row
@@ -32,10 +33,22 @@ abstract class AbstractGeolocationContext extends AbstractContext
     public function __construct(array $arRow = [], ?GeoLocationService $geoLocationService = null)
     {
         parent::__construct($arRow);
+        $this->geoLocationService = $geoLocationService;
+    }
 
-        if ($geoLocationService !== null) {
-            $this->geoLocationService = $geoLocationService;
+    /**
+     * Get the GeoLocationService instance.
+     *
+     * Uses lazy initialization to support context creation by the Container
+     * which doesn't use TYPO3's DI container.
+     */
+    protected function getGeoLocationService(): GeoLocationService
+    {
+        if ($this->geoLocationService === null) {
+            $this->geoLocationService = GeneralUtility::makeInstance(GeoLocationService::class);
         }
+
+        return $this->geoLocationService;
     }
 
     /**
@@ -59,7 +72,7 @@ abstract class AbstractGeolocationContext extends AbstractContext
             return null;
         }
 
-        return $this->geoLocationService->getClientIpAddress($request);
+        return $this->getGeoLocationService()->getClientIpAddress($request);
     }
 
     /**
@@ -67,7 +80,7 @@ abstract class AbstractGeolocationContext extends AbstractContext
      */
     protected function isPrivateIp(string $ip): bool
     {
-        return $this->geoLocationService->isPrivateIp($ip);
+        return $this->getGeoLocationService()->isPrivateIp($ip);
     }
 
     /**

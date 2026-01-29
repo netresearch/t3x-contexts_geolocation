@@ -97,7 +97,7 @@ class ContinentContext extends AbstractGeolocationContext
         }
 
         // Get continent code from GeoIP
-        $continentCode = $this->geoLocationService->getLocationForIp($clientIp)?->continentCode;
+        $continentCode = $this->getGeoLocationService()->getLocationForIp($clientIp)?->continentCode;
 
         if ($continentCode === null) {
             return $this->storeInSession($this->invert(false));

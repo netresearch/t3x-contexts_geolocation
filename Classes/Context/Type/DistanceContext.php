@@ -80,7 +80,7 @@ class DistanceContext extends AbstractGeolocationContext
         }
 
         // Get visitor coordinates from GeoIP
-        $location = $this->geoLocationService->getLocationForIp($clientIp);
+        $location = $this->getGeoLocationService()->getLocationForIp($clientIp);
 
         if ($location === null || !$location->hasCoordinates()) {
             return $this->storeInSession($this->invert(false));
