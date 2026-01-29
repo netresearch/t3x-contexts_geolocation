@@ -55,7 +55,7 @@ final class GeoLocationServiceTest extends TestCase
         yield 'Google DNS' => ['8.8.8.8'];
         yield 'Cloudflare DNS' => ['1.1.1.1'];
         yield 'Public IPv4' => ['203.0.113.50'];
-        yield 'Public IPv6' => ['2001:db8::1'];
+        yield 'Public IPv6' => ['2001:4860:4860::8888']; // Google Public DNS
     }
 
     #[Test]
