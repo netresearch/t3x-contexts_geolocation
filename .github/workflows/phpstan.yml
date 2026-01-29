@@ -2,9 +2,9 @@ name: PHPStan
 
 on:
   push:
-    branches: [master, main, feature-v13-rewrite]
+    branches: [main]
   pull_request:
-    branches: [master, main, feature-v13-rewrite]
+    branches: [main]
 
 permissions:
   contents: read

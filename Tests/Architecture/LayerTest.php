@@ -70,8 +70,8 @@ final class LayerTest
             )
             ->shouldImplement()
             ->classes(
-                Selector::classname('Netresearch\ContextsGeolocation\Adapter\AdapterInterface')
+                Selector::classname('Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface')
             )
-            ->because('All adapters should implement AdapterInterface');
+            ->because('All adapters should implement GeoIpAdapterInterface');
     }
 }
