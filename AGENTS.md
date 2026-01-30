@@ -50,8 +50,9 @@ https://v13.contexts-geolocation.ddev.site/typo3/    # TYPO3 v13 backend
 |----------|---------|---------|
 | `ci.yml` | push/PR | Full test suite (unit, functional, lint, phpstan) |
 | `phpstan.yml` | push/PR | Static analysis |
-| `phpcs.yml` | push/PR | Code style |
 | `security.yml` | schedule | Dependency vulnerability scan |
+| `scorecard.yml` | push to main, weekly | OpenSSF Scorecard security analysis |
+| `slsa-provenance.yml` | release | SLSA Level 3 provenance attestation |
 | `publish-to-ter.yml` | tag | Publish to TYPO3 Extension Repository |
 
 ## Project Structure (Target)

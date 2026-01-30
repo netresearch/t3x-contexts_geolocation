@@ -1,0 +1,63 @@
+# SLSA Level 3 Provenance - Supply chain security attestation
+# https://slsa.dev/spec/v1.0/levels
+name: SLSA Provenance
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and hash
+    runs-on: ubuntu-latest
+    outputs:
+      hash: ${{ steps.hash.outputs.base64 }}
+      tag: ${{ steps.tag.outputs.name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Get tag name
+        id: tag
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          echo "name=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Create source archive
+        env:
+          TAG_NAME: ${{ steps.tag.outputs.name }}
+        run: |
+          git archive --format=tar.gz --prefix="contexts_geolocation-${TAG_NAME}/" \
+            -o "contexts_geolocation-${TAG_NAME}.tar.gz" HEAD
+
+      - name: Generate subject hash
+        id: hash
+        env:
+          TAG_NAME: ${{ steps.tag.outputs.name }}
+        run: |
+          HASH=$(sha256sum "contexts_geolocation-${TAG_NAME}.tar.gz" | base64 -w0)
+          echo "base64=$HASH" >> $GITHUB_OUTPUT
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: source-archive
+          path: contexts_geolocation-${{ steps.tag.outputs.name }}.tar.gz
+          retention-days: 5
+
+  provenance:
+    needs: build
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
+    with:
+      base64-subjects: ${{ needs.build.outputs.hash }}
+      upload-assets: true
+      compile-generator: true
+      private-repository: true
