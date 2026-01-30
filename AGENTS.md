@@ -41,7 +41,7 @@ ddev install-all          # Install TYPO3 v12, v13
 https://v12.contexts-geolocation.ddev.site/typo3/    # TYPO3 v12 backend
 https://v13.contexts-geolocation.ddev.site/typo3/    # TYPO3 v13 backend
 
-# Credentials: admin / Password:joh316
+# Credentials: admin / Password:joh316!
 ```
 
 ## CI Workflows
