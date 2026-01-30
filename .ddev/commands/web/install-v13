@@ -35,20 +35,20 @@ cp -a "${TEMP_DIR}"/. "${INSTALL_DIR}/"
 rm -rf "${TEMP_DIR}"
 cd "${INSTALL_DIR}"
 
-# Configure local extension repository
+# Remove platform config to allow PHP 8.2+ requirement
+echo "Removing platform PHP override..."
+composer config --unset platform.php
+
+# Configure local extension repository (keep packagist for dependencies)
 echo "Configuring local extension repository..."
-composer config repositories.packagist.org false
 composer config repositories.local path "${EXTENSION_DIR}"
 composer config minimum-stability dev
 composer config prefer-stable true
 
-# Install extensions (geolocation requires contexts)
+# Install extensions (packagist needed for geoip2/geoip2 dependency)
 echo "Installing contexts_geolocation extension..."
 composer require "netresearch/contexts-geolocation:*" --no-interaction
 composer require "typo3/cms-fluid-styled-content:${TYPO3_VERSION}" --no-interaction
-
-# Re-enable packagist
-composer config repositories.packagist.org composer https://repo.packagist.org
 
 # Create directories
 mkdir -p public/typo3conf public/fileadmin public/uploads var/log var/cache config/system config/sites/${SITE_IDENTIFIER}
