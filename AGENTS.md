@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-30 -->
 
 # AGENTS.md
 
@@ -66,7 +66,7 @@ Classes/                       # PHP source code
 │   ├── ContinentContext.php
 │   └── DistanceContext.php
 ├── Service/                   # Business logic services
-│   └── GeoIpService.php
+│   └── GeoLocationService.php
 ├── Exception/                 # Custom exceptions
 │   └── GeoIpException.php
 └── Dto/                       # Value objects for geolocation data

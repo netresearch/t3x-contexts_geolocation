@@ -19,6 +19,9 @@ services:
       $databasePath: '%env(GEOIP_DATABASE_PATH)%'
 
   # GeoLocation Service with configurable proxy header trust
+  # Public: true allows context types to retrieve service from container
+  # when instantiated by the contexts extension's Container class
   Netresearch\ContextsGeolocation\Service\GeoLocationService:
+    public: true
     arguments:
       $trustProxyHeaders: '%env(bool:GEOIP_TRUST_PROXY_HEADERS)%'

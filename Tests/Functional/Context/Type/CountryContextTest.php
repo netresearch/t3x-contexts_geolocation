@@ -18,6 +18,7 @@ use Netresearch\ContextsGeolocation\Dto\GeoLocation;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -78,16 +79,14 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
+        // initMatching() would filter out contexts that return false from match()
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         // UID 1 is "Germany Country Context" from fixture
         $context = Container::get()->find(1);
@@ -104,16 +103,13 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find('germany');
 
@@ -127,16 +123,13 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         // Check that multiple contexts are loaded from fixtures
         $germany = Container::get()->find('germany');
@@ -158,16 +151,13 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         // UID 4 is disabled in fixture
         $context = Container::get()->find(4);
@@ -181,16 +171,13 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find(1);
 
@@ -228,11 +215,7 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -271,11 +254,7 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -314,11 +293,7 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Normal match would be true (GB in GB), but inverted should be false
@@ -358,11 +333,7 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -399,16 +370,28 @@ final class CountryContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '192.168.1.1'; // Private IP
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '192.168.1.1'],
-        );
+        $request = $this->createFrontendRequest('192.168.1.1');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
             $context->match(),
             'Country context should not match for private IP addresses',
         );
+    }
+
+    /**
+     * Create a ServerRequest configured for frontend mode.
+     *
+     * @param array<string, string> $serverParams
+     */
+    protected function createFrontendRequest(string $remoteAddr = '8.8.8.8', array $serverParams = []): ServerRequest
+    {
+        $serverParams['REMOTE_ADDR'] = $remoteAddr;
+
+        return (new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: $serverParams,
+        ))->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE);
     }
 }

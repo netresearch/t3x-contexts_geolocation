@@ -1,4 +1,4 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-28 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-30 -->
 
 # AGENTS.md - Classes/
 
@@ -52,7 +52,7 @@ Prefer constructor injection via `Services.yaml`:
 
 ```php
 public function __construct(
-    private readonly GeoIpService $geoIpService,
+    private readonly GeoLocationService $geoIpService,
 ) {}
 ```
 
@@ -196,12 +196,12 @@ declare(strict_types=1);
 namespace Netresearch\ContextsGeolocation\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
-use Netresearch\ContextsGeolocation\Service\GeoIpService;
+use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 
 final class CountryContext extends AbstractContext
 {
     public function __construct(
-        private readonly GeoIpService $geoIpService,
+        private readonly GeoLocationService $geoIpService,
     ) {}
 
     public function match(array $arDependencies = []): bool
@@ -249,7 +249,7 @@ declare(strict_types=1);
 namespace Netresearch\ContextsGeolocation\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
-use Netresearch\ContextsGeolocation\Service\GeoIpService;
+use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 
 final class ContinentContext extends AbstractContext
 {
@@ -257,7 +257,7 @@ final class ContinentContext extends AbstractContext
     // EU (Europe), NA (North America), OC (Oceania), SA (South America)
 
     public function __construct(
-        private readonly GeoIpService $geoIpService,
+        private readonly GeoLocationService $geoIpService,
     ) {}
 
     public function match(array $arDependencies = []): bool
@@ -300,14 +300,14 @@ declare(strict_types=1);
 namespace Netresearch\ContextsGeolocation\Context\Type;
 
 use Netresearch\Contexts\Context\AbstractContext;
-use Netresearch\ContextsGeolocation\Service\GeoIpService;
+use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 
 final class DistanceContext extends AbstractContext
 {
     private const EARTH_RADIUS_KM = 6371.0;
 
     public function __construct(
-        private readonly GeoIpService $geoIpService,
+        private readonly GeoLocationService $geoIpService,
     ) {}
 
     public function match(array $arDependencies = []): bool
@@ -388,7 +388,7 @@ use Netresearch\ContextsGeolocation\Dto\GeoLocation;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
 
-final class GeoIpService
+final class GeoLocationService
 {
     public function __construct(
         private readonly GeoIpAdapterInterface $adapter,

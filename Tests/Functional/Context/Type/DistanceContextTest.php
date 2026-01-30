@@ -18,6 +18,7 @@ use Netresearch\ContextsGeolocation\Dto\GeoLocation;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -78,16 +79,13 @@ final class DistanceContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         // UID 7 is "Leipzig Distance Context" from fixture
         $context = Container::get()->find(7);
@@ -104,16 +102,13 @@ final class DistanceContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find('leipzig');
 
@@ -127,16 +122,13 @@ final class DistanceContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
+        // Use initAll() to load all contexts without matching filter
         Container::get()
             ->setRequest($request)
-            ->initMatching();
+            ->initAll();
 
         $context = Container::get()->find(7);
 
@@ -179,11 +171,7 @@ final class DistanceContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -227,11 +215,7 @@ final class DistanceContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -274,11 +258,7 @@ final class DistanceContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -315,11 +295,7 @@ final class DistanceContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '172.16.0.1'; // Private IP
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '172.16.0.1'],
-        );
+        $request = $this->createFrontendRequest('172.16.0.1');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -360,11 +336,7 @@ final class DistanceContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -402,11 +374,7 @@ final class DistanceContextTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = new ServerRequest(
-            uri: 'http://localhost/',
-            method: 'GET',
-            serverParams: ['REMOTE_ADDR' => '8.8.8.8'],
-        );
+        $request = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -439,7 +407,7 @@ final class DistanceContextTest extends FunctionalTestCase
         $context = new DistanceContext($row, $service);
 
         // Test known distances
-        // Leipzig to Berlin: approximately 165km
+        // Leipzig to Berlin: approximately 149km (verified with haversine formula)
         $leipzigToBerlin = $context->calculateHaversineDistance(
             51.3397,
             12.3731,
@@ -447,8 +415,8 @@ final class DistanceContextTest extends FunctionalTestCase
             13.405,
         );
 
-        self::assertGreaterThan(160.0, $leipzigToBerlin);
-        self::assertLessThan(170.0, $leipzigToBerlin);
+        self::assertGreaterThan(145.0, $leipzigToBerlin);
+        self::assertLessThan(155.0, $leipzigToBerlin);
 
         // Same point should be 0km
         $samePoint = $context->calculateHaversineDistance(
@@ -459,5 +427,21 @@ final class DistanceContextTest extends FunctionalTestCase
         );
 
         self::assertEqualsWithDelta(0.0, $samePoint, 0.001);
+    }
+
+    /**
+     * Create a ServerRequest configured for frontend mode.
+     *
+     * @param array<string, string> $serverParams
+     */
+    protected function createFrontendRequest(string $remoteAddr = '8.8.8.8', array $serverParams = []): ServerRequest
+    {
+        $serverParams['REMOTE_ADDR'] = $remoteAddr;
+
+        return (new ServerRequest(
+            uri: 'http://localhost/',
+            method: 'GET',
+            serverParams: $serverParams,
+        ))->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE);
     }
 }

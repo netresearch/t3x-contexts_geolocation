@@ -14,6 +14,8 @@ namespace Netresearch\ContextsGeolocation\Context\Type;
 use Netresearch\Contexts\Context\AbstractContext;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Abstract base class for geolocation context types.
@@ -24,7 +26,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 abstract class AbstractGeolocationContext extends AbstractContext
 {
-    protected GeoLocationService $geoLocationService;
+    protected ?GeoLocationService $geoLocationService = null;
 
     /**
      * @param array<string, mixed> $arRow Database context row
@@ -32,10 +34,35 @@ abstract class AbstractGeolocationContext extends AbstractContext
     public function __construct(array $arRow = [], ?GeoLocationService $geoLocationService = null)
     {
         parent::__construct($arRow);
+        $this->geoLocationService = $geoLocationService;
+    }
 
-        if ($geoLocationService !== null) {
-            $this->geoLocationService = $geoLocationService;
+    /**
+     * Get the GeoLocationService instance.
+     *
+     * Uses lazy initialization to support context creation by the Container
+     * which doesn't use TYPO3's DI container.
+     *
+     * @return GeoLocationService|null Service instance or null if DI container is not available
+     */
+    protected function getGeoLocationService(): ?GeoLocationService
+    {
+        if ($this->geoLocationService === null) {
+            try {
+                // Use the DI container to get the properly configured service
+                $container = GeneralUtility::getContainer();
+                $service = $container->get(GeoLocationService::class);
+                \assert($service instanceof GeoLocationService);
+                $this->geoLocationService = $service;
+            } catch (Throwable) {
+                // DI container not available or not properly initialized
+                // This can happen during functional tests when Container::matchAll()
+                // instantiates context types before the DI container is fully warmed up
+                return null;
+            }
         }
+
+        return $this->geoLocationService;
     }
 
     /**
@@ -59,7 +86,12 @@ abstract class AbstractGeolocationContext extends AbstractContext
             return null;
         }
 
-        return $this->geoLocationService->getClientIpAddress($request);
+        $service = $this->getGeoLocationService();
+        if ($service === null) {
+            return null;
+        }
+
+        return $service->getClientIpAddress($request);
     }
 
     /**
@@ -67,7 +99,13 @@ abstract class AbstractGeolocationContext extends AbstractContext
      */
     protected function isPrivateIp(string $ip): bool
     {
-        return $this->geoLocationService->isPrivateIp($ip);
+        $service = $this->getGeoLocationService();
+        if ($service === null) {
+            // If service unavailable, treat as private to avoid false positives
+            return true;
+        }
+
+        return $service->isPrivateIp($ip);
     }
 
     /**
