@@ -5,6 +5,12 @@
 [![PHP](https://img.shields.io/badge/PHP-8.2+-blue.svg?style=flat-square)](https://php.net/)
 [![License](https://img.shields.io/badge/License-AGPL--3.0--or--later-green.svg?style=flat-square)](LICENSE)
 
+[![CI](https://img.shields.io/github/actions/workflow/status/netresearch/t3x-contexts_geolocation/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/netresearch/t3x-contexts_geolocation/actions/workflows/ci.yml)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%2010-brightgreen?style=flat-square)](https://phpstan.org/)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/netresearch/t3x-contexts_geolocation/badge?style=flat-square)](https://scorecard.dev/viewer/?uri=github.com/netresearch/t3x-contexts_geolocation)
+[![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg?style=flat-square)](CODE_OF_CONDUCT.md)
+
 Geolocation-based context types for TYPO3. Show pages and content elements for
 visitors in specific countries, continents, or within a defined geographic area.
 
