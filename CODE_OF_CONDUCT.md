@@ -1,54 +1,59 @@
-# Contributor Covenant Code of Conduct
+# Contributor Covenant 3.0 Code of Conduct
 
 ## Our Pledge
 
-We as members, contributors, and leaders pledge to make participation in our
-community a harassment-free experience for everyone, regardless of age, body
-size, visible or invisible disability, ethnicity, sex characteristics, gender
-identity and expression, level of experience, education, socio-economic status,
-nationality, personal appearance, race, religion, or sexual identity
-and orientation.
+We pledge to make our community welcoming, safe, and equitable for all.
 
-## Our Standards
+We are committed to fostering an environment that respects and promotes the dignity, rights, and contributions of all individuals, regardless of characteristics including race, ethnicity, caste, color, age, physical characteristics, neurodiversity, disability, sex or gender, gender identity or expression, sexual orientation, language, philosophy or religion, national or social origin, socio-economic position, level of education, or other status.
 
-Examples of behavior that contributes to a positive environment:
+## Encouraged Behaviors
 
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
+We agree to behave mindfully toward each other and act in ways that center our shared values, including:
 
-Examples of unacceptable behavior:
+1. Respecting the **purpose of our community**, our activities, and our ways of gathering.
+2. Engaging **kindly and honestly** with others.
+3. Respecting **different viewpoints** and experiences.
+4. **Taking responsibility** for our actions and contributions.
+5. Gracefully giving and accepting **constructive feedback**.
+6. Committing to **repairing harm** when it occurs.
+7. Behaving in other ways that promote and sustain the **well-being of our community**.
 
-* The use of sexualized language or imagery and unwelcome sexual attention
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information without explicit permission
-* Other conduct which could reasonably be considered inappropriate
+## Restricted Behaviors
 
-## Enforcement Responsibilities
+We agree to restrict the following behaviors in our community:
 
-Project maintainers are responsible for clarifying and enforcing standards of
-acceptable behavior and will take appropriate and fair corrective action in
-response to any behavior that they deem inappropriate, threatening, offensive,
-or harmful.
+1. **Harassment.** Violating explicitly expressed boundaries or engaging in unnecessary personal attention after any clear request to stop.
+2. **Character attacks.** Making insulting, demeaning, or pejorative comments directed at a community member or group of people.
+3. **Stereotyping or discrimination.** Characterizing anyone's personality or behavior on the basis of immutable identities or traits.
+4. **Sexualization.** Behaving in a way that would generally be considered inappropriately intimate in the context or purpose of the community.
+5. **Violating confidentiality.** Sharing or acting on someone's personal or private information without their permission.
+6. **Endangerment.** Causing, encouraging, or threatening violence or other harm toward any person or group.
+
+## Reporting an Issue
+
+To report a possible violation, contact the project team at **typo3@netresearch.de**.
+
+Reports will be reviewed and investigated promptly while prioritizing safety and confidentiality.
+
+## Addressing and Repairing Harm
+
+If this Code of Conduct has been violated, the following enforcement ladder may be used:
+
+1. **Warning** - A private, written warning from the maintainers.
+2. **Temporarily Limited Activities** - A time-limited cooldown period.
+3. **Temporary Suspension** - A private written warning with conditions for return.
+4. **Permanent Ban** - Access to all community spaces is removed.
 
 ## Scope
 
-This Code of Conduct applies within all project spaces, and also applies when
-an individual is officially representing the project in public spaces.
-
-## Enforcement
-
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project team at typo3@netresearch.de. All complaints will be
-reviewed and investigated promptly and fairly.
+This Code of Conduct applies within all community spaces, and also applies when an individual is officially representing the community in public spaces.
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
-version 2.0, available at
-https://www.contributor-covenant.org/version/2/0/code_of_conduct.html.
+This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 3.0, permanently available at [https://www.contributor-covenant.org/version/3/0/][v3.0].
+
+Contributor Covenant is stewarded by the Organization for Ethical Source and licensed under [CC BY-SA 4.0][cc-by-sa].
 
 [homepage]: https://www.contributor-covenant.org
+[v3.0]: https://www.contributor-covenant.org/version/3/0/
+[cc-by-sa]: https://creativecommons.org/licenses/by-sa/4.0/

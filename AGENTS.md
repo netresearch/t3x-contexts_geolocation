@@ -15,16 +15,15 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 - Conventional Commits: `type(scope): subject`
 - Ask before: heavy dependencies, architecture changes, new context types
 - Never commit secrets, credentials, or PII
-- GrumPHP runs pre-commit checks automatically
 
-## Pre-Commit Checks (GrumPHP)
+## Quality Checks
 
 ```bash
-# Automatic on commit (via GrumPHP):
-composer lint          # PHP_CodeSniffer (PSR-12 + TYPO3 CGL)
+# Code quality (run before committing):
+composer lint          # PHP-CS-Fixer (PSR-12 + TYPO3 CGL)
 composer analyze       # PHPStan level 10
 
-# Manual testing:
+# Testing:
 composer test:unit        # PHPUnit unit tests
 composer test:functional  # PHPUnit functional tests (needs DB)
 composer test:coverage    # Coverage report (needs PCOV/Xdebug)
@@ -50,7 +49,9 @@ https://v13.contexts-geolocation.ddev.site/typo3/    # TYPO3 v13 backend
 |----------|---------|---------|
 | `ci.yml` | push/PR | Full test suite (unit, functional, lint, phpstan) |
 | `phpstan.yml` | push/PR | Static analysis |
-| `security.yml` | schedule | Dependency vulnerability scan |
+| `codeql.yml` | push/PR, weekly | CodeQL security scanning |
+| `dependency-review.yml` | PR | Dependency vulnerability check |
+| `security.yml` | push/PR, weekly | Composer audit, SBOM generation |
 | `scorecard.yml` | push to main, weekly | OpenSSF Scorecard security analysis |
 | `slsa-provenance.yml` | release | SLSA Level 3 provenance attestation |
 | `publish-to-ter.yml` | tag | Publish to TYPO3 Extension Repository |
