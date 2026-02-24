@@ -9,7 +9,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within this extension, please send an email to typo3@netresearch.de.
+If you discover a security vulnerability within this extension, please report via [GitHub Security Advisories](https://github.com/netresearch/t3x-contexts_geolocation/security/advisories/new).
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
