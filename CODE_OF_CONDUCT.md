@@ -31,7 +31,7 @@ We agree to restrict the following behaviors in our community:
 
 ## Reporting an Issue
 
-To report a possible violation, contact the project team at **typo3@netresearch.de**.
+To report a possible violation, contact the project team via [GitHub Issues](https://github.com/netresearch/t3x-contexts_geolocation/issues).
 
 Reports will be reviewed and investigated promptly while prioritizing safety and confidentiality.
 
