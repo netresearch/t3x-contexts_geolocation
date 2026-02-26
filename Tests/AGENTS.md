@@ -16,7 +16,7 @@ Tests/
 
 ```bash
 # Run all tests
-composer test:unit
+composer ci:test:php:unit
 
 # Coverage (requires PCOV or Xdebug)
 composer test:coverage
@@ -45,7 +45,7 @@ self::assertInstanceOf(GeolocationContext::class, $object);
 ## PR/Commit Checklist
 
 - [ ] New functionality has corresponding tests
-- [ ] All tests pass: `composer test:unit`
+- [ ] All tests pass: `composer ci:test:php:unit`
 - [ ] Architecture tests pass with PHPat
 
 ## House Rules

@@ -23,9 +23,9 @@ ddev start && ddev install-v13
 ## Build & Tests
 
 ```bash
-composer lint              # PHP_CodeSniffer
-composer analyze           # PHPStan level 10
-composer test:unit         # Unit tests for this code
+composer ci:test:php:cgl      # PHP-CS-Fixer
+composer ci:test:php:phpstan  # PHPStan level 10
+composer ci:test:php:unit     # Unit tests for this code
 ```
 
 ## Code Style & Conventions
@@ -583,8 +583,8 @@ final class CountryContextFunctionalTest extends FunctionalTestCase
 
 ## PR/Commit Checklist
 
-- [ ] `composer lint` passes
-- [ ] `composer analyze` passes
+- [ ] `composer ci:test:php:cgl` passes
+- [ ] `composer ci:test:php:phpstan` passes
 - [ ] Unit tests added/updated for new functionality
 - [ ] Strict types declared
 - [ ] Return types on all methods

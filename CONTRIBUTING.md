@@ -6,22 +6,22 @@ Thank you for your interest in contributing to the TYPO3 Contexts Geolocation ex
 
 1. Clone the repository
 2. Install dependencies: `composer install`
-3. Run tests: `composer test:unit`
+3. Run tests: `composer ci:test:php:unit`
 
 ## Code Quality
 
 Before submitting changes, ensure:
 
-- **PHPStan passes**: `composer analyze`
-- **Code style is correct**: `composer lint`
-- **Tests pass**: `composer test:unit`
+- **PHPStan passes**: `composer ci:test:php:phpstan`
+- **Code style is correct**: `composer ci:test:php:cgl`
+- **Tests pass**: `composer ci:test:php:unit`
 
-To auto-fix code style issues: `composer lint:fix`
+To auto-fix code style issues: `composer ci:cgl`
 
 ## Testing
 
-- **Unit tests**: `composer test:unit`
-- **Functional tests**: `composer test:functional` (requires database)
+- **Unit tests**: `composer ci:test:php:unit`
+- **Functional tests**: `composer ci:test:php:functional` (requires database)
 - **Coverage report**: `composer test:coverage`
 - **Mutation testing**: `composer test:mutation`
 

@@ -20,13 +20,16 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 
 ```bash
 # Code quality (run before committing):
-composer lint          # PHP-CS-Fixer (PSR-12 + TYPO3 CGL)
-composer analyze       # PHPStan level 10
+composer ci:test:php:cgl      # PHP-CS-Fixer (PSR-12 + TYPO3 CGL)
+composer ci:test:php:phpstan  # PHPStan level 10
 
 # Testing:
-composer test:unit        # PHPUnit unit tests
-composer test:functional  # PHPUnit functional tests (needs DB)
-composer test:coverage    # Coverage report (needs PCOV/Xdebug)
+composer ci:test:php:unit        # PHPUnit unit tests
+composer ci:test:php:functional  # PHPUnit functional tests (needs DB)
+composer test:coverage           # Coverage report (needs PCOV/Xdebug)
+
+# Fix commands (for local development):
+composer ci:cgl               # Fix code style
 ```
 
 ## Development Environment
