@@ -74,7 +74,7 @@
     },
     "scripts": {
         "ci:cgl": ".Build/bin/php-cs-fixer fix",
-        "ci:test:php:cgl": "@ci:cgl -- --dry-run --diff",
+        "ci:test:php:cgl": ".Build/bin/php-cs-fixer fix --dry-run --diff",
         "ci:test:php:functional": ".Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml",
         "ci:test:php:phpstan": ".Build/bin/phpstan analyse -c Build/phpstan.neon",
         "ci:test:php:unit": ".Build/bin/phpunit -c Build/phpunit/UnitTests.xml",
