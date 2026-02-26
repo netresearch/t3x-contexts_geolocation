@@ -16,7 +16,3 @@ jobs:
       functional-test-db: mariadb
       db-image: 'mariadb:11.4'
       run-rector: false
-      cgl-command: 'composer lint'
-      phpstan-command: 'composer analyze'
-      unit-test-command: 'composer test:unit -- --no-coverage'
-      functional-test-command: 'composer test:functional -- --no-coverage'
