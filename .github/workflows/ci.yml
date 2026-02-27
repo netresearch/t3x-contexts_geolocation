@@ -16,3 +16,6 @@ jobs:
       functional-test-db: mysql
       db-image: 'mysql:8.4'
       run-rector: false
+      upload-coverage: true
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
