@@ -1,0 +1,9 @@
+# semgrepignore / opengrepignore — paths excluded from SAST scanning.
+# gitignore-style syntax; opengrep reads this file (fork of semgrep).
+
+# Build cache and vendored dependencies (should never be committed,
+# belt-and-braces in case CI scans these directories).
+.Build/
+Documentation-GENERATED-temp/
+node_modules/
+vendor/

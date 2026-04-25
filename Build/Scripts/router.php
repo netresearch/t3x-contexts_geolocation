@@ -25,6 +25,7 @@
 declare(strict_types=1);
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename - dev-only PHP built-in server router for E2E tests; not exposed to production traffic
 $file = __DIR__ . '/../../.Build/Web' . $path;
 
 // Serve static files directly

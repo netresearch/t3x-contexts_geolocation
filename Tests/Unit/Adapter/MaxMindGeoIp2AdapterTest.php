@@ -32,6 +32,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
 
         // Clean up any temp file created during the test
         if ($this->tempFilePath !== null && file_exists($this->tempFilePath)) {
+            // nosemgrep: php.lang.security.unlink-use.unlink-use - test-owned path (sys_get_temp_dir + uniqid)
             unlink($this->tempFilePath);
             $this->tempFilePath = null;
         }
@@ -64,6 +65,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
             $adapter = new MaxMindGeoIp2Adapter($tempFile);
             self::assertTrue($adapter->isAvailable());
         } finally {
+            // nosemgrep: php.lang.security.unlink-use.unlink-use - test-owned path (sys_get_temp_dir + uniqid)
             unlink($tempFile);
         }
     }
