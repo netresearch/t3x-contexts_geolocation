@@ -1,0 +1,16 @@
+# semgrepignore / opengrepignore — paths excluded from SAST scanning.
+# gitignore-style syntax; opengrep reads this file (fork of semgrep).
+
+# Build cache and vendored dependencies (should never be committed,
+# belt-and-braces in case CI scans these directories).
+.Build/
+Documentation-GENERATED-temp/
+node_modules/
+vendor/
+
+# Dev-only PHP built-in server router for E2E tests; not exposed to
+# production traffic. The `tainted-filename` rule fires on `is_file()` /
+# require with a path derived from REQUEST_URI, but this script is only
+# invoked via `php -S` for local/E2E testing — never from a public web
+# server — so the SSRF/path-traversal threat model does not apply.
+Build/Scripts/router.php

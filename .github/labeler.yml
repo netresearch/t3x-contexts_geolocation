@@ -1,0 +1,58 @@
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Documentation/**'
+          - 'README.md'
+          - 'CONTRIBUTING.md'
+          - 'CHANGELOG.md'
+          - 'ChangeLog'
+          - 'SECURITY.md'
+          - 'CODE_OF_CONDUCT.md'
+          - 'AGENTS.md'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Tests/**'
+          - 'Build/phpunit.xml'
+          - 'Build/FunctionalTests.xml'
+          - 'Build/Scripts/**'
+          - 'infection.json5'
+          - 'phpat.neon'
+
+configuration:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Configuration/**'
+          - 'ext_localconf.php'
+          - 'ext_emconf.php'
+          - 'ext_conf_template.txt'
+          - 'ext_tables.sql'
+          - 'composer.json'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
+          - 'Makefile'
+          - 'phpstan.neon'
+          - 'rector.php'
+          - 'fractor.php'
+          - '.php-cs-fixer.dist.php'
+          - 'codecov.yml'
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Resources/Public/**'
+          - 'Resources/Private/Templates/**'
+          - 'Resources/Private/Language/**'
+
+domain:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Classes/Adapter/**'
+          - 'Classes/Context/**'
+          - 'Classes/Dto/**'
+          - 'Classes/Service/**'
+          - 'Classes/Exception/**'
