@@ -1,0 +1,15 @@
+{
+  "php-versions": [
+    "8.2",
+    "8.3",
+    "8.4",
+    "8.5"
+  ],
+  "typo3-versions": [
+    "^12.4",
+    "^13.4"
+  ],
+  "archive-prefix": "contexts-geolocation",
+  "package-name": "netresearch/contexts-geolocation",
+  "extension-key": "contexts_geolocation"
+}
