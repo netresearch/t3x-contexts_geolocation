@@ -25,7 +25,7 @@
         "typo3/cms-frontend": "^12.4 || ^13.4"
     },
     "require-dev": {
-        "a9f/typo3-fractor": "^0.5.8",
+        "a9f/typo3-fractor": "^1.0.0",
         "friendsofphp/php-cs-fixer": "^3.92",
         "infection/infection": "*",
         "phpat/phpat": "^0.12",
