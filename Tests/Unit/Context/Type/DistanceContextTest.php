@@ -108,7 +108,7 @@ final class DistanceContextTest extends TestCase
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
         $adapter->method('lookup')->with('8.8.8.8')->willReturn(
-            new GeoLocation(latitude: null, longitude: null),
+            new GeoLocation(),
         );
 
         $service = new GeoLocationService($adapter);
@@ -425,13 +425,13 @@ final class DistanceContextTest extends TestCase
         bool $invert = false,
     ): DistanceContext {
         return new class ($latitude, $longitude, $radius, $service, $invert) extends DistanceContext {
-            private string $testLatitude;
+            private readonly string $testLatitude;
 
-            private string $testLongitude;
+            private readonly string $testLongitude;
 
-            private string $testRadius;
+            private readonly string $testRadius;
 
-            private bool $testInvert;
+            private readonly bool $testInvert;
 
             public function __construct(
                 string $latitude,

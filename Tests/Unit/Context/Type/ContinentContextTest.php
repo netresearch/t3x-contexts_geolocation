@@ -99,7 +99,7 @@ final class ContinentContextTest extends TestCase
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
         $adapter->method('lookup')->with('8.8.8.8')->willReturn(
-            new GeoLocation(continentCode: null),
+            new GeoLocation(),
         );
 
         $service = new GeoLocationService($adapter);
@@ -270,9 +270,9 @@ final class ContinentContextTest extends TestCase
         bool $invert = false,
     ): ContinentContext {
         return new class ($continents, $service, $invert) extends ContinentContext {
-            private string $testContinents;
+            private readonly string $testContinents;
 
-            private bool $testInvert;
+            private readonly bool $testInvert;
 
             public function __construct(
                 string $continents,

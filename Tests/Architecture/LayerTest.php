@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace Netresearch\ContextsGeolocation\Tests\Architecture;
 
+use Netresearch\Contexts\Context\AbstractContext;
+use Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface;
 use PHPat\Selector\Selector;
 use PHPat\Test\Builder\Rule;
 use PHPat\Test\PHPat;
@@ -36,7 +38,7 @@ final class LayerTest
             ->classes(Selector::inNamespace('Netresearch\ContextsGeolocation\Context\Type'))
             ->shouldExtend()
             ->classes(
-                Selector::classname('Netresearch\Contexts\Context\AbstractContext'),
+                Selector::classname(AbstractContext::class),
             )
             ->because('All context types should extend AbstractContext from the contexts extension');
     }
@@ -71,11 +73,11 @@ final class LayerTest
         return PHPat::rule()
             ->classes(Selector::inNamespace('Netresearch\ContextsGeolocation\Adapter'))
             ->excluding(
-                Selector::classname('Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface'),
+                Selector::classname(GeoIpAdapterInterface::class),
             )
             ->shouldImplement()
             ->classes(
-                Selector::classname('Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface'),
+                Selector::classname(GeoIpAdapterInterface::class),
             )
             ->because('All adapters should implement GeoIpAdapterInterface');
     }

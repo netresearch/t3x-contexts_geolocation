@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Netresearch\ContextsGeolocation\Context\Type;
 
+use Netresearch\ContextsGeolocation\Dto\GeoLocation;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 
 /**
@@ -86,13 +87,13 @@ class DistanceContext extends AbstractGeolocationContext
 
         // Get visitor coordinates from GeoIP
         $service = $this->getGeoLocationService();
-        if ($service === null) {
+        if (!$service instanceof GeoLocationService) {
             return $this->storeInSession($this->invert(false));
         }
 
         $location = $service->getLocationForIp($clientIp);
 
-        if ($location === null || !$location->hasCoordinates()) {
+        if (!$location instanceof GeoLocation || !$location->hasCoordinates()) {
             return $this->storeInSession($this->invert(false));
         }
 

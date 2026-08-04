@@ -52,7 +52,7 @@ abstract class AbstractGeolocationContext extends AbstractContext
      */
     protected function getGeoLocationService(): ?GeoLocationService
     {
-        if ($this->geoLocationService === null) {
+        if (!$this->geoLocationService instanceof GeoLocationService) {
             try {
                 // Use the DI container to get the properly configured service
                 $container = GeneralUtility::getContainer();
@@ -87,12 +87,12 @@ abstract class AbstractGeolocationContext extends AbstractContext
     {
         $request = $this->getRequest();
 
-        if ($request === null) {
+        if (!$request instanceof ServerRequestInterface) {
             return null;
         }
 
         $service = $this->getGeoLocationService();
-        if ($service === null) {
+        if (!$service instanceof GeoLocationService) {
             return null;
         }
 
@@ -105,7 +105,7 @@ abstract class AbstractGeolocationContext extends AbstractContext
     protected function isPrivateIp(string $ip): bool
     {
         $service = $this->getGeoLocationService();
-        if ($service === null) {
+        if (!$service instanceof GeoLocationService) {
             // If service unavailable, treat as private to avoid false positives
             return true;
         }

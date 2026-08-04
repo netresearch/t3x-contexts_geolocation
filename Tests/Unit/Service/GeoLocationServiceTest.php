@@ -162,11 +162,9 @@ final class GeoLocationServiceTest extends TestCase
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getHeaderLine')
-            ->willReturnCallback(function (string $header): string {
-                return match ($header) {
-                    'X-Forwarded-For' => '1.2.3.4, 5.6.7.8',
-                    default => '',
-                };
+            ->willReturnCallback(fn(string $header): string => match ($header) {
+                'X-Forwarded-For' => '1.2.3.4, 5.6.7.8',
+                default => '',
             });
         $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
 
@@ -184,12 +182,10 @@ final class GeoLocationServiceTest extends TestCase
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getHeaderLine')
-            ->willReturnCallback(function (string $header): string {
-                return match ($header) {
-                    'X-Forwarded-For' => '',
-                    'X-Real-IP' => '9.9.9.9',
-                    default => '',
-                };
+            ->willReturnCallback(fn(string $header): string => match ($header) {
+                'X-Forwarded-For' => '',
+                'X-Real-IP' => '9.9.9.9',
+                default => '',
             });
         $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
 
@@ -206,12 +202,10 @@ final class GeoLocationServiceTest extends TestCase
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getHeaderLine')
-            ->willReturnCallback(function (string $header): string {
-                return match ($header) {
-                    'X-Forwarded-For' => 'invalid-ip',
-                    'X-Real-IP' => 'also-invalid',
-                    default => '',
-                };
+            ->willReturnCallback(fn(string $header): string => match ($header) {
+                'X-Forwarded-For' => 'invalid-ip',
+                'X-Real-IP' => 'also-invalid',
+                default => '',
             });
         $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
 
@@ -232,11 +226,9 @@ final class GeoLocationServiceTest extends TestCase
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getHeaderLine')
-            ->willReturnCallback(function (string $header): string {
-                return match ($header) {
-                    'CF-Connecting-IP' => '1.1.1.1',
-                    default => '',
-                };
+            ->willReturnCallback(fn(string $header): string => match ($header) {
+                'CF-Connecting-IP' => '1.1.1.1',
+                default => '',
             });
         $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
 
