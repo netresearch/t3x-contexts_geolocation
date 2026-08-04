@@ -24,5 +24,11 @@ jobs:
       upload-coverage: true
       functional-test-db: 'mysql'
       db-image: 'mysql:8.4'
+      # netresearch/typo3-ci-workflows requires saschaegerer/phpstan-typo3, whose
+      # every release needs typo3/cms-core ^13.4.3 or ^14.0 — so the meta package
+      # cannot resolve on the ^12.4 legs. It contributes nothing they need: the
+      # phpstan extensions and testing-framework they use are declared in this
+      # repository's own require-dev, and Build/phpstan.neon includes them by path.
+      remove-dev-deps: '[{"dep":"netresearch/typo3-ci-workflows","only-for":"^13.4|^14.3"}]'
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
