@@ -115,7 +115,7 @@ final class CountryContextTest extends TestCase
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
         $adapter->method('lookup')->with('8.8.8.8')->willReturn(
-            new GeoLocation(countryCode: null),
+            new GeoLocation(),
         );
 
         $service = new GeoLocationService($adapter);
@@ -296,9 +296,9 @@ final class CountryContextTest extends TestCase
         bool $invert = false,
     ): CountryContext {
         return new class ($countries, $service, $invert) extends CountryContext {
-            private string $testCountries;
+            private readonly string $testCountries;
 
-            private bool $testInvert;
+            private readonly bool $testInvert;
 
             public function __construct(
                 string $countries,

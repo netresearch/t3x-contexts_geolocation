@@ -16,33 +16,28 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\StaticCall\RemoveParentCallWithoutParentRector;
-use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\Set\ValueObject\LevelSetList;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([
-        __DIR__ . '/Classes',
-        __DIR__ . '/Configuration',
-        __DIR__ . '/Tests',
-    ]);
+$configure = require_once __DIR__ . '/.Build/vendor/netresearch/typo3-ci-workflows/config/rector/rector.php';
 
-    $rectorConfig->skip([
-        __DIR__ . '/ext_emconf.php',
-        __DIR__ . '/.Build',
-        __DIR__ . '/vendor',
-    ]);
+return static function (RectorConfig $rectorConfig) use ($configure): void {
+    // Shared org base config: code-quality sets, rule skips, phpstan-rector.neon
+    $configure($rectorConfig, __DIR__);
 
-    $rectorConfig->phpstanConfig(__DIR__ . '/Build/phpstan.neon');
-    $rectorConfig->importNames();
-    $rectorConfig->removeUnusedImports();
+    // paths() replaces the shared list — re-declared to keep Tests/ in scope,
+    // which the shared $projectRoot default leaves out.
+    $rectorConfig->paths(array_merge(
+        [
+            __DIR__ . '/Classes',
+            __DIR__ . '/Configuration',
+            __DIR__ . '/Resources',
+            __DIR__ . '/Tests',
+        ],
+        glob(__DIR__ . '/ext_*.php') ?: [],
+    ));
 
-    // Define what rule sets will be applied - upgrade to PHP 8.2 and TYPO3 v13
     $rectorConfig->sets([
-        // PHP level upgrades
-        LevelSetList::UP_TO_PHP_82,
-
         // TYPO3 v12 migrations only (extension supports ^12.4 || ^13.4)
         // Note: Don't use UP_TO_TYPO3_13 as it introduces v13-only APIs
         Typo3LevelSetList::UP_TO_TYPO3_12,
@@ -52,11 +47,7 @@ return static function (RectorConfig $rectorConfig): void {
         Typo3SetList::GENERAL,
     ]);
 
-    // Skip some rules that may cause issues or require manual review
     $rectorConfig->skip([
-        // Skip constructor promotion - keep explicit property declarations for clarity
-        ClassPropertyAssignToConstructorPromotionRector::class,
-
         // Skip removing parent calls - may be needed for TYPO3 hooks
         RemoveParentCallWithoutParentRector::class,
     ]);

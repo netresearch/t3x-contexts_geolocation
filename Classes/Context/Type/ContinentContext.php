@@ -103,7 +103,7 @@ class ContinentContext extends AbstractGeolocationContext
 
         // Get continent code from GeoIP
         $service = $this->getGeoLocationService();
-        if ($service === null) {
+        if (!$service instanceof GeoLocationService) {
             return $this->storeInSession($this->invert(false));
         }
 

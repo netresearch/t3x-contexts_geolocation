@@ -19,7 +19,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * Provides geolocation data for IP addresses using the configured GeoIP adapter.
  * Handles client IP detection from HTTP requests including proxy headers.
  */
-final class GeoLocationService
+final readonly class GeoLocationService
 {
     /**
      * @param GeoIpAdapterInterface $adapter The GeoIP adapter to use for lookups
@@ -27,9 +27,9 @@ final class GeoLocationService
      * @param array<string> $proxyHeaders List of proxy headers to check (in order of priority)
      */
     public function __construct(
-        private readonly GeoIpAdapterInterface $adapter,
-        private readonly bool $trustProxyHeaders = false,
-        private readonly array $proxyHeaders = ['X-Forwarded-For', 'X-Real-IP'],
+        private GeoIpAdapterInterface $adapter,
+        private bool $trustProxyHeaders = false,
+        private array $proxyHeaders = ['X-Forwarded-For', 'X-Real-IP'],
     ) {}
 
     /**
@@ -79,7 +79,7 @@ final class GeoLocationService
                 $value = $request->getHeaderLine($header);
                 if ($value !== '') {
                     // X-Forwarded-For may contain multiple IPs: "client, proxy1, proxy2"
-                    $ips = array_map('trim', explode(',', $value));
+                    $ips = array_map(trim(...), explode(',', $value));
                     $clientIp = $ips[0];
                     if ($this->isValidIpAddress($clientIp)) {
                         return $clientIp;

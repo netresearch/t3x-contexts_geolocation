@@ -35,15 +35,17 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
         if (!$this->isAvailable()) {
             throw new GeoIpException(
                 \sprintf('GeoIP2 database not available at path: %s', $this->databasePath),
+                2024837309,
             );
         }
 
         try {
             $record = $this->getReader()->city($ipAddress);
 
+            // countryCode3 stays at its null default: GeoIP2 does not provide
+            // ISO 3166-1 alpha-3 codes.
             return new GeoLocation(
                 countryCode: $record->country->isoCode,
-                countryCode3: null, // GeoIP2 doesn't provide ISO 3166-1 alpha-3
                 countryName: $record->country->name,
                 continentCode: $record->continent->code,
                 continentName: $record->continent->name,
@@ -137,7 +139,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
      */
     private function getReader(): Reader
     {
-        if ($this->reader === null) {
+        if (!$this->reader instanceof Reader) {
             try {
                 $this->reader = new Reader($this->databasePath);
             } catch (InvalidDatabaseException $e) {
@@ -148,6 +150,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
                 );
             }
         }
+
         return $this->reader;
     }
 }

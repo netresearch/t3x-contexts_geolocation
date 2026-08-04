@@ -160,15 +160,7 @@ final class GeoLocationServiceTest extends TestCase
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
         $service = new GeoLocationService($adapter, trustProxyHeaders: true);
 
-        $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getHeaderLine')
-            ->willReturnCallback(function (string $header): string {
-                return match ($header) {
-                    'X-Forwarded-For' => '1.2.3.4, 5.6.7.8',
-                    default => '',
-                };
-            });
-        $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = $this->createRequestWithHeaders(['X-Forwarded-For' => '1.2.3.4, 5.6.7.8']);
 
         $result = $service->getClientIpAddress($request);
 
@@ -182,16 +174,7 @@ final class GeoLocationServiceTest extends TestCase
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
         $service = new GeoLocationService($adapter, trustProxyHeaders: true);
 
-        $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getHeaderLine')
-            ->willReturnCallback(function (string $header): string {
-                return match ($header) {
-                    'X-Forwarded-For' => '',
-                    'X-Real-IP' => '9.9.9.9',
-                    default => '',
-                };
-            });
-        $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = $this->createRequestWithHeaders(['X-Real-IP' => '9.9.9.9']);
 
         $result = $service->getClientIpAddress($request);
 
@@ -204,16 +187,10 @@ final class GeoLocationServiceTest extends TestCase
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
         $service = new GeoLocationService($adapter, trustProxyHeaders: true);
 
-        $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getHeaderLine')
-            ->willReturnCallback(function (string $header): string {
-                return match ($header) {
-                    'X-Forwarded-For' => 'invalid-ip',
-                    'X-Real-IP' => 'also-invalid',
-                    default => '',
-                };
-            });
-        $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = $this->createRequestWithHeaders([
+            'X-Forwarded-For' => 'invalid-ip',
+            'X-Real-IP' => 'also-invalid',
+        ]);
 
         $result = $service->getClientIpAddress($request);
 
@@ -230,15 +207,7 @@ final class GeoLocationServiceTest extends TestCase
             proxyHeaders: ['CF-Connecting-IP', 'True-Client-IP'],
         );
 
-        $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getHeaderLine')
-            ->willReturnCallback(function (string $header): string {
-                return match ($header) {
-                    'CF-Connecting-IP' => '1.1.1.1',
-                    default => '',
-                };
-            });
-        $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = $this->createRequestWithHeaders(['CF-Connecting-IP' => '1.1.1.1']);
 
         $result = $service->getClientIpAddress($request);
 
@@ -315,5 +284,22 @@ final class GeoLocationServiceTest extends TestCase
         } finally {
             unset($GLOBALS['TYPO3_REQUEST']);
         }
+    }
+
+    /**
+     * Mocked request answering the given headers; any other header yields ''.
+     *
+     * @param array<string, string> $headers
+     */
+    private function createRequestWithHeaders(
+        array $headers,
+        string $remoteAddr = '8.8.8.8',
+    ): ServerRequestInterface {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getHeaderLine')
+            ->willReturnCallback(static fn(string $header): string => $headers[$header] ?? '');
+        $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => $remoteAddr]);
+
+        return $request;
     }
 }

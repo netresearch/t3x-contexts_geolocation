@@ -35,6 +35,6 @@ final readonly class GeoLocation
     {
         return $this->latitude !== null
             && $this->longitude !== null
-            && !($this->latitude === 0.0 && $this->longitude === 0.0);
+            && ($this->latitude !== 0.0 || $this->longitude !== 0.0);
     }
 }
