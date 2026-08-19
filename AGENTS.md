@@ -1,9 +1,9 @@
-<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-01-30 -->
+<!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-08-19 -->
 
 # AGENTS.md
 
-**Project:** netresearch/contexts_geolocation — Geolocation context types for TYPO3
-**Type:** TYPO3 CMS Extension (PHP 8.2+, TYPO3 12.4/13.4)
+**Project:** netresearch/contexts-geolocation — Geolocation context types for TYPO3
+**Type:** TYPO3 CMS Extension (PHP 8.2+, TYPO3 12.4/13.4; version: see `ext_emconf.php`)
 
 ## Precedence
 
@@ -15,21 +15,24 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 - Conventional Commits: `type(scope): subject`
 - Ask before: heavy dependencies, architecture changes, new context types
 - Never commit secrets, credentials, or PII
+- Architecture overview: `docs/ARCHITECTURE.md`; execution plans: `docs/exec-plans/`
 
-## Quality Checks
+## Commands
 
 ```bash
 # Code quality (run before committing):
-composer ci:test:php:cgl      # PHP-CS-Fixer (PSR-12 + TYPO3 CGL)
-composer ci:test:php:phpstan  # PHPStan level 10
+composer ci:test:php:cgl      # PHP-CS-Fixer check (dry-run)
+composer ci:test:php:phpstan  # PHPStan (Build/phpstan.neon)
+composer ci:cgl               # Fix code style
 
 # Testing:
 composer ci:test:php:unit        # PHPUnit unit tests
 composer ci:test:php:functional  # PHPUnit functional tests (needs DB)
-composer test:coverage           # Coverage report (needs PCOV/Xdebug)
+composer test:coverage           # HTML coverage report (needs Xdebug)
+composer test:mutation           # Infection mutation testing
 
-# Fix commands (for local development):
-composer ci:cgl               # Fix code style
+# Makefile mirrors: make cgl / cgl-fix / phpstan / test / test-unit / test-functional
+# Containerized matrix runs: Build/Scripts/runTests.sh [options] [suite]
 ```
 
 ## Development Environment
@@ -37,7 +40,7 @@ composer ci:cgl               # Fix code style
 ```bash
 # DDEV setup (recommended)
 ddev start
-ddev install-all          # Install TYPO3 v12, v13
+ddev install-all          # Install TYPO3 v12 + v13 (or install-v12 / install-v13)
 
 # Access
 https://v12.contexts-geolocation.ddev.site/typo3/    # TYPO3 v12 backend
@@ -50,105 +53,61 @@ https://v13.contexts-geolocation.ddev.site/typo3/    # TYPO3 v13 backend
 
 | Workflow | Trigger | Purpose |
 |----------|---------|---------|
-| `ci.yml` | push/PR | Full test suite (unit, functional, lint, phpstan) |
-| `phpstan.yml` | push/PR | Static analysis |
-| `codeql.yml` | push/PR, weekly | CodeQL security scanning |
-| `dependency-review.yml` | PR | Dependency vulnerability check |
-| `security.yml` | push/PR, weekly | Composer audit, SBOM generation |
-| `scorecard.yml` | push to main, weekly | OpenSSF Scorecard security analysis |
-| `slsa-provenance.yml` | release | SLSA Level 3 provenance attestation |
-| `publish-to-ter.yml` | tag | Publish to TYPO3 Extension Repository |
+| `ci.yml` | push/PR/merge_group, weekly | Test matrix (PHP 8.2–8.5 × TYPO3 ^12.4/^13.4, MySQL functional tests) via reusable `netresearch/typo3-ci-workflows` |
+| `checks.yml` | push/PR/merge_group, weekly | Security/quality gate: composer audit, gitleaks, zizmor, CodeQL, fuzz, license check, Scorecard, dependency review, PR quality — gated by `All security checks` |
+| `check-template-drift.yml` | PR, weekly | Keeps `checks.yml` byte-identical to the org template |
+| `harness-verify.yml` | push/PR | Agent-harness consistency (AGENTS.md budget, refs, docs/) |
+| `release.yml` | tag | Release + TER publishing pipeline |
+| `republish.yml` | manual | Re-run TER publishing for an existing tag |
+| `labeler.yml` / `community.yml` / `auto-merge-deps.yml` | PR/misc | Labels, community hygiene, dependency auto-merge |
 
-## Project Structure (Target)
+## Project Structure
 
 ```
-Classes/                       # PHP source code
-├── Adapter/                   # GeoIP adapter implementations
-│   ├── GeoIpAdapterInterface.php
-│   └── MaxMindGeoIp2Adapter.php
-├── Context/Type/              # Context type implementations
-│   ├── CountryContext.php
-│   ├── ContinentContext.php
-│   └── DistanceContext.php
-├── Service/                   # Business logic services
-│   └── GeoLocationService.php
-├── Exception/                 # Custom exceptions
-│   └── GeoIpException.php
-└── Dto/                       # Value objects for geolocation data
-    └── GeoLocation.php
-Tests/                         # Test suite
-├── Unit/                      # Unit tests
-│   ├── Adapter/
-│   └── Context/Type/
-└── Functional/                # Functional tests
-Configuration/                 # TYPO3 configuration
-├── TCA/Overrides/
-├── FlexForms/
-├── Services.yaml
-└── SiteSet/                   # v13 site sets
+Classes/                       # PHP source (see Classes/AGENTS.md)
+├── Adapter/                   # GeoIpAdapterInterface, MaxMindGeoIp2Adapter
+├── Context/Type/              # AbstractGeolocationContext, Country/Continent/DistanceContext
+├── Service/                   # GeoLocationService
+├── Exception/                 # GeoIpException
+└── Dto/                       # GeoLocation value object
+Tests/                         # Unit/, Functional/, Architecture/ (phpat)
+Configuration/                 # TCA/Overrides/, FlexForms/, Services.yaml
 Resources/                     # Language files, assets
-Documentation/                 # RST documentation
+Documentation/                 # RST docs for docs.typo3.org
+Build/                         # phpunit/phpstan/phpat configs, Scripts/
+docs/                          # ARCHITECTURE.md, exec-plans/
 ```
 
-## Index of Scoped AGENTS.md
+## Index of scoped AGENTS.md
 
 | Path | Purpose |
 |------|---------|
-| `Classes/AGENTS.md` | PHP backend code, adapters, context types |
+| `./Classes/AGENTS.md` | PHP backend code, adapters, context types |
+| `./Configuration/AGENTS.md` | TCA registration, FlexForms, DI services |
+| `./Documentation/AGENTS.md` | RST documentation conventions |
+| `./Tests/AGENTS.md` | Unit/functional/architecture test suite |
 
 ## Dependencies
 
-**Required:**
-- `netresearch/contexts` ^4.0 - Base contexts extension
-- `geoip2/geoip2` ^3.0 - MaxMind GeoIP2 PHP library
-
-**Suggested:**
-- `sjbr/static-info-tables` - Country/continent metadata
+**Required:** `netresearch/contexts` ^3.1.1 || ^4.0 (base contexts extension), `geoip2/geoip2` ^3.0 (MaxMind GeoIP2 PHP library)
 
 ## Key Concepts
 
-### MaxMind GeoIP2 Integration
+| Context Type | TCA key | FlexForm fields |
+|-------------|---------|-----------------|
+| `CountryContext` | `geolocation_country` | `field_countries` (ISO 3166-1 alpha-2, comma-separated) |
+| `ContinentContext` | `geolocation_continent` | `field_continents` (AF, AN, AS, EU, NA, OC, SA) |
+| `DistanceContext` | `geolocation_distance` | `field_latitude`, `field_longitude`, `field_radius` (km) |
 
-The extension uses MaxMind GeoIP2 library for IP geolocation:
-
-```php
-// GeoLocation databases (configure path in extension settings)
-// - GeoLite2-Country.mmdb (free, country-level)
-// - GeoLite2-City.mmdb (free, city-level with coordinates)
-// - GeoIP2-Country.mmdb (commercial, higher accuracy)
-// - GeoIP2-City.mmdb (commercial, higher accuracy)
-```
-
-### Context Types
-
-| Context Type | Purpose | Configuration Fields |
-|-------------|---------|---------------------|
-| `CountryContext` | Match by country code | Countries (ISO 3166-1), Unknown handling |
-| `ContinentContext` | Match by continent | Continents (AF, AS, EU, NA, OC, SA, AN), Unknown handling |
-| `DistanceContext` | Match by distance from point | Latitude, Longitude, Radius (km), Unknown handling |
-
-### IP Address Handling
-
-```php
-// IPv4 and IPv6 support
-// Trust proxy headers (X-Forwarded-For, X-Real-IP) when configured
-// Fallback to REMOTE_ADDR
-// Special handling for private/local IPs (return unknown)
-```
+Context types are registered in `Configuration/TCA/Overrides/tx_contexts_contexts.php` via `Configuration::registerContextType()`. GeoIP lookups go through `GeoLocationService` → `GeoIpAdapterInterface`; results are cached in the session. Private/reserved IPs never match.
 
 ## Configuration
 
-### Extension Configuration (ext_conf_template.txt)
+Runtime configuration is environment-based (wired in `Configuration/Services.yaml`):
 
 ```
-# MaxMind GeoIP2 database path
-geoipDatabasePath = EXT:contexts_geolocation/Resources/Private/GeoIP/GeoLite2-City.mmdb
-
-# Trust proxy headers for IP detection
-trustProxyHeaders = 0
-
-# Proxy header priority (comma-separated)
-proxyHeaders = X-Forwarded-For,X-Real-IP
+GEOIP_DATABASE_PATH        # Path to MaxMind .mmdb database (GeoLite2 or GeoIP2)
+GEOIP_TRUST_PROXY_HEADERS  # bool: trust X-Forwarded-For / X-Real-IP
 ```
 
 ## When Instructions Conflict
