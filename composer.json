@@ -20,7 +20,7 @@
         "geoip2/geoip2": "^3.0",
         "netresearch/contexts": "^3.1.1 || ^4.0 || dev-main",
         "typo3/cms-backend": "^12.4 || ^13.4",
-        "typo3/cms-core": "^12.4 || ^13.4",
+        "typo3/cms-core": "^12.4 || ^13.4 || ^14.0",
         "typo3/cms-extbase": "^12.4 || ^13.4",
         "typo3/cms-frontend": "^12.4 || ^13.4"
     },
