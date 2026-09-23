@@ -54,7 +54,7 @@ https://v13.contexts-geolocation.ddev.site/typo3/    # TYPO3 v13 backend
 | Workflow | Trigger | Purpose |
 |----------|---------|---------|
 | `ci.yml` | push/PR/merge_group, weekly | Test matrix (PHP 8.2–8.5 × TYPO3 ^12.4/^13.4, MySQL functional tests) via reusable `netresearch/typo3-ci-workflows` |
-| `checks.yml` | push/PR/merge_group, weekly | Security/quality gate: composer audit, gitleaks, zizmor, CodeQL, fuzz, license check, Scorecard, dependency review, PR quality — gated by `All security checks` |
+| `checks.yml` | push/PR/merge_group, weekly | Security/quality gate: composer audit, betterleaks, zizmor, CodeQL, fuzz, license check, Scorecard, dependency review, PR quality — gated by `All security checks` |
 | `check-template-drift.yml` | PR, weekly | Keeps `checks.yml` byte-identical to the org template |
 | `harness-verify.yml` | push/PR | Agent-harness consistency (AGENTS.md budget, refs, docs/) |
 | `release.yml` | tag | Release + TER publishing pipeline |
