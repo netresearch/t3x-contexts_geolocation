@@ -51,6 +51,66 @@ All notable changes to this project will be documented in this file.
 - Updated to TYPO3 12.4/13.4 LTS versions
 - Updated all dev dependencies to latest versions supporting PHP 8.2+
 
-## [1.x] - Legacy
+## [1.0.5] - 2025-11-20
 
-See GitHub releases for version 1.x changelog.
+### Changed
+- Extension metadata: the author company in `ext_emconf.php` is now
+  "Netresearch DTT GmbH". No code change; updating from 1.0.4 needs no action.
+
+## [1.0.4] - 2025-11-20
+
+### Added
+- Extension icon for the TYPO3 Extension Repository
+  (`Resources/Public/Icons/Extension.svg`).
+- GitHub Actions workflow that publishes tagged versions to the TYPO3 Extension
+  Repository.
+- Renovate configuration for dependency update pull requests.
+
+### Changed
+- `README.rst` replaced by `README.md` with status badges.
+- `composer.json` declares the extension key
+  (`extra.typo3/cms.extension-key`).
+- `ext_emconf.php` version set to 1.0.4; releases 1.0.1 to 1.0.3 had left it
+  at 1.0.0.
+
+No code change; updating from 1.0.3 needs no action.
+
+## [1.0.3] - 2023-11-09
+
+### Changed
+- `composer.json` declares the licence as AGPL-3.0-or-later, matching the
+  `LICENSE` file added in 1.0.1 (it said GPL-2.0+ before).
+
+### Fixed
+- `composer.json` no longer replaces its own package name
+  `netresearch/contexts_geolocation`.
+
+## [1.0.2] - 2021-12-24
+
+### Fixed
+- `composer.json`: Unix line endings and the lower-case package name
+  `mikey179/vfsstream`.
+
+## [1.0.1] - 2021-12-24
+
+### Added
+- `LICENSE` file (GNU AGPL 3.0).
+
+### Fixed
+- Country and continent FlexForms set the `renderType` of their select
+  fields.
+- Class references to the PEAR `Net_GeoIP` library use the global namespace.
+
+## [1.0.0] - 2017-01-10
+
+### Changed
+- Compatibility with TYPO3 6.2 to 8.x; TYPO3 4.5 to 6.1 are no longer
+  supported.
+- The client address is read through the base extension's
+  `getRemoteAddress()` instead of `$_SERVER['REMOTE_ADDR']`.
+- The backend map for the distance context uses plain JavaScript.
+- `composer.json` added; stability set to stable.
+
+## 0.x
+
+Changes before 1.0.0 are listed in the `ChangeLog` file.
