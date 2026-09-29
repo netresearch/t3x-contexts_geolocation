@@ -154,6 +154,13 @@ Version 2.0 is a complete rewrite with breaking changes:
 Full documentation is available at [docs.typo3.org](https://docs.typo3.org/p/netresearch/contexts-geolocation/main/en-us/)
 (once published) or in the `Documentation/` folder of this extension.
 
+## Security
+
+What the extension does with visitor IP addresses, what it stores, and which
+security guarantees it gives and does not give is described in
+[docs/SECURITY-ASSURANCE.md](docs/SECURITY-ASSURANCE.md). Report
+vulnerabilities as described in [SECURITY.md](SECURITY.md).
+
 ## Contributing
 
 Contributions are welcome! Please submit issues and pull requests on

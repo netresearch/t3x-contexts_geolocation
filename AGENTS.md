@@ -17,7 +17,7 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 - Conventional Commits: `type(scope): subject`
 - Ask before: heavy dependencies, architecture changes, new context types
 - Never commit secrets, credentials, or PII
-- Architecture overview: `docs/ARCHITECTURE.md`; execution plans: `docs/exec-plans/`
+- Architecture overview: `docs/ARCHITECTURE.md`; security assurance: `docs/SECURITY-ASSURANCE.md`; execution plans: `docs/exec-plans/`
 
 ## Commands
 

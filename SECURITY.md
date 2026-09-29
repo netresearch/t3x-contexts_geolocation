@@ -19,6 +19,11 @@ We will acknowledge your email within 48 hours and provide a more detailed respo
 
 After the initial reply to your report, we will endeavor to keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
 
+## Security Assurance
+
+The security guarantees and limits of the extension, its threat model and trust
+boundaries are described in [docs/SECURITY-ASSURANCE.md](docs/SECURITY-ASSURANCE.md).
+
 ## Security Update Process
 
 1. Security issues are handled with high priority
