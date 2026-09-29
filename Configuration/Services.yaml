@@ -15,7 +15,7 @@ services:
       - '../Classes/Exception/*'
 
   # GeoIP Adapter - uses MaxMind GeoIP2 library
-  # Database path can be configured via extension settings
+  # Database path comes from the GEOIP_DATABASE_PATH environment variable
   Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface:
     class: Netresearch\ContextsGeolocation\Adapter\MaxMindGeoIp2Adapter
     arguments:

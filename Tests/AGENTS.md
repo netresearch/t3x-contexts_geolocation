@@ -22,8 +22,8 @@ composer install    # installs PHPUnit, phpat, testing-framework into .Build/
 ```
 
 Functional tests need a database; run them via `composer ci:test:php:functional`
-(configured in `Build/phpunit/FunctionalTests.xml`) or containerized via
-`Build/Scripts/runTests.sh`.
+(configured in `Build/phpunit/FunctionalTests.xml`) or through
+`Build/Scripts/runTests.sh functional`, which uses the php on PATH.
 
 ## Build & Tests
 

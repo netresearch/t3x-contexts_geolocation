@@ -119,7 +119,9 @@ See the :ref:`Configuration <configuration>` section for more details.
 Database updates
 ================
 
-After installation, run the database analyzer to create required tables:
+This extension adds no database tables. The base contexts extension does; if
+you installed it together with this extension, create its tables with the
+database analyzer:
 
 .. code-block:: bash
 
@@ -139,11 +141,10 @@ After installation, you should see:
    creation wizard.
 2. The extension should be listed in :guilabel:`Admin Tools > Extensions`.
 
-To verify the GeoIP database is working:
+The extension ships no console command for lookups. Lookups need a database
+file that the web server user can read at ``GEOIP_DATABASE_PATH``; if the file
+is missing, every lookup throws a ``GeoIpException``. Check it as that user:
 
 .. code-block:: bash
 
-   # Test from the command line (requires a public IP)
-   vendor/bin/typo3 contexts:geolocation:lookup 8.8.8.8
-
-This should output the geolocation data for Google's public DNS server.
+   test -r "$GEOIP_DATABASE_PATH" && echo "readable"
