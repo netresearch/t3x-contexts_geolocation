@@ -1,6 +1,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Netresearch DTT GmbH
 
+parameters:
+  # Documented default of GEOIP_TRUST_PROXY_HEADERS: proxy headers are not
+  # trusted when the variable is not set.
+  env(GEOIP_TRUST_PROXY_HEADERS): 'false'
+
 services:
   _defaults:
     autowire: true
