@@ -143,8 +143,9 @@ After installation, you should see:
 
 The extension ships no console command for lookups. Lookups need a database
 file that the web server user can read at ``GEOIP_DATABASE_PATH``; if the file
-is missing, every lookup throws a ``GeoIpException``. Check it as that user:
+is missing, every lookup throws a ``GeoIpException``. Check the path that
+``GEOIP_DATABASE_PATH`` is set to (for example in ``.env``) as that user:
 
 .. code-block:: bash
 
-   test -r "$GEOIP_DATABASE_PATH" && echo "readable"
+   test -r /var/lib/GeoIP/GeoLite2-City.mmdb && echo "readable"
