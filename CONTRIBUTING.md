@@ -60,9 +60,10 @@ This extension follows the organisation-wide Netresearch policies:
 - [Secret management](https://github.com/netresearch/.github/blob/main/SECURITY.md#secret-management):
   where project, CI and release credentials are stored, who may use them,
   and how they are rotated or revoked. The workflows of this repository use
-  two secrets: `CODECOV_TOKEN` (coverage upload in `ci.yml`) and
+  four secrets: `CODECOV_TOKEN` (coverage upload in `ci.yml`),
   `TYPO3_TER_ACCESS_TOKEN` (TER publishing in `release.yml` and
-  `republish.yml`).
+  `republish.yml`), and `PROJECT_APP_ID` and `PROJECT_APP_PRIVATE_KEY`
+  (the merge app of `auto-merge-deps.yml`).
 - [Access roster](https://github.com/netresearch/.github/blob/main/docs/access-roster.md):
   the people and teams with administrative or write access to this
   repository.

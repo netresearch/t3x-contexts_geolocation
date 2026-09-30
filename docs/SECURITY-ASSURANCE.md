@@ -8,7 +8,7 @@ This document states what users can expect from `netresearch/contexts-geolocatio
 
 The extension adds three context types (country, continent, distance) to the base extension [netresearch/contexts](https://github.com/netresearch/t3x-contexts). For each frontend request that evaluates one of them, it resolves the visitor's IP address to a location in a local MaxMind database and returns whether the location matches the configured values.
 
-- **Data it processes**: the visitor's IP address. `GeoLocationService::getClientIpAddress()` (`Classes/Service/GeoLocationService.php`) reads `REMOTE_ADDR` from the PSR-7 request. Only when `GEOIP_TRUST_PROXY_HEADERS` is `true` (default `false`, `Configuration/Services.yaml`) does it read `X-Forwarded-For` and then `X-Real-IP` first, taking the first address of the header. The database returns country, continent, coordinates, city, postal code and subdivision (`Classes/Adapter/MaxMindGeoIp2Adapter.php`, `Classes/Dto/GeoLocation.php`); the context types use the country code, the continent code or the coordinates.
+- **Data it processes**: the visitor's IP address. `GeoLocationService::getClientIpAddress()` (`Classes/Service/GeoLocationService.php`) reads `REMOTE_ADDR` from the PSR-7 request. Only when `GEOIP_TRUST_PROXY_HEADERS` is `true` (default `false` through the `env(GEOIP_TRUST_PROXY_HEADERS)` parameter in `Configuration/Services.yaml`) does it read `X-Forwarded-For` and then `X-Real-IP` first, taking the first address of the header. The database returns country, continent, coordinates, city, postal code and subdivision (`Classes/Adapter/MaxMindGeoIp2Adapter.php`, `Classes/Dto/GeoLocation.php`); the context types use the country code, the continent code or the coordinates.
 - **Where the location data comes from**: a MaxMind GeoLite2 or GeoIP2 City database file (`.mmdb`) on the server, at the path in the environment variable `GEOIP_DATABASE_PATH` (`Configuration/Services.yaml`). The operator downloads and updates it, for example with `geoipupdate` ([README.md](../README.md), `Documentation/Configuration/GeoIP.rst`). The extension opens it read-only through `GeoIp2\Database\Reader` and makes no network requests. The MaxMind account and licence key are used by the operator's download tool; the extension never reads them.
 - **What it stores**: this extension stores neither the IP address nor the location. The only state that outlives the request is the boolean match result, which the base extension's `AbstractContext::storeInSession()` writes to the TYPO3 frontend user session under the key `contexts-<uid>-<tstamp>` when the context record has "use session" enabled. The extension has no database tables (no `ext_tables.sql`) and writes no log entries.
 - **What it outputs**: nothing. It returns a boolean to the base extension, which shows or hides content.
@@ -59,11 +59,11 @@ Threats considered and how they are handled:
 | Internal addresses are looked up or matched | `isPrivateIp()` excludes private and reserved ranges before every lookup. |
 | Editor input causes code or file access | FlexForm values are only compared or converted to floats; no path, query or output uses them. |
 | IP addresses leak through storage or logs | The extension persists no IP or location and has no logging calls. |
-| Database missing or corrupt | `GeoIpException` with the reader's exception attached (`MaxMindGeoIp2Adapter`); covered by `Tests/Unit/Adapter/MaxMindGeoIp2AdapterTest.php`. |
+| Database missing or corrupt | `GeoIpException` (`MaxMindGeoIp2Adapter`); for a corrupt file it carries the reader's exception; covered by `Tests/Unit/Adapter/MaxMindGeoIp2AdapterTest.php`. |
 
 ## Secure design principles applied
 
-- **Secure defaults**: proxy headers are distrusted unless `GEOIP_TRUST_PROXY_HEADERS` is set (`GeoLocationService` constructor default `false`, `Services.yaml`).
+- **Secure defaults**: proxy headers are distrusted unless `GEOIP_TRUST_PROXY_HEADERS` is `true`; an unset variable means `false` (`env(GEOIP_TRUST_PROXY_HEADERS)` parameter `false` in `Configuration/Services.yaml`, covered by `Tests/Functional/Context/Type/AbstractGeolocationContextTest.php`).
 - **Fail closed**: any error in resolving a location yields "no match" before inversion (`CountryContext::match()`, `ContinentContext::match()`, `DistanceContext::match()`).
 - **Minimal data**: the location is kept in memory for the request only; the session holds a boolean.
 - **Least privilege**: the database is opened read-only; the extension needs no write access, no network access and no database tables.
