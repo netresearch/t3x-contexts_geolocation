@@ -64,7 +64,7 @@ Threats considered and how they are handled:
 ## Secure design principles applied
 
 - **Secure defaults**: proxy headers are distrusted unless `GEOIP_TRUST_PROXY_HEADERS` is `true`; an unset variable means `false` (`env(GEOIP_TRUST_PROXY_HEADERS)` parameter `false` in `Configuration/Services.yaml`, covered by `Tests/Functional/Context/Type/AbstractGeolocationContextTest.php`).
-- **Fail closed**: any error in resolving a location yields "no match" before inversion (`CountryContext::match()`, `ContinentContext::match()`, `DistanceContext::match()`).
+- **Fail closed**: the failures listed under "A match when the location is unknown" yield "no match" before inversion (`CountryContext::match()`, `ContinentContext::match()`, `DistanceContext::match()`); a `GeoIpException` from a missing or corrupt database is not caught (see "Graceful degradation without a database").
 - **Minimal data**: the location is kept in memory for the request only; the session holds a boolean.
 - **Least privilege**: the database is opened read-only; the extension needs no write access, no network access and no database tables.
 - **Configuration outside the web request**: the database path and the proxy trust come from the environment, not from TYPO3 settings an editor can change.
