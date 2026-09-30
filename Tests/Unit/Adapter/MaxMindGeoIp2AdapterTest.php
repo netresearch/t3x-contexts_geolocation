@@ -9,14 +9,17 @@ declare(strict_types=1);
 
 namespace Netresearch\ContextsGeolocation\Tests\Unit\Adapter;
 
+use Closure;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use GeoIp2\Model\City;
+use MaxMind\Db\Reader\InvalidDatabaseException;
 use Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface;
 use Netresearch\ContextsGeolocation\Adapter\MaxMindGeoIp2Adapter;
 use Netresearch\ContextsGeolocation\Dto\GeoLocation;
 use Netresearch\ContextsGeolocation\Exception\GeoIpException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -35,6 +38,19 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
             unlink($this->tempFilePath); // nosemgrep: php.lang.security.unlink-use.unlink-use - test-owned path (sys_get_temp_dir + uniqid)
             $this->tempFilePath = null;
         }
+    }
+
+    /**
+     * @return iterable<string, array{Closure(MaxMindGeoIp2Adapter, string): (string|float|null)}>
+     */
+    public static function singleFieldGetterProvider(): iterable
+    {
+        yield 'getCountryCode' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getCountryCode($ip)];
+        yield 'getCountryName' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getCountryName($ip)];
+        yield 'getContinentCode' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getContinentCode($ip)];
+        yield 'getLatitude' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?float => $adapter->getLatitude($ip)];
+        yield 'getLongitude' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?float => $adapter->getLongitude($ip)];
+        yield 'getCity' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getCity($ip)];
     }
 
     #[Test]
@@ -218,6 +234,71 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
         $adapter = $this->createAdapterWithReader($reader);
 
         self::assertNull($adapter->getCity('0.0.0.0'));
+    }
+
+    #[Test]
+    public function lookupWrapsInvalidDatabaseExceptionInGeoIpException(): void
+    {
+        $previous = new InvalidDatabaseException('The MaxMind DB file contains invalid metadata', 42);
+        $reader = self::createStub(Reader::class);
+        $reader->method('city')->willThrowException($previous);
+
+        $adapter = $this->createAdapterWithReader($reader);
+
+        try {
+            $adapter->lookup('8.8.8.8');
+            self::fail('Expected GeoIpException');
+        } catch (GeoIpException $exception) {
+            self::assertSame(
+                'Invalid GeoIP2 database: The MaxMind DB file contains invalid metadata',
+                $exception->getMessage(),
+            );
+            self::assertSame(42, $exception->getCode());
+            self::assertSame($previous, $exception->getPrevious());
+        }
+    }
+
+    #[Test]
+    public function lookupThrowsGeoIpExceptionWhenDatabaseFileIsNotAMaxMindDatabase(): void
+    {
+        // A readable file that is not a MaxMind DB: isAvailable() is true,
+        // but opening the reader fails.
+        $this->tempFilePath = sys_get_temp_dir() . '/test-geoip-' . uniqid() . '.mmdb';
+        file_put_contents($this->tempFilePath, 'not a MaxMind database');
+
+        $adapter = new MaxMindGeoIp2Adapter($this->tempFilePath);
+
+        try {
+            $adapter->lookup('8.8.8.8');
+            self::fail('Expected GeoIpException');
+        } catch (GeoIpException $exception) {
+            self::assertStringStartsWith('Cannot read GeoIP2 database: ', $exception->getMessage());
+            self::assertInstanceOf(InvalidDatabaseException::class, $exception->getPrevious());
+        }
+    }
+
+    #[Test]
+    #[DataProvider('singleFieldGetterProvider')]
+    public function singleFieldGetterReturnsNullWhenAddressNotFound(Closure $getter): void
+    {
+        $reader = self::createStub(Reader::class);
+        $reader->method('city')->willThrowException(new AddressNotFoundException('Address not found'));
+
+        $adapter = $this->createAdapterWithReader($reader);
+
+        self::assertNull($getter($adapter, '0.0.0.0'));
+    }
+
+    #[Test]
+    #[DataProvider('singleFieldGetterProvider')]
+    public function singleFieldGetterReturnsNullWhenDatabaseIsInvalid(Closure $getter): void
+    {
+        $reader = self::createStub(Reader::class);
+        $reader->method('city')->willThrowException(new InvalidDatabaseException('invalid'));
+
+        $adapter = $this->createAdapterWithReader($reader);
+
+        self::assertNull($getter($adapter, '8.8.8.8'));
     }
 
     /**

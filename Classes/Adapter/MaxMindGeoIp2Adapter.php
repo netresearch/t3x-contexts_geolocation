@@ -61,7 +61,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
         } catch (InvalidDatabaseException $e) {
             throw new GeoIpException(
                 \sprintf('Invalid GeoIP2 database: %s', $e->getMessage()),
-                (int) $e->getCode(),
+                $e->getCode(),
                 $e,
             );
         }
@@ -145,7 +145,7 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
             } catch (InvalidDatabaseException $e) {
                 throw new GeoIpException(
                     \sprintf('Cannot read GeoIP2 database: %s', $e->getMessage()),
-                    (int) $e->getCode(),
+                    $e->getCode(),
                     $e,
                 );
             }

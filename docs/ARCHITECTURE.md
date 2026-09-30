@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 # Architecture
 
 Agent-oriented component map for `netresearch/contexts-geolocation`. Facts here are verified against the source files listed; when in doubt, the source wins.

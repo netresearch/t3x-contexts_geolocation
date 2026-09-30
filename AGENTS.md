@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 <!-- Managed by agent: keep sections & order; edit content, not structure. Last updated: 2026-08-19 -->
 
 # AGENTS.md
@@ -15,7 +17,7 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 - Conventional Commits: `type(scope): subject`
 - Ask before: heavy dependencies, architecture changes, new context types
 - Never commit secrets, credentials, or PII
-- Architecture overview: `docs/ARCHITECTURE.md`; execution plans: `docs/exec-plans/`
+- Architecture overview: `docs/ARCHITECTURE.md`; security assurance: `docs/SECURITY-ASSURANCE.md`; execution plans: `docs/exec-plans/`
 
 ## Commands
 
@@ -32,7 +34,7 @@ composer test:coverage           # HTML coverage report (needs Xdebug)
 composer test:mutation           # Infection mutation testing
 
 # Makefile mirrors: make cgl / cgl-fix / phpstan / test / test-unit / test-functional
-# Containerized matrix runs: Build/Scripts/runTests.sh [options] [suite]
+# Local runner with the php on PATH (no containers): Build/Scripts/runTests.sh [options] [suite]
 ```
 
 ## Development Environment
@@ -54,7 +56,7 @@ https://v13.contexts-geolocation.ddev.site/typo3/    # TYPO3 v13 backend
 | Workflow | Trigger | Purpose |
 |----------|---------|---------|
 | `ci.yml` | push/PR/merge_group, weekly | Test matrix (PHP 8.2–8.5 × TYPO3 ^12.4/^13.4, MySQL functional tests) via reusable `netresearch/typo3-ci-workflows` |
-| `checks.yml` | push/PR/merge_group, weekly | Security/quality gate: composer audit, betterleaks, zizmor, CodeQL, fuzz, license check, Scorecard, dependency review, PR quality — gated by `All security checks` |
+| `checks.yml` | push/PR/merge_group, weekly | Security/quality gate: composer audit, Opengrep, betterleaks, zizmor, CodeQL, license check, Scorecard, dependency review, PR quality (the fuzz job skips: no Fuzz test suite) — gated by `All security checks` |
 | `check-template-drift.yml` | PR, weekly | Keeps `checks.yml` byte-identical to the org template |
 | `harness-verify.yml` | push/PR | Agent-harness consistency (AGENTS.md budget, refs, docs/) |
 | `release.yml` | tag | Release + TER publishing pipeline |
@@ -89,7 +91,7 @@ docs/                          # ARCHITECTURE.md, exec-plans/
 
 ## Dependencies
 
-**Required:** `netresearch/contexts` ^3.1.1 || ^4.0 (base contexts extension), `geoip2/geoip2` ^3.0 (MaxMind GeoIP2 PHP library)
+**Required:** `netresearch/contexts` `^3.1.1 || ^4.0 || ^5.0.1 || dev-main` with Composer, 4.x from TER (`ext_emconf.php`) (base contexts extension), `geoip2/geoip2` ^3.0 (MaxMind GeoIP2 PHP library)
 
 ## Key Concepts
 

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 # Security Policy
 
 ## Supported Versions
@@ -13,9 +15,14 @@ If you discover a security vulnerability within this extension, please report vi
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-We will acknowledge your email within 48 hours and provide a more detailed response within 7 days indicating the next steps in handling your report.
+We will acknowledge your report within 48 hours and provide a more detailed response within 7 days indicating the next steps in handling your report.
 
 After the initial reply to your report, we will endeavor to keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
+
+## Security Assurance
+
+The security guarantees and limits of the extension, its threat model and trust
+boundaries are described in [docs/SECURITY-ASSURANCE.md](docs/SECURITY-ASSURANCE.md).
 
 ## Security Update Process
 

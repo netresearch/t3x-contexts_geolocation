@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
 
 #
 # TYPO3 extension test runner script
 #
 # Usage: ./Build/Scripts/runTests.sh [options] [suite]
 #
+# Runs the suites with the `php` found on PATH and the dependencies in
+# .Build/ (installed with `composer install` if missing). It starts no
+# containers; the PHP x TYPO3 matrix runs in CI (.github/workflows/ci.yml).
+#
 # Options:
-#   -p <version>  PHP version (8.2, 8.3, 8.4, 8.5) - default: 8.2
-#   -t <version>  TYPO3 version (12, 13) - default: 12
 #   -x            Enable xdebug for debugging
-#   -v            Verbose output
+#   -v            Verbose output (PHPStan and PHP-CS-Fixer)
 #   -h            Show this help
 #
 # Suites:
@@ -28,8 +32,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 # Default values
-PHP_VERSION="8.2"
-TYPO3_VERSION="12"
 XDEBUG=""
 VERBOSE=""
 SUITE="unit"
@@ -45,11 +47,11 @@ print_help() {
     echo ""
     echo "Usage: $0 [options] [suite]"
     echo ""
+    echo "Runs with the php on PATH; it starts no containers."
+    echo ""
     echo "Options:"
-    echo "  -p <version>  PHP version (8.2, 8.3, 8.4, 8.5) - default: 8.2"
-    echo "  -t <version>  TYPO3 version (12, 13) - default: 12"
     echo "  -x            Enable xdebug for debugging"
-    echo "  -v            Verbose output"
+    echo "  -v            Verbose output (PHPStan and PHP-CS-Fixer)"
     echo "  -h            Show this help"
     echo ""
     echo "Suites:"
@@ -64,14 +66,8 @@ print_help() {
 }
 
 # Parse command line arguments
-while getopts "p:t:xvh" opt; do
+while getopts "xvh" opt; do
     case ${opt} in
-        p)
-            PHP_VERSION="${OPTARG}"
-            ;;
-        t)
-            TYPO3_VERSION="${OPTARG}"
-            ;;
         x)
             XDEBUG="-dxdebug.mode=debug -dxdebug.start_with_request=yes"
             ;;
@@ -101,7 +97,7 @@ if [[ ! -d .Build/vendor ]]; then
 fi
 
 echo -e "${GREEN}Running suite: ${SUITE}${NC}"
-echo -e "PHP: ${PHP_VERSION}, TYPO3: ${TYPO3_VERSION}"
+echo -e "PHP: $(php -r 'echo PHP_VERSION;')"
 echo ""
 
 # Set database credentials for functional tests (DDEV or CI environment)
@@ -124,12 +120,12 @@ setup_database_env() {
 case ${SUITE} in
     unit)
         echo -e "${GREEN}>>> Running Unit Tests${NC}"
-        php ${XDEBUG} .Build/bin/phpunit -c Build/phpunit/UnitTests.xml ${VERBOSE}
+        php ${XDEBUG} .Build/bin/phpunit -c Build/phpunit/UnitTests.xml
         ;;
     functional)
         echo -e "${GREEN}>>> Running Functional Tests${NC}"
         setup_database_env
-        php ${XDEBUG} .Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml ${VERBOSE}
+        php ${XDEBUG} .Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml
         ;;
     lint)
         echo -e "${GREEN}>>> Running PHPStan${NC}"
@@ -153,24 +149,29 @@ case ${SUITE} in
     all)
         echo -e "${GREEN}>>> Running All Suites${NC}"
         echo ""
+        FAILED=""
 
         echo -e "${GREEN}>>> 1/4 PHPStan${NC}"
-        .Build/bin/phpstan analyse -c Build/phpstan.neon || true
+        .Build/bin/phpstan analyse -c Build/phpstan.neon || FAILED="${FAILED} phpstan"
         echo ""
 
         echo -e "${GREEN}>>> 2/4 PHP-CS-Fixer${NC}"
-        .Build/bin/php-cs-fixer fix --dry-run --diff || true
+        .Build/bin/php-cs-fixer fix --dry-run --diff || FAILED="${FAILED} cgl"
         echo ""
 
         echo -e "${GREEN}>>> 3/4 Unit Tests${NC}"
-        php .Build/bin/phpunit -c Build/phpunit/UnitTests.xml || true
+        php .Build/bin/phpunit -c Build/phpunit/UnitTests.xml || FAILED="${FAILED} unit"
         echo ""
 
         echo -e "${GREEN}>>> 4/4 Functional Tests${NC}"
         setup_database_env
-        php .Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml || true
+        php .Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml || FAILED="${FAILED} functional"
         echo ""
 
+        if [[ -n "${FAILED}" ]]; then
+            echo -e "${RED}Failed suites:${FAILED}${NC}"
+            exit 1
+        fi
         echo -e "${GREEN}All suites completed${NC}"
         ;;
     *)

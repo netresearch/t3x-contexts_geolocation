@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
 # Contexts: Geolocation
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/netresearch/contexts-geolocation.svg?style=flat-square)](https://packagist.org/packages/netresearch/contexts-geolocation)
@@ -9,7 +11,7 @@
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%2010-brightgreen?style=flat-square)](https://phpstan.org/)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/netresearch/t3x-contexts_geolocation/badge?style=flat-square)](https://scorecard.dev/viewer/?uri=github.com/netresearch/t3x-contexts_geolocation)
 [![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-3.0-4baaaa.svg?style=flat-square)](CODE_OF_CONDUCT.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-3.0-4baaaa.svg?style=flat-square)](https://github.com/netresearch/t3x-contexts_geolocation/blob/main/CODE_OF_CONDUCT.md)
 
 Geolocation-based context types for TYPO3. Show pages and content elements for
 visitors in specific countries, continents, or within a defined geographic area.
@@ -30,7 +32,7 @@ IP-based location detection.
 
 - TYPO3 12.4 LTS or 13.4 LTS
 - PHP 8.2 or higher
-- [contexts](https://github.com/netresearch/t3x-contexts) extension (v4.0+)
+- [contexts](https://github.com/netresearch/t3x-contexts) extension: `^3.1.1 || ^4.0 || ^5.0.1 || dev-main` with Composer (`composer.json`), 4.x for installations from TER (`ext_emconf.php`)
 - MaxMind GeoLite2-City database (free) or GeoIP2-City database (commercial)
 
 ## Installation
@@ -151,6 +153,13 @@ Version 2.0 is a complete rewrite with breaking changes:
 
 Full documentation is available at [docs.typo3.org](https://docs.typo3.org/p/netresearch/contexts-geolocation/main/en-us/)
 (once published) or in the `Documentation/` folder of this extension.
+
+## Security
+
+What the extension does with visitor IP addresses, what it stores, and which
+security guarantees it gives and does not give is described in
+[docs/SECURITY-ASSURANCE.md](https://github.com/netresearch/t3x-contexts_geolocation/blob/main/docs/SECURITY-ASSURANCE.md). Report
+vulnerabilities as described in [SECURITY.md](https://github.com/netresearch/t3x-contexts_geolocation/blob/main/SECURITY.md).
 
 ## Contributing
 

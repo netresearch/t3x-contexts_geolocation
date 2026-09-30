@@ -20,6 +20,7 @@ use Netresearch\ContextsGeolocation\Context\Type\CountryContext;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -88,6 +89,32 @@ final class AbstractGeolocationContextTest extends FunctionalTestCase
             $this->getContainer()->has(GeoLocationService::class),
             'GeoLocationService must be public so context types can resolve it from the container',
         );
+    }
+
+    /**
+     * GEOIP_TRUST_PROXY_HEADERS is documented with the default `false`
+     * (README.md, Documentation/Configuration/Index.rst). Without a default
+     * for the env placeholder in Services.yaml an unset variable makes the
+     * service unbuildable, and every geolocation context stops matching.
+     */
+    #[Test]
+    public function unsetTrustProxyHeadersDefaultsToIgnoringProxyHeaders(): void
+    {
+        putenv('GEOIP_TRUST_PROXY_HEADERS');
+        unset($_ENV['GEOIP_TRUST_PROXY_HEADERS'], $_SERVER['GEOIP_TRUST_PROXY_HEADERS']);
+
+        $service = $this->getContainer()->get(GeoLocationService::class);
+        self::assertInstanceOf(GeoLocationService::class, $service);
+
+        $request = new ServerRequest(
+            'https://example.org/',
+            'GET',
+            'php://temp',
+            ['X-Forwarded-For' => '198.51.100.7'],
+            ['REMOTE_ADDR' => '203.0.113.10'],
+        );
+
+        self::assertSame('203.0.113.10', $service->getClientIpAddress($request));
     }
 
     #[Test]
