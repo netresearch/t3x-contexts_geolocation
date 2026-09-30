@@ -158,8 +158,8 @@ Full documentation is available at [docs.typo3.org](https://docs.typo3.org/p/net
 
 What the extension does with visitor IP addresses, what it stores, and which
 security guarantees it gives and does not give is described in
-[docs/SECURITY-ASSURANCE.md](docs/SECURITY-ASSURANCE.md). Report
-vulnerabilities as described in [SECURITY.md](SECURITY.md).
+[docs/SECURITY-ASSURANCE.md](https://github.com/netresearch/t3x-contexts_geolocation/blob/main/docs/SECURITY-ASSURANCE.md). Report
+vulnerabilities as described in [SECURITY.md](https://github.com/netresearch/t3x-contexts_geolocation/blob/main/SECURITY.md).
 
 ## Contributing
 
