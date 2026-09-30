@@ -80,9 +80,10 @@ Checks that run on every pull request in this repository:
   scanning; zizmor for the workflow files. The `fuzz` job skips, because the
   repository has no Fuzz test suite.
 - `.github/workflows/ci.yml`: PHP lint, code style (PHP-CS-Fixer), PHPStan
-  (`Build/phpstan.neon`), Rector dry run, unit tests and functional tests
-  (MySQL 8.4) for PHP 8.2 to 8.5 with TYPO3 12.4 and 13.4, and the
-  documentation rendering.
+  (`Build/phpstan.neon`), unit tests and functional tests (MySQL 8.4) for
+  PHP 8.2 to 8.5 with TYPO3 12.4 and 13.4, and the documentation rendering.
+  Its Rector job skips, because `composer.json` defines no
+  `ci:test:php:rector` script.
 - `.github/workflows/harness-verify.yml`: `Build/Scripts/verify-harness.sh`.
 
 ## Reporting Issues
