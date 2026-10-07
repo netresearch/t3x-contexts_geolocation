@@ -68,7 +68,7 @@ final class GeoLocationServiceTest extends TestCase
     {
         $expectedLocation = new GeoLocation(countryCode: 'DE');
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn($expectedLocation);
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn($expectedLocation);
 
         $service = new GeoLocationService($adapter);
         $result = $service->getLocationForIp('8.8.8.8');
@@ -253,7 +253,7 @@ final class GeoLocationServiceTest extends TestCase
 
         try {
             $adapter = $this->createMock(GeoIpAdapterInterface::class);
-            $adapter->method('lookup')->with('8.8.8.8')->willReturn($expectedLocation);
+            $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn($expectedLocation);
 
             $service = new GeoLocationService($adapter);
             $result = $service->getLocationForRequest();

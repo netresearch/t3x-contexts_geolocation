@@ -56,7 +56,7 @@ final class DistanceContextTest extends TestCase
         // Distance: ~153 km
 
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(latitude: 52.5200, longitude: 13.4050),
         );
 
@@ -82,7 +82,7 @@ final class DistanceContextTest extends TestCase
     {
         // Leipzig to Berlin is ~153 km
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(latitude: 52.5200, longitude: 13.4050),
         );
 
@@ -107,7 +107,7 @@ final class DistanceContextTest extends TestCase
     public function matchReturnsFalseWhenCoordinatesNotAvailable(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(),
         );
 
@@ -132,7 +132,7 @@ final class DistanceContextTest extends TestCase
     public function matchReturnsInvertedResultWhenInvertIsTrue(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(latitude: 52.5200, longitude: 13.4050),
         );
 
@@ -199,9 +199,7 @@ final class DistanceContextTest extends TestCase
     public function matchReturnsFalseWhenConfigurationIncomplete(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
-            new GeoLocation(latitude: 52.5200, longitude: 13.4050),
-        );
+        $adapter->expects(self::never())->method('lookup');
 
         $service = new GeoLocationService($adapter);
 
@@ -225,7 +223,7 @@ final class DistanceContextTest extends TestCase
     public function matchReturnsFalseWhenLookupReturnsNull(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(null);
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(null);
 
         $service = new GeoLocationService($adapter);
 
@@ -255,7 +253,7 @@ final class DistanceContextTest extends TestCase
         float $tolerance,
     ): void {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(latitude: $lat2, longitude: $lon2),
         );
 
@@ -291,7 +289,7 @@ final class DistanceContextTest extends TestCase
     public function matchHandlesZeroRadius(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(latitude: 51.3397, longitude: 12.3731),
         );
 
@@ -319,7 +317,7 @@ final class DistanceContextTest extends TestCase
     {
         // Sydney, Australia: -33.8688 S, 151.2093 E
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(latitude: -33.8688, longitude: 151.2093),
         );
 
@@ -345,7 +343,7 @@ final class DistanceContextTest extends TestCase
     {
         // New York: 40.7128 N, -74.0060 W
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(latitude: 40.7128, longitude: -74.0060),
         );
 

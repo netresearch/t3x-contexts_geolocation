@@ -45,7 +45,7 @@ final class CountryContextTest extends TestCase
     public function matchReturnsTrueWhenCountryMatches(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(countryCode: 'DE'),
         );
 
@@ -68,7 +68,7 @@ final class CountryContextTest extends TestCase
     public function matchReturnsFalseWhenCountryDoesNotMatch(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(countryCode: 'GB'),
         );
 
@@ -91,7 +91,7 @@ final class CountryContextTest extends TestCase
     public function matchHandlesCaseInsensitiveComparison(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(countryCode: 'de'),
         );
 
@@ -114,7 +114,7 @@ final class CountryContextTest extends TestCase
     public function matchReturnsFalseWhenCountryCodeIsNull(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(),
         );
 
@@ -158,7 +158,7 @@ final class CountryContextTest extends TestCase
     public function matchReturnsInvertedResultWhenInvertIsTrue(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(countryCode: 'DE'),
         );
 
@@ -183,7 +183,7 @@ final class CountryContextTest extends TestCase
     public function matchReturnsTrueWhenCountryDoesNotMatchAndInverted(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(countryCode: 'GB'),
         );
 
@@ -208,9 +208,7 @@ final class CountryContextTest extends TestCase
     public function matchReturnsFalseWhenNoCountriesConfigured(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
-            new GeoLocation(countryCode: 'DE'),
-        );
+        $adapter->expects(self::never())->method('lookup');
 
         $service = new GeoLocationService($adapter);
 
@@ -246,7 +244,7 @@ final class CountryContextTest extends TestCase
     public function matchReturnsFalseWhenLookupReturnsNull(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(null);
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(null);
 
         $service = new GeoLocationService($adapter);
 
@@ -268,7 +266,7 @@ final class CountryContextTest extends TestCase
     public function matchWorksWithVariousCountryCodeFormats(string $configured, string $detected, bool $expected): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(countryCode: $detected),
         );
 
