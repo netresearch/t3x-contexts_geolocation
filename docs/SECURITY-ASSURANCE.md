@@ -80,7 +80,7 @@ Threats considered and how they are handled:
 | CWE-89 SQL injection | The extension runs no database queries; the base extension reads the context records. |
 | CWE-22 Path traversal | The only file opened is the one at `GEOIP_DATABASE_PATH`, set by the operator. |
 | CWE-918 Server-side request forgery | No outbound network requests; lookups read the local file. |
-| CWE-532 Sensitive information in log files | The only log call writes the lookup error message: the adapter's fixed text, which names the `GEOIP_DATABASE_PATH` setting, or for a corrupt file the reader's fixed description of the damage. Neither contains the file path or the visitor's address. |
+| CWE-532 Sensitive information in log files | The only log call writes the lookup error message. The adapter replaces the reader's messages, which can contain the file path or the looked-up address, with fixed text that names the `GEOIP_DATABASE_PATH` setting (`MaxMindGeoIp2Adapter::getReader()`, `lookup()`; `lookupWrapsInvalidDatabaseExceptionInGeoIpException`). |
 | CWE-209 Error messages containing sensitive information | `GeoIpException` messages name the `GEOIP_DATABASE_PATH` setting, not the file path, and the service catches them. |
 | CWE-1104 Use of unmaintained third-party components | Renovate (`renovate.json`) proposes dependency updates; Composer Audit and Dependency Review run on every pull request (see [CONTRIBUTING.md](../CONTRIBUTING.md#governance-and-policies)). |
 

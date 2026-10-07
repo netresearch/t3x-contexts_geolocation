@@ -243,7 +243,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     #[Test]
     public function lookupWrapsInvalidDatabaseExceptionInGeoIpException(): void
     {
-        $previous = new InvalidDatabaseException('The MaxMind DB file contains invalid metadata', 42);
+        $previous = new InvalidDatabaseException('Expected an array when looking up 8.8.8.8 but received: string', 42);
         $reader = self::createStub(Reader::class);
         $reader->method('city')->willThrowException($previous);
 
@@ -254,9 +254,10 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
             self::fail('Expected GeoIpException');
         } catch (GeoIpException $exception) {
             self::assertSame(
-                'Invalid GeoIP2 database: The MaxMind DB file contains invalid metadata',
+                'The GeoIP2 database configured in GEOIP_DATABASE_PATH is invalid or corrupt',
                 $exception->getMessage(),
             );
+            self::assertStringNotContainsString('8.8.8.8', $exception->getMessage());
             self::assertSame(42, $exception->getCode());
             self::assertSame($previous, $exception->getPrevious());
         }

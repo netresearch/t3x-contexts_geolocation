@@ -52,8 +52,10 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
         } catch (AddressNotFoundException) {
             return null;
         } catch (InvalidDatabaseException $e) {
+            // The reader's message can contain the looked-up IP address; keep
+            // it only as the previous exception.
             throw new GeoIpException(
-                \sprintf('Invalid GeoIP2 database: %s', $e->getMessage()),
+                'The GeoIP2 database configured in GEOIP_DATABASE_PATH is invalid or corrupt',
                 $e->getCode(),
                 $e,
             );
