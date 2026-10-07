@@ -25,6 +25,7 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 # Code quality (run before committing):
 composer ci:test:php:cgl      # PHP-CS-Fixer check (dry-run)
 composer ci:test:php:phpstan  # PHPStan (Build/phpstan.neon)
+composer ci:test:php:rector   # Rector dry run (rector.php)
 composer ci:cgl               # Fix code style
 
 # Testing:

@@ -81,6 +81,7 @@
         "ci:test:php:cgl": ".Build/bin/php-cs-fixer fix --dry-run --diff",
         "ci:test:php:functional": ".Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml",
         "ci:test:php:phpstan": ".Build/bin/phpstan analyse -c Build/phpstan.neon",
+        "ci:test:php:rector": ".Build/bin/rector process --dry-run --config=rector.php",
         "ci:test:php:unit": ".Build/bin/phpunit -c Build/phpunit/UnitTests.xml",
         "test:coverage": "XDEBUG_MODE=coverage .Build/bin/phpunit -c Build/phpunit/UnitTests.xml --coverage-html .Build/coverage",
         "test:mutation": ".Build/bin/infection --threads=4 --show-mutations"
