@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
-# Contexts: Geolocation
+# Contexts: Geolocation for TYPO3
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/netresearch/contexts-geolocation.svg?style=flat-square)](https://packagist.org/packages/netresearch/contexts-geolocation)
 [![TYPO3](https://img.shields.io/badge/TYPO3-12.4%20|%2013.4-orange.svg?style=flat-square)](https://typo3.org/)

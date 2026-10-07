@@ -7,7 +7,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Contexts: Geolocation',
-    'description' => 'Geolocation-based context types (continent, country, distance) for the contexts extension. Uses MaxMind GeoIP2 for IP-based location detection - by Netresearch.',
+    'description' => 'Geolocation context types (continent, country, distance) for the contexts extension, using MaxMind GeoIP2 for IP-based location detection.',
     'category' => 'misc',
     'author' => 'Netresearch DTT GmbH',
     'author_email' => '',

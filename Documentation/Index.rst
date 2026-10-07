@@ -5,9 +5,9 @@
 
 .. _start:
 
-======================
+=====================
 Contexts: Geolocation
-======================
+=====================
 
 :Extension key:
    contexts_geolocation
