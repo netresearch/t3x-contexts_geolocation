@@ -81,7 +81,11 @@ TYPO3 itself, so that TYPO3 reads the client address from
    :caption: config/system/additional.php
 
    $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP'] = '192.0.2.10';
-   $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue'] = 'first';
+   $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue'] = 'last';
+
+With ``'last'``, TYPO3 takes the address the proxy appended, not one the
+visitor sent in its own ``X-Forwarded-For``. Use ``'first'`` only if the
+proxy replaces the header instead of appending to it.
 
 See `reverseProxyIP <https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/Configuration/Typo3ConfVars/SYS.html#confval-globals-typo3-conf-vars-sys-reverseproxyip>`__
 in the TYPO3 core documentation for the format and the related settings.

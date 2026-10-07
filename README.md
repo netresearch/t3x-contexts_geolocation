@@ -97,8 +97,10 @@ If your TYPO3 installation is behind a reverse proxy, configure the proxy in TYP
 ```php
 // config/system/additional.php
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP'] = '192.0.2.10';
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue'] = 'first';
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue'] = 'last';
 ```
+
+With `'last'`, TYPO3 takes the address the proxy appended, not one the visitor sent in its own `X-Forwarded-For`. Use `'first'` only if the proxy replaces the header instead of appending to it.
 
 ## Context Types
 

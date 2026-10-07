@@ -10,7 +10,7 @@ The extension adds three context types (country, continent, distance) to the bas
 
 - **Data it processes**: the visitor's IP address. `GeoLocationService::getClientIpAddress()` (`Classes/Service/GeoLocationService.php`) takes the client address TYPO3 determines for the request (the `normalizedParams` request attribute, falling back to `REMOTE_ADDR`). TYPO3 reads `X-Forwarded-For` only when `REMOTE_ADDR` is listed in `$GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP']`. The database returns country, continent, coordinates, city, postal code and subdivision (`Classes/Adapter/MaxMindGeoIp2Adapter.php`, `Classes/Dto/GeoLocation.php`); the context types use the country code, the continent code or the coordinates.
 - **Where the location data comes from**: a MaxMind GeoLite2 or GeoIP2 City database file (`.mmdb`) on the server, at the path in the environment variable `GEOIP_DATABASE_PATH` (`Configuration/Services.yaml`). The operator downloads and updates it, for example with `geoipupdate` ([README.md](../README.md), `Documentation/Configuration/GeoIP.rst`). The extension opens it read-only through `GeoIp2\Database\Reader` and makes no network requests. The MaxMind account and licence key are used by the operator's download tool; the extension never reads them.
-- **What it stores**: this extension stores neither the IP address nor the location. The only state that outlives the request is the boolean match result, which the base extension's `AbstractContext::storeInSession()` writes to the TYPO3 frontend user session under the key `contexts-<uid>-<tstamp>` when the context record has "use session" enabled. The extension has no database tables (no `ext_tables.sql`) and writes no log entries.
+- **What it stores**: this extension stores neither the IP address nor the location. The only state that outlives the request is the boolean match result, which the base extension's `AbstractContext::storeInSession()` writes to the TYPO3 frontend user session under the key `contexts-<uid>-<tstamp>` when the context record has "use session" enabled. The extension has no database tables (no `ext_tables.sql`). Its only log entry is a warning when a lookup fails because the database is missing or unreadable; it contains the error message, not the visitor's IP address.
 - **What it outputs**: nothing. It returns a boolean to the base extension, which shows or hides content.
 
 ## Security expectations
@@ -26,9 +26,9 @@ Users can expect:
 Users cannot expect:
 
 - **Access control.** IP geolocation is a targeting heuristic. Visitors using VPNs, proxies or mobile networks are located elsewhere than they are ([README.md](../README.md), "Accuracy Considerations"). Do not use these contexts to protect content that a visitor must not see.
-- **Correct results behind a reverse proxy without configuration.** Without `reverseProxyIP`, `REMOTE_ADDR` is the proxy's address, usually private, so no geolocation context matches. The reverse proxy has to set `X-Forwarded-For` itself; a CDN header such as `CF-Connecting-IP` is not read.
-- **A match when the location is unknown.** Every failure (no request, no service, private IP, address not in the database, missing coordinates) evaluates to "no match" before the context's invert option is applied. An inverted context therefore matches in these cases.
-- **Graceful degradation without a database.** If the file at `GEOIP_DATABASE_PATH` is missing, unreadable or not a MaxMind database, `MaxMindGeoIp2Adapter::lookup()` throws `GeoIpException`, and the context types do not catch it. The frontend request then fails with TYPO3's error handling, so the operator has to keep the file in place. If `GEOIP_DATABASE_PATH` is not set at all, the service cannot be created and `AbstractGeolocationContext::getGeoLocationService()` returns `null`, so the contexts do not match.
+- **Correct results behind a reverse proxy without configuration.** Without `reverseProxyIP`, `REMOTE_ADDR` is the proxy's address, usually private, so no geolocation context matches. The reverse proxy has to set `X-Forwarded-For` itself; a CDN header such as `CF-Connecting-IP` is not read. With `reverseProxyHeaderMultiValue = 'first'` and a proxy that appends to the header, the visitor chooses the address; the documentation therefore recommends `'last'`.
+- **A match when the location is unknown.** Every failure (no request, no service, private IP, address not in the database, missing or unreadable database, missing coordinates) evaluates to "no match" before the context's invert option is applied. An inverted context therefore matches in these cases.
+- **A visible error without a database.** If the file at `GEOIP_DATABASE_PATH` is missing, unreadable or not a MaxMind database, `MaxMindGeoIp2Adapter::lookup()` throws `GeoIpException`; `GeoLocationService::getLocationForIp()` catches it, logs a warning and returns no location, so the contexts do not match and the request continues (`lookupWithoutDatabaseYieldsNoLocation` in `Tests/Functional/Context/Type/AbstractGeolocationContextTest.php`). The operator learns of it only from the log. If `GEOIP_DATABASE_PATH` is not set at all, the service cannot be created and `AbstractGeolocationContext::getGeoLocationService()` returns `null`, so the contexts do not match.
 - **Current location data.** Accuracy depends on the age of the database file, which the extension does not check.
 - **Data protection compliance.** Processing IP addresses is processing personal data; the operator decides on the lawful basis and informs visitors (`Documentation/Configuration/GeoIP.rst`, "Privacy and Data Protection").
 
@@ -58,13 +58,13 @@ Threats considered and how they are handled:
 | Crafted address strings reach the database reader | `FILTER_VALIDATE_IP` on every candidate; invalid values are dropped (`GeoLocationService`). |
 | Internal addresses are looked up or matched | `isPrivateIp()` excludes private and reserved ranges before every lookup. |
 | Editor input causes code or file access | FlexForm values are only compared or converted to floats; no path, query or output uses them. |
-| IP addresses leak through storage or logs | The extension persists no IP or location and has no logging calls. |
-| Database missing or corrupt | `GeoIpException` (`MaxMindGeoIp2Adapter`); for a corrupt file it carries the reader's exception; covered by `Tests/Unit/Adapter/MaxMindGeoIp2AdapterTest.php`. |
+| IP addresses leak through storage or logs | The extension persists no IP or location; its only log call (`GeoLocationService::getLocationForIp()`) logs the lookup error message, not the address. |
+| Database missing or corrupt | `GeoIpException` (`MaxMindGeoIp2Adapter`), caught by `GeoLocationService` and logged as a warning; the lookup yields no location. Covered by `Tests/Unit/Adapter/MaxMindGeoIp2AdapterTest.php`, `Tests/Unit/Service/GeoLocationServiceTest.php` and `lookupWithoutDatabaseYieldsNoLocation`. |
 
 ## Secure design principles applied
 
 - **Secure defaults**: proxy headers are distrusted unless the request comes from an address in TYPO3's `reverseProxyIP` (`GeoLocationService::getClientIpAddress()`, covered by `Tests/Functional/Context/Type/AbstractGeolocationContextTest.php`). A missing or unreadable database makes lookups return no location instead of failing the request, and its error messages do not contain the database path (`Classes/Adapter/MaxMindGeoIp2Adapter.php`).
-- **Fail closed**: the failures listed under "A match when the location is unknown" yield "no match" before inversion (`CountryContext::match()`, `ContinentContext::match()`, `DistanceContext::match()`); a `GeoIpException` from a missing or corrupt database is not caught (see "Graceful degradation without a database").
+- **Fail closed**: the failures listed under "A match when the location is unknown" yield "no match" before inversion (`CountryContext::match()`, `ContinentContext::match()`, `DistanceContext::match()`), and so does a missing or corrupt database (see "A visible error without a database").
 - **Minimal data**: the location is kept in memory for the request only; the session holds a boolean.
 - **Least privilege**: the database is opened read-only; the extension needs no write access, no network access and no database tables.
 - **Configuration outside the web request**: the database path and the proxy trust come from the environment, not from TYPO3 settings an editor can change.
@@ -80,8 +80,8 @@ Threats considered and how they are handled:
 | CWE-89 SQL injection | The extension runs no database queries; the base extension reads the context records. |
 | CWE-22 Path traversal | The only file opened is the one at `GEOIP_DATABASE_PATH`, set by the operator. |
 | CWE-918 Server-side request forgery | No outbound network requests; lookups read the local file. |
-| CWE-532 Sensitive information in log files | No logging calls in `Classes/`. |
-| CWE-209 Error messages containing sensitive information | `GeoIpException` messages name the database path; they reach visitors only if TYPO3 is configured to display errors, which production configurations do not. |
+| CWE-532 Sensitive information in log files | The only log call writes the lookup error message: the adapter's fixed text, which names the `GEOIP_DATABASE_PATH` setting, or for a corrupt file the reader's fixed description of the damage. Neither contains the file path or the visitor's address. |
+| CWE-209 Error messages containing sensitive information | `GeoIpException` messages name the `GEOIP_DATABASE_PATH` setting, not the file path, and the service catches them. |
 | CWE-1104 Use of unmaintained third-party components | Renovate (`renovate.json`) proposes dependency updates; Composer Audit and Dependency Review run on every pull request (see [CONTRIBUTING.md](../CONTRIBUTING.md#governance-and-policies)). |
 
 ## Verification
