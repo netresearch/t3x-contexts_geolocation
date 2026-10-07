@@ -11,25 +11,28 @@ namespace Netresearch\ContextsGeolocation\Service;
 
 use Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface;
 use Netresearch\ContextsGeolocation\Dto\GeoLocation;
+use Netresearch\ContextsGeolocation\Exception\GeoIpException;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 
 /**
  * Service for geolocation lookups.
  *
  * Provides geolocation data for IP addresses using the configured GeoIP adapter.
- * Handles client IP detection from HTTP requests including proxy headers.
+ * The client IP address is the one TYPO3 determines for the request, which
+ * honours the reverse proxy configuration in
+ * $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP'].
  */
 final readonly class GeoLocationService
 {
     /**
      * @param GeoIpAdapterInterface $adapter The GeoIP adapter to use for lookups
-     * @param bool $trustProxyHeaders Whether to trust X-Forwarded-For and similar headers
-     * @param array<string> $proxyHeaders List of proxy headers to check (in order of priority)
+     * @param LoggerInterface|null $logger Receives failed lookups (missing or unreadable database)
      */
     public function __construct(
         private GeoIpAdapterInterface $adapter,
-        private bool $trustProxyHeaders = false,
-        private array $proxyHeaders = ['X-Forwarded-For', 'X-Real-IP'],
+        private ?LoggerInterface $logger = null,
     ) {}
 
     /**
@@ -46,15 +49,18 @@ final readonly class GeoLocationService
 
         $ipAddress = $this->getClientIpAddress($request);
 
-        if ($ipAddress === null || $this->isPrivateIp($ipAddress)) {
+        if ($ipAddress === null) {
             return null;
         }
 
-        return $this->adapter->lookup($ipAddress);
+        return $this->getLocationForIp($ipAddress);
     }
 
     /**
      * Get geolocation for a specific IP address.
+     *
+     * Returns null when the address is private or reserved, unknown to the
+     * database, or when the database cannot be used; the last case is logged.
      *
      * @param string $ipAddress IPv4 or IPv6 address
      */
@@ -64,40 +70,35 @@ final readonly class GeoLocationService
             return null;
         }
 
-        return $this->adapter->lookup($ipAddress);
+        try {
+            return $this->adapter->lookup($ipAddress);
+        } catch (GeoIpException $e) {
+            $this->logger?->warning('GeoIP lookup failed: {message}', ['message' => $e->getMessage()]);
+
+            return null;
+        }
     }
 
     /**
      * Get the client IP address from a PSR-7 request.
      *
-     * Handles X-Forwarded-For and similar proxy headers when configured.
+     * Uses the "normalizedParams" request attribute, which TYPO3 sets for
+     * every frontend and backend request. It takes the address from
+     * X-Forwarded-For only when REMOTE_ADDR is a proxy listed in
+     * $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP']. Without the
+     * attribute, REMOTE_ADDR is used.
      */
     public function getClientIpAddress(ServerRequestInterface $request): ?string
     {
-        if ($this->trustProxyHeaders) {
-            foreach ($this->proxyHeaders as $header) {
-                $value = $request->getHeaderLine($header);
-                if ($value !== '') {
-                    // X-Forwarded-For may contain multiple IPs: "client, proxy1, proxy2"
-                    $ips = array_map(trim(...), explode(',', $value));
-                    $clientIp = $ips[0];
-                    if ($this->isValidIpAddress($clientIp)) {
-                        return $clientIp;
-                    }
-                }
-            }
+        $normalizedParams = $request->getAttribute('normalizedParams');
+        if ($normalizedParams instanceof NormalizedParams) {
+            $remoteAddr = $normalizedParams->getRemoteAddress();
+        } else {
+            $serverParams = $request->getServerParams();
+            $remoteAddr = isset($serverParams['REMOTE_ADDR']) ? (string) $serverParams['REMOTE_ADDR'] : '';
         }
 
-        $serverParams = $request->getServerParams();
-        $remoteAddr = isset($serverParams['REMOTE_ADDR'])
-            ? (string) $serverParams['REMOTE_ADDR']
-            : null;
-
-        if ($remoteAddr !== null && $this->isValidIpAddress($remoteAddr)) {
-            return $remoteAddr;
-        }
-
-        return null;
+        return $this->isValidIpAddress($remoteAddr) ? $remoteAddr : null;
     }
 
     /**

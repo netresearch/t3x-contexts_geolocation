@@ -89,10 +89,14 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     {
         $adapter = new MaxMindGeoIp2Adapter('/nonexistent/path/to/database.mmdb');
 
-        $this->expectException(GeoIpException::class);
-        $this->expectExceptionMessage('GeoIP2 database not available');
-
-        $adapter->lookup('8.8.8.8');
+        try {
+            $adapter->lookup('8.8.8.8');
+            self::fail('Expected GeoIpException');
+        } catch (GeoIpException $exception) {
+            self::assertStringStartsWith('GeoIP2 database not available', $exception->getMessage());
+            // The message can reach a debug error page: it names the setting, not the path.
+            self::assertStringNotContainsString('/nonexistent/', $exception->getMessage());
+        }
     }
 
     #[Test]
@@ -272,7 +276,8 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
             $adapter->lookup('8.8.8.8');
             self::fail('Expected GeoIpException');
         } catch (GeoIpException $exception) {
-            self::assertStringStartsWith('Cannot read GeoIP2 database: ', $exception->getMessage());
+            self::assertStringStartsWith('Cannot read the GeoIP2 database', $exception->getMessage());
+            self::assertStringNotContainsString($this->tempFilePath, $exception->getMessage());
             self::assertInstanceOf(InvalidDatabaseException::class, $exception->getPrevious());
         }
     }

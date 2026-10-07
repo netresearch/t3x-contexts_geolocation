@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - PHP 8.2, 8.3, 8.4, and 8.5 support
 - Complete rewrite with modern architecture using MaxMind GeoIP2 library
 - Environment-based configuration for GeoIP database path (GEOIP_DATABASE_PATH)
-- Proxy header trust configuration (GEOIP_TRUST_PROXY_HEADERS)
+- Client IP address from TYPO3's reverse proxy configuration (`$GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP']`)
 - Session-based caching for efficient geolocation lookups
 - Three context types:
   - **Continent Context**: Match visitors by continent (AF, AN, AS, EU, NA, OC, SA)

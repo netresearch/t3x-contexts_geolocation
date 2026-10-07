@@ -32,13 +32,6 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
 
     public function lookup(string $ipAddress): ?GeoLocation
     {
-        if (!$this->isAvailable()) {
-            throw new GeoIpException(
-                \sprintf('GeoIP2 database not available at path: %s', $this->databasePath),
-                2024837309,
-            );
-        }
-
         try {
             $record = $this->getReader()->city($ipAddress);
 
@@ -135,16 +128,26 @@ final class MaxMindGeoIp2Adapter implements GeoIpAdapterInterface
     /**
      * Get the MaxMind Reader instance (lazy initialization).
      *
-     * @throws GeoIpException If the database cannot be read
+     * The exception messages do not contain the database path: they can end
+     * up in a debug error page.
+     *
+     * @throws GeoIpException If the database is missing or cannot be read
      */
     private function getReader(): Reader
     {
         if (!$this->reader instanceof Reader) {
+            if (!$this->isAvailable()) {
+                throw new GeoIpException(
+                    'GeoIP2 database not available: check GEOIP_DATABASE_PATH',
+                    2024837309,
+                );
+            }
+
             try {
                 $this->reader = new Reader($this->databasePath);
             } catch (InvalidDatabaseException $e) {
                 throw new GeoIpException(
-                    \sprintf('Cannot read GeoIP2 database: %s', $e->getMessage()),
+                    'Cannot read the GeoIP2 database configured in GEOIP_DATABASE_PATH',
                     $e->getCode(),
                     $e,
                 );
