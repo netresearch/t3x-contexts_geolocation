@@ -52,7 +52,7 @@ final class ContinentContextTest extends TestCase
     public function matchReturnsTrueWhenContinentMatches(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(continentCode: 'EU'),
         );
 
@@ -75,7 +75,7 @@ final class ContinentContextTest extends TestCase
     public function matchReturnsFalseWhenContinentDoesNotMatch(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(continentCode: 'AS'),
         );
 
@@ -98,7 +98,7 @@ final class ContinentContextTest extends TestCase
     public function matchReturnsFalseWhenContinentCodeIsNull(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(),
         );
 
@@ -121,7 +121,7 @@ final class ContinentContextTest extends TestCase
     public function matchReturnsInvertedResultWhenInvertIsTrue(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(continentCode: 'EU'),
         );
 
@@ -167,9 +167,7 @@ final class ContinentContextTest extends TestCase
     public function matchReturnsFalseWhenNoContinentsConfigured(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
-            new GeoLocation(continentCode: 'EU'),
-        );
+        $adapter->expects(self::never())->method('lookup');
 
         $service = new GeoLocationService($adapter);
 
@@ -205,7 +203,7 @@ final class ContinentContextTest extends TestCase
     public function matchReturnsFalseWhenLookupReturnsNull(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(null);
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(null);
 
         $service = new GeoLocationService($adapter);
 
@@ -227,7 +225,7 @@ final class ContinentContextTest extends TestCase
     public function matchWorksWithValidContinentCodes(string $configured, string $detected, bool $expected): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $adapter->method('lookup')->with('8.8.8.8')->willReturn(
+        $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(
             new GeoLocation(continentCode: $detected),
         );
 

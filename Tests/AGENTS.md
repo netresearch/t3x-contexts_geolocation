@@ -70,7 +70,7 @@ self::assertInstanceOf(GeoLocation::class, $object);
 ```php
 // Good: mock the adapter, wrap it in a real service, inject via constructor
 $adapter = $this->createMock(GeoIpAdapterInterface::class);
-$adapter->method('lookup')->with('8.8.8.8')->willReturn(new GeoLocation(countryCode: 'DE'));
+$adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn(new GeoLocation(countryCode: 'DE'));
 $service = new GeoLocationService($adapter);
 $context = $this->createTestableCountryContext('DE, US, FR', $service);
 
