@@ -79,7 +79,7 @@ Requirements
 - TYPO3 v12.4 LTS or v13.4 LTS.
 - PHP 8.2 or higher.
 - The `contexts <https://github.com/netresearch/t3x-contexts>`__ extension:
-  ``^3.1.1 || ^4.0 || ^5.0.1 || dev-main`` with Composer, 4.x for installations from TER.
+  ``^4.0 || ^5.0.1 || dev-main`` with Composer, 4.x or 5.x for installations from TER.
 - MaxMind GeoLite2-City database (free registration required).
 
 .. tip::

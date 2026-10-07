@@ -32,7 +32,7 @@ IP-based location detection.
 
 - TYPO3 12.4 LTS or 13.4 LTS
 - PHP 8.2 or higher
-- [contexts](https://github.com/netresearch/t3x-contexts) extension: `^3.1.1 || ^4.0 || ^5.0.1 || dev-main` with Composer (`composer.json`), 4.x for installations from TER (`ext_emconf.php`)
+- [contexts](https://github.com/netresearch/t3x-contexts) extension: `^4.0 || ^5.0.1 || dev-main` with Composer (`composer.json`), 4.x or 5.x for installations from TER (`ext_emconf.php`)
 - MaxMind GeoLite2-City database (free) or GeoIP2-City database (commercial)
 
 ## Installation

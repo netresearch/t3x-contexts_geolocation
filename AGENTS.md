@@ -91,7 +91,7 @@ docs/                          # ARCHITECTURE.md, exec-plans/
 
 ## Dependencies
 
-**Required:** `netresearch/contexts` `^3.1.1 || ^4.0 || ^5.0.1 || dev-main` with Composer, 4.x from TER (`ext_emconf.php`) (base contexts extension), `geoip2/geoip2` ^3.0 (MaxMind GeoIP2 PHP library)
+**Required:** `netresearch/contexts` `^4.0 || ^5.0.1 || dev-main` with Composer, 4.x or 5.x from TER (`ext_emconf.php`) (base contexts extension), `geoip2/geoip2` ^3.0 (MaxMind GeoIP2 PHP library)
 
 ## Key Concepts
 
