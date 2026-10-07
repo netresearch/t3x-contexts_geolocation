@@ -26,7 +26,7 @@ IP-based location detection.
 - **Distance context**: Target visitors within a radius from a geographic point.
 - **MaxMind GeoIP2**: Uses the modern GeoIP2 library with GeoLite2 or commercial databases.
 - **Session caching**: Efficient lookups with session-based caching.
-- **Proxy support**: Configurable trust for X-Forwarded-For and similar headers.
+- **Proxy support**: Uses the client IP address TYPO3 determines, so TYPO3's reverse proxy configuration applies.
 
 ## Requirements
 
@@ -89,14 +89,15 @@ GEOIP_DATABASE_PATH=/var/lib/GeoIP/GeoLite2-City.mmdb
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `GEOIP_DATABASE_PATH` | Path to the GeoIP2 database file | (required) |
-| `GEOIP_TRUST_PROXY_HEADERS` | Trust X-Forwarded-For headers | `false` |
 
 ### Proxy Configuration
 
-If your TYPO3 installation is behind a reverse proxy, enable proxy header trust:
+If your TYPO3 installation is behind a reverse proxy, configure the proxy in TYPO3 itself; the extension then uses the client address TYPO3 reads from `X-Forwarded-For`:
 
-```bash
-GEOIP_TRUST_PROXY_HEADERS=true
+```php
+// config/system/additional.php
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP'] = '192.0.2.10';
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue'] = 'first';
 ```
 
 ## Context Types

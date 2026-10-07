@@ -45,7 +45,7 @@ docker run --rm \
 ### Geolocation-Specific Content
 
 Configuration values are documented with `confval` directives; the existing ones
-are `GEOIP_DATABASE_PATH` / `GEOIP_TRUST_PROXY_HEADERS` (Configuration/Index.rst)
+are `GEOIP_DATABASE_PATH` (Configuration/Index.rst)
 and the FlexForm fields (`field_countries`, `field_continents`, `field_latitude`,
 `field_longitude`, `field_radius`) in ContextTypes/Index.rst:
 

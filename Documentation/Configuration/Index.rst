@@ -47,25 +47,6 @@ production).
       # In .env file
       GEOIP_DATABASE_PATH=/var/lib/GeoIP/GeoLite2-City.mmdb
 
-.. confval:: GEOIP_TRUST_PROXY_HEADERS
-   :name: confval-geoip-trust-proxy-headers
-   :type: boolean
-   :Default: false
-
-   Whether to trust proxy headers (``X-Forwarded-For``, ``X-Real-IP``) for
-   client IP detection.
-
-   Enable this only if your TYPO3 installation is behind a trusted reverse
-   proxy (nginx, Varnish, load balancer).
-
-   **Security warning:** Do not enable this if clients can connect directly
-   to your server, as they could spoof their IP address.
-
-   .. code-block:: bash
-
-      # In .env file
-      GEOIP_TRUST_PROXY_HEADERS=true
-
 .. _configuration-services:
 
 Service configuration
@@ -86,33 +67,33 @@ For advanced use cases, you can override the service configuration:
        arguments:
          $databasePath: '/custom/path/to/GeoLite2-City.mmdb'
 
-     Netresearch\ContextsGeolocation\Service\GeoLocationService:
-       arguments:
-         $trustProxyHeaders: true
-         $proxyHeaders: ['X-Forwarded-For', 'X-Real-IP', 'CF-Connecting-IP']
-
 .. _configuration-proxy-headers:
 
-Proxy header configuration
-==========================
+Reverse proxy configuration
+===========================
 
-When running behind a reverse proxy, the extension needs to know the real
-client IP address. The following proxy headers are checked by default:
+The extension uses the client IP address that TYPO3 determines for the
+request. Behind a reverse proxy (nginx, Varnish, a load balancer), configure
+TYPO3 itself, so that TYPO3 reads the client address from
+``X-Forwarded-For`` only when the request comes from that proxy:
 
-1. ``X-Forwarded-For`` - Standard proxy header (leftmost IP is the client).
-2. ``X-Real-IP`` - Common alternative used by nginx.
+.. code-block:: php
+   :caption: config/system/additional.php
 
-For specific proxy setups, you may need to configure additional headers:
+   $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP'] = '192.0.2.10';
+   $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue'] = 'first';
 
-.. csv-table:: Common proxy headers
-   :header: "Proxy/CDN", "Header"
-   :widths: 40, 40
+See `reverseProxyIP <https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/Configuration/Typo3ConfVars/SYS.html#confval-globals-typo3-conf-vars-sys-reverseproxyip>`__
+in the TYPO3 core documentation for the format and the related settings.
 
-   "nginx", "X-Real-IP"
-   "Cloudflare", "CF-Connecting-IP"
-   "AWS ALB/ELB", "X-Forwarded-For"
-   "Fastly", "Fastly-Client-IP"
-   "Akamai", "True-Client-IP"
+A CDN that sends the client address in its own header (for example
+``CF-Connecting-IP`` or ``True-Client-IP``) has to be mapped to
+``X-Forwarded-For`` or to the connection address by the web server in front
+of TYPO3.
+
+.. versionchanged:: 2.0.0
+   The ``GEOIP_TRUST_PROXY_HEADERS`` environment variable was removed. Proxy
+   headers are evaluated through the TYPO3 reverse proxy configuration.
 
 .. _configuration-caching:
 

@@ -191,7 +191,6 @@ A complete TYPO3 setup using Docker:
          - ./var/lib/GeoIP:/var/lib/GeoIP:ro
        environment:
          - GEOIP_DATABASE_PATH=/var/lib/GeoIP/GeoLite2-City.mmdb
-         - GEOIP_TRUST_PROXY_HEADERS=true
        ports:
          - "80:80"
 
@@ -202,7 +201,6 @@ And in your ``.env`` file:
 
    # GeoIP Configuration
    GEOIP_DATABASE_PATH=/var/lib/GeoIP/GeoLite2-City.mmdb
-   GEOIP_TRUST_PROXY_HEADERS=false
 
 .. _configuration-geoip-auto-updates:
 

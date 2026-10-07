@@ -109,8 +109,9 @@ Runtime configuration is environment-based (wired in `Configuration/Services.yam
 
 ```
 GEOIP_DATABASE_PATH        # Path to MaxMind .mmdb database (GeoLite2 or GeoIP2)
-GEOIP_TRUST_PROXY_HEADERS  # bool: trust X-Forwarded-For / X-Real-IP
 ```
+
+The client IP address is the one TYPO3 determines; behind a reverse proxy, configure `$GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP']`.
 
 ## When Instructions Conflict
 

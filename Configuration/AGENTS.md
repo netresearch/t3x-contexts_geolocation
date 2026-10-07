@@ -64,8 +64,7 @@ Configuration::registerContextType(
 ### Services.yaml
 
 The adapter binding takes `$databasePath: '%env(GEOIP_DATABASE_PATH)%'`;
-`GeoLocationService` takes `$trustProxyHeaders: '%env(bool:GEOIP_TRUST_PROXY_HEADERS)%'`
-and is `public: true` because context types fetch it from the container at runtime.
+`GeoLocationService` is `public: true` because context types fetch it from the container at runtime.
 
 ## Security
 
