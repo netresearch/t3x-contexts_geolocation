@@ -25,6 +25,7 @@ The **closest AGENTS.md** to changed files wins. This root file holds global def
 # Code quality (run before committing):
 composer ci:test:php:cgl      # PHP-CS-Fixer check (dry-run)
 composer ci:test:php:phpstan  # PHPStan (Build/phpstan.neon)
+composer ci:test:php:rector   # Rector dry run (rector.php)
 composer ci:cgl               # Fix code style
 
 # Testing:
@@ -91,7 +92,7 @@ docs/                          # ARCHITECTURE.md, exec-plans/
 
 ## Dependencies
 
-**Required:** `netresearch/contexts` `^3.1.1 || ^4.0 || ^5.0.1 || dev-main` with Composer, 4.x from TER (`ext_emconf.php`) (base contexts extension), `geoip2/geoip2` ^3.0 (MaxMind GeoIP2 PHP library)
+**Required:** `netresearch/contexts` `^4.0 || ^5.0.1 || dev-main` with Composer, 4.x or 5.x from TER (`ext_emconf.php`) (base contexts extension), `geoip2/geoip2` ^3.0 (MaxMind GeoIP2 PHP library)
 
 ## Key Concepts
 
@@ -109,8 +110,9 @@ Runtime configuration is environment-based (wired in `Configuration/Services.yam
 
 ```
 GEOIP_DATABASE_PATH        # Path to MaxMind .mmdb database (GeoLite2 or GeoIP2)
-GEOIP_TRUST_PROXY_HEADERS  # bool: trust X-Forwarded-For / X-Real-IP
 ```
+
+The client IP address is the one TYPO3 determines; behind a reverse proxy, configure `$GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP']`.
 
 ## When Instructions Conflict
 

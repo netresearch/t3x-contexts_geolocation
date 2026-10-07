@@ -1,11 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: Netresearch DTT GmbH
 
-parameters:
-  # Documented default of GEOIP_TRUST_PROXY_HEADERS: proxy headers are not
-  # trusted when the variable is not set.
-  env(GEOIP_TRUST_PROXY_HEADERS): 'false'
-
 services:
   _defaults:
     autowire: true
@@ -26,10 +21,10 @@ services:
     arguments:
       $databasePath: '%env(GEOIP_DATABASE_PATH)%'
 
-  # GeoLocation Service with configurable proxy header trust
+  # GeoLocation Service. The client IP address comes from TYPO3's
+  # normalizedParams, so the reverse proxy configuration in
+  # $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP'] applies.
   # Public: true allows context types to retrieve service from container
   # when instantiated by the contexts extension's Container class
   Netresearch\ContextsGeolocation\Service\GeoLocationService:
     public: true
-    arguments:
-      $trustProxyHeaders: '%env(bool:GEOIP_TRUST_PROXY_HEADERS)%'

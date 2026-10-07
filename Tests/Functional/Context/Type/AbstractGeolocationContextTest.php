@@ -19,7 +19,9 @@ namespace Netresearch\ContextsGeolocation\Tests\Functional\Context\Type;
 use Netresearch\ContextsGeolocation\Context\Type\CountryContext;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -54,7 +56,8 @@ final class AbstractGeolocationContextTest extends FunctionalTestCase
 
         // GeoLocationService and its adapter resolve their configuration from
         // env placeholders in Services.yaml at container lookup time.
-        foreach (['GEOIP_DATABASE_PATH' => '/dev/null', 'GEOIP_TRUST_PROXY_HEADERS' => '0'] as $name => $value) {
+        // GEOIP_TRUST_PROXY_HEADERS is set to show that it no longer has an effect.
+        foreach (['GEOIP_DATABASE_PATH' => '/dev/null', 'GEOIP_TRUST_PROXY_HEADERS' => '1'] as $name => $value) {
             $this->originalEnv[$name] = getenv($name);
             putenv($name . '=' . $value);
             $_ENV[$name] = $value;
@@ -77,6 +80,21 @@ final class AbstractGeolocationContextTest extends FunctionalTestCase
     }
 
     /**
+     * The client IP address is the one TYPO3 determines: X-Forwarded-For
+     * counts only when REMOTE_ADDR is listed in SYS/reverseProxyIP.
+     *
+     * @return iterable<string, array{array<string, string>, string}>
+     */
+    public static function reverseProxyConfigurationProvider(): iterable
+    {
+        yield 'no reverse proxy configured' => [['reverseProxyIP' => ''], '203.0.113.10'];
+        yield 'REMOTE_ADDR is the configured reverse proxy' => [
+            ['reverseProxyIP' => '203.0.113.10', 'reverseProxyHeaderMultiValue' => 'first'],
+            '198.51.100.7',
+        ];
+    }
+
+    /**
      * Guards the `public: true` entry in Configuration/Services.yaml. The
      * container of a booted TYPO3 exposes only public services through has(),
      * so this really asserts public visibility — a private service would make
@@ -92,29 +110,46 @@ final class AbstractGeolocationContextTest extends FunctionalTestCase
     }
 
     /**
-     * GEOIP_TRUST_PROXY_HEADERS is documented with the default `false`
-     * (README.md, Documentation/Configuration/Index.rst). Without a default
-     * for the env placeholder in Services.yaml an unset variable makes the
-     * service unbuildable, and every geolocation context stops matching.
+     * @param array<string, string> $systemConfiguration
      */
     #[Test]
-    public function unsetTrustProxyHeadersDefaultsToIgnoringProxyHeaders(): void
-    {
-        putenv('GEOIP_TRUST_PROXY_HEADERS');
-        unset($_ENV['GEOIP_TRUST_PROXY_HEADERS'], $_SERVER['GEOIP_TRUST_PROXY_HEADERS']);
-
+    #[DataProvider('reverseProxyConfigurationProvider')]
+    public function clientIpAddressFollowsTheTypo3ReverseProxyConfiguration(
+        array $systemConfiguration,
+        string $expectedAddress,
+    ): void {
         $service = $this->getContainer()->get(GeoLocationService::class);
         self::assertInstanceOf(GeoLocationService::class, $service);
 
-        $request = new ServerRequest(
+        $serverParams = ['REMOTE_ADDR' => '203.0.113.10', 'HTTP_X_FORWARDED_FOR' => '198.51.100.7'];
+        $request = (new ServerRequest(
             'https://example.org/',
             'GET',
             'php://temp',
             ['X-Forwarded-For' => '198.51.100.7'],
-            ['REMOTE_ADDR' => '203.0.113.10'],
+            $serverParams,
+        ))->withAttribute(
+            'normalizedParams',
+            NormalizedParams::createFromServerParams($serverParams, $systemConfiguration),
         );
 
-        self::assertSame('203.0.113.10', $service->getClientIpAddress($request));
+        self::assertSame($expectedAddress, $service->getClientIpAddress($request));
+    }
+
+    /**
+     * A missing database is a configuration error, not a reason to fail every
+     * request that evaluates a geolocation context.
+     */
+    #[Test]
+    public function lookupWithoutDatabaseYieldsNoLocation(): void
+    {
+        putenv('GEOIP_DATABASE_PATH=/nonexistent/GeoLite2-City.mmdb');
+        $_ENV['GEOIP_DATABASE_PATH'] = '/nonexistent/GeoLite2-City.mmdb';
+
+        $service = $this->getContainer()->get(GeoLocationService::class);
+        self::assertInstanceOf(GeoLocationService::class, $service);
+
+        self::assertNull($service->getLocationForIp('8.8.8.8'));
     }
 
     #[Test]

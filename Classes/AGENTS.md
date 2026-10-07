@@ -125,7 +125,7 @@ FlexForm fields per type: `field_countries` (Country), `field_continents`
 
 - `getLocationForRequest(): ?GeoLocation` — uses `$GLOBALS['TYPO3_REQUEST']`; returns `null` when no PSR-7 request is available
 - `getLocationForIp(string $ip): ?GeoLocation`
-- `getClientIpAddress(ServerRequestInterface $request): ?string` — checks configured proxy headers (`X-Forwarded-For`, `X-Real-IP`) only when `$trustProxyHeaders` is true, validates every candidate IP, falls back to `REMOTE_ADDR`
+- `getClientIpAddress(ServerRequestInterface $request): ?string` — the address of the `normalizedParams` request attribute (TYPO3's `reverseProxyIP` handling), falling back to `REMOTE_ADDR`; returns `null` for an invalid address
 - `isPrivateIp(string $ip): bool` — `filter_var()` with `FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE`
 - `isAvailable(): bool` — delegates to the adapter
 

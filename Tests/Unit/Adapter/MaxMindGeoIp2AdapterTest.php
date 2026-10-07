@@ -89,10 +89,14 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     {
         $adapter = new MaxMindGeoIp2Adapter('/nonexistent/path/to/database.mmdb');
 
-        $this->expectException(GeoIpException::class);
-        $this->expectExceptionMessage('GeoIP2 database not available');
-
-        $adapter->lookup('8.8.8.8');
+        try {
+            $adapter->lookup('8.8.8.8');
+            self::fail('Expected GeoIpException');
+        } catch (GeoIpException $exception) {
+            self::assertStringStartsWith('GeoIP2 database not available', $exception->getMessage());
+            // The message can reach a debug error page: it names the setting, not the path.
+            self::assertStringNotContainsString('/nonexistent/', $exception->getMessage());
+        }
     }
 
     #[Test]
@@ -239,7 +243,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     #[Test]
     public function lookupWrapsInvalidDatabaseExceptionInGeoIpException(): void
     {
-        $previous = new InvalidDatabaseException('The MaxMind DB file contains invalid metadata', 42);
+        $previous = new InvalidDatabaseException('Expected an array when looking up 8.8.8.8 but received: string', 42);
         $reader = self::createStub(Reader::class);
         $reader->method('city')->willThrowException($previous);
 
@@ -250,9 +254,10 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
             self::fail('Expected GeoIpException');
         } catch (GeoIpException $exception) {
             self::assertSame(
-                'Invalid GeoIP2 database: The MaxMind DB file contains invalid metadata',
+                'The GeoIP2 database configured in GEOIP_DATABASE_PATH is invalid or corrupt',
                 $exception->getMessage(),
             );
+            self::assertStringNotContainsString('8.8.8.8', $exception->getMessage());
             self::assertSame(42, $exception->getCode());
             self::assertSame($previous, $exception->getPrevious());
         }
@@ -272,7 +277,8 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
             $adapter->lookup('8.8.8.8');
             self::fail('Expected GeoIpException');
         } catch (GeoIpException $exception) {
-            self::assertStringStartsWith('Cannot read GeoIP2 database: ', $exception->getMessage());
+            self::assertStringStartsWith('Cannot read the GeoIP2 database', $exception->getMessage());
+            self::assertStringNotContainsString($this->tempFilePath, $exception->getMessage());
             self::assertInstanceOf(InvalidDatabaseException::class, $exception->getPrevious());
         }
     }

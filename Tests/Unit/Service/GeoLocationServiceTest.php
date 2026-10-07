@@ -11,12 +11,15 @@ namespace Netresearch\ContextsGeolocation\Tests\Unit\Service;
 
 use Netresearch\ContextsGeolocation\Adapter\GeoIpAdapterInterface;
 use Netresearch\ContextsGeolocation\Dto\GeoLocation;
+use Netresearch\ContextsGeolocation\Exception\GeoIpException;
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 
 #[CoversClass(GeoLocationService::class)]
 final class GeoLocationServiceTest extends TestCase
@@ -109,109 +112,67 @@ final class GeoLocationServiceTest extends TestCase
     }
 
     #[Test]
-    public function getClientIpAddressReturnsRemoteAddrByDefault(): void
+    public function getClientIpAddressReturnsRemoteAddrWithoutNormalizedParams(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $service = new GeoLocationService($adapter, trustProxyHeaders: false);
+        $service = new GeoLocationService($adapter);
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
 
-        $result = $service->getClientIpAddress($request);
-
-        self::assertSame('8.8.8.8', $result);
+        self::assertSame('8.8.8.8', $service->getClientIpAddress($request));
     }
 
     #[Test]
     public function getClientIpAddressReturnsNullWhenRemoteAddrMissing(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $service = new GeoLocationService($adapter, trustProxyHeaders: false);
+        $service = new GeoLocationService($adapter);
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getServerParams')->willReturn([]);
 
-        $result = $service->getClientIpAddress($request);
-
-        self::assertNull($result);
+        self::assertNull($service->getClientIpAddress($request));
     }
 
     #[Test]
-    public function getClientIpAddressIgnoresProxyHeadersByDefault(): void
+    public function getClientIpAddressIgnoresForwardedForFromAClientThatIsNoConfiguredProxy(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $service = new GeoLocationService($adapter, trustProxyHeaders: false);
+        $service = new GeoLocationService($adapter);
 
-        $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getHeaderLine')
-            ->willReturnMap([
-                ['X-Forwarded-For', '1.2.3.4'],
-            ]);
-        $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => '8.8.8.8']);
+        $request = $this->createRequestWithNormalizedParams(['reverseProxyIP' => '']);
 
-        $result = $service->getClientIpAddress($request);
-
-        self::assertSame('8.8.8.8', $result);
+        self::assertSame('203.0.113.10', $service->getClientIpAddress($request));
     }
 
     #[Test]
-    public function getClientIpAddressUsesXForwardedForWhenTrusted(): void
+    public function getClientIpAddressUsesForwardedForFromAConfiguredReverseProxy(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $service = new GeoLocationService($adapter, trustProxyHeaders: true);
+        $service = new GeoLocationService($adapter);
 
-        $request = $this->createRequestWithHeaders(['X-Forwarded-For' => '1.2.3.4, 5.6.7.8']);
-
-        $result = $service->getClientIpAddress($request);
-
-        // Should use first IP from X-Forwarded-For
-        self::assertSame('1.2.3.4', $result);
-    }
-
-    #[Test]
-    public function getClientIpAddressUsesXRealIpWhenXForwardedForMissing(): void
-    {
-        $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $service = new GeoLocationService($adapter, trustProxyHeaders: true);
-
-        $request = $this->createRequestWithHeaders(['X-Real-IP' => '9.9.9.9']);
-
-        $result = $service->getClientIpAddress($request);
-
-        self::assertSame('9.9.9.9', $result);
-    }
-
-    #[Test]
-    public function getClientIpAddressFallsBackToRemoteAddrWhenProxyHeadersInvalid(): void
-    {
-        $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $service = new GeoLocationService($adapter, trustProxyHeaders: true);
-
-        $request = $this->createRequestWithHeaders([
-            'X-Forwarded-For' => 'invalid-ip',
-            'X-Real-IP' => 'also-invalid',
+        $request = $this->createRequestWithNormalizedParams([
+            'reverseProxyIP' => '203.0.113.10',
+            'reverseProxyHeaderMultiValue' => 'first',
         ]);
 
-        $result = $service->getClientIpAddress($request);
-
-        self::assertSame('8.8.8.8', $result);
+        self::assertSame('198.51.100.7', $service->getClientIpAddress($request));
     }
 
     #[Test]
-    public function getClientIpAddressSupportsCustomProxyHeaders(): void
+    public function getLocationForIpReturnsNullAndLogsWhenTheDatabaseCannotBeUsed(): void
     {
         $adapter = $this->createMock(GeoIpAdapterInterface::class);
-        $service = new GeoLocationService(
-            $adapter,
-            trustProxyHeaders: true,
-            proxyHeaders: ['CF-Connecting-IP', 'True-Client-IP'],
+        $adapter->method('lookup')->willThrowException(
+            new GeoIpException('GeoIP2 database not available: check GEOIP_DATABASE_PATH', 2024837309),
         );
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('warning');
 
-        $request = $this->createRequestWithHeaders(['CF-Connecting-IP' => '1.1.1.1']);
+        $service = new GeoLocationService($adapter, $logger);
 
-        $result = $service->getClientIpAddress($request);
-
-        self::assertSame('1.1.1.1', $result);
+        self::assertNull($service->getLocationForIp('8.8.8.8'));
     }
 
     #[Test]
@@ -287,18 +248,24 @@ final class GeoLocationServiceTest extends TestCase
     }
 
     /**
-     * Mocked request answering the given headers; any other header yields ''.
+     * Request carrying the "normalizedParams" attribute TYPO3 sets, for a
+     * client 198.51.100.7 behind 203.0.113.10.
      *
-     * @param array<string, string> $headers
+     * @param array<string, string> $systemConfiguration $GLOBALS['TYPO3_CONF_VARS']['SYS'] subset
      */
-    private function createRequestWithHeaders(
-        array $headers,
-        string $remoteAddr = '8.8.8.8',
-    ): ServerRequestInterface {
+    private function createRequestWithNormalizedParams(array $systemConfiguration): ServerRequestInterface
+    {
+        $serverParams = [
+            'REMOTE_ADDR' => '203.0.113.10',
+            'HTTP_X_FORWARDED_FOR' => '198.51.100.7',
+        ];
+        $normalizedParams = new NormalizedParams($serverParams, $systemConfiguration, '', '');
+
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getHeaderLine')
-            ->willReturnCallback(static fn(string $header): string => $headers[$header] ?? '');
-        $request->method('getServerParams')->willReturn(['REMOTE_ADDR' => $remoteAddr]);
+        $request->method('getServerParams')->willReturn($serverParams);
+        $request->method('getAttribute')->willReturnCallback(
+            static fn(string $name): ?NormalizedParams => $name === 'normalizedParams' ? $normalizedParams : null,
+        );
 
         return $request;
     }

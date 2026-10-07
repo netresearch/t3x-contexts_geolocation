@@ -9,6 +9,10 @@
 | 2.x     | :white_check_mark: |
 | 1.x     | :x:                |
 
+2.x is not released yet. 2.0.0 will be the first release for TYPO3 12.4 and
+13.4; until it is published, security fixes go to the `main` branch only. The
+released 1.0.x versions run on TYPO3 6.2 to 8.7 and receive no fixes.
+
 ## Reporting a Vulnerability
 
 If you discover a security vulnerability within this extension, please report via [GitHub Security Advisories](https://github.com/netresearch/t3x-contexts_geolocation/security/advisories/new).

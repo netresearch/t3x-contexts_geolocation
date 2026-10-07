@@ -19,7 +19,7 @@ The extension adds geolocation-based context types to the base [netresearch/cont
 | Context base class | `Classes/Context/Type/AbstractGeolocationContext.php` | Shared plumbing for context types: service lookup, request/IP access, list parsing; extends `Netresearch\Contexts\Context\AbstractContext` |
 | Context types | `Classes/Context/Type/{Country,Continent,Distance}Context.php` | `match()` implementations per criterion; session-cached results |
 | Exception | `Classes/Exception/GeoIpException.php` | Adapter/database failure signaling |
-| DI wiring | `Configuration/Services.yaml` | Binds interface → MaxMind adapter (`%env(GEOIP_DATABASE_PATH)%`), configures service proxy trust (`%env(bool:GEOIP_TRUST_PROXY_HEADERS)%`) |
+| DI wiring | `Configuration/Services.yaml` | Binds interface → MaxMind adapter (`%env(GEOIP_DATABASE_PATH)%`), makes `GeoLocationService` public |
 | Registration | `Configuration/TCA/Overrides/tx_contexts_contexts.php` | Registers the three context types + FlexForms via `Configuration::registerContextType()` |
 | FlexForms | `Configuration/FlexForms/{Country,Continent,Distance}.xml` | Per-type editor configuration fields |
 
@@ -43,6 +43,6 @@ Enforced by phpat in `Tests/Architecture/LayerTest.php` (config `Build/phpat.neo
 ## Key Decisions
 
 - **Adapter abstraction**: GeoIP providers are swappable behind `GeoIpAdapterInterface`; only the MaxMind implementation ships. Rationale in `Classes/AGENTS.md` (House Rules).
-- **Environment-based configuration**: `GEOIP_DATABASE_PATH` and `GEOIP_TRUST_PROXY_HEADERS` are wired in `Configuration/Services.yaml`; there is no `ext_conf_template.txt`. Documented in `Documentation/Configuration/Index.rst`.
+- **Environment-based configuration**: `GEOIP_DATABASE_PATH` is wired in `Configuration/Services.yaml`; the client IP address follows TYPO3's reverse proxy configuration; there is no `ext_conf_template.txt`. Documented in `Documentation/Configuration/Index.rst`.
 - **Public service**: `GeoLocationService` is `public: true` because context types are constructed by the base extension, not the container (comment in `Configuration/Services.yaml`).
 - **CI layout**: extension-specific test matrix in `.github/workflows/ci.yml`, drift-enforced shared security gate in `.github/workflows/checks.yml` (rationale in the comments of both files).

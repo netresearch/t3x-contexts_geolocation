@@ -18,7 +18,7 @@
     "require": {
         "php": "^8.2",
         "geoip2/geoip2": "^3.0",
-        "netresearch/contexts": "^3.1.1 || ^4.0 || ^5.0.1 || dev-main",
+        "netresearch/contexts": "^4.0 || ^5.0.1 || dev-main",
         "typo3/cms-backend": "^12.4 || ^13.4",
         "typo3/cms-core": "^12.4 || ^13.4",
         "typo3/cms-extbase": "^12.4 || ^13.4",
@@ -64,12 +64,7 @@
         },
         "bin-dir": ".Build/bin",
         "sort-packages": true,
-        "vendor-dir": ".Build/vendor",
-        "audit": {
-            "ignore": {
-                "PKSA-y2cr-5h3j-g3ys": "Upstream firebase/php-jwt issue via typo3/cms-core, no fix available yet"
-            }
-        }
+        "vendor-dir": ".Build/vendor"
     },
     "extra": {
         "typo3/cms": {
@@ -81,6 +76,7 @@
         "ci:test:php:cgl": ".Build/bin/php-cs-fixer fix --dry-run --diff",
         "ci:test:php:functional": ".Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml",
         "ci:test:php:phpstan": ".Build/bin/phpstan analyse -c Build/phpstan.neon",
+        "ci:test:php:rector": ".Build/bin/rector process --dry-run --config=rector.php",
         "ci:test:php:unit": ".Build/bin/phpunit -c Build/phpunit/UnitTests.xml",
         "test:coverage": "XDEBUG_MODE=coverage .Build/bin/phpunit -c Build/phpunit/UnitTests.xml --coverage-html .Build/coverage",
         "test:mutation": ".Build/bin/infection --threads=4 --show-mutations"

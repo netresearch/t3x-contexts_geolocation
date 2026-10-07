@@ -3,6 +3,9 @@ name: Release
 on:
   push:
     tags:
+      # Releases since 1.0.4 are tagged without the "v" prefix; the reusable
+      # workflow strips an optional "v" when it derives the version.
+      - '[0-9]+.[0-9]+.[0-9]+'
       - 'v*'
 
 permissions: {}
