@@ -70,11 +70,11 @@ final class GeoLocationServiceTest extends TestCase
     public function getLocationForIpReturnsLocationFromAdapter(): void
     {
         $expectedLocation = new GeoLocation(countryCode: 'DE');
-        $adapter = $this->createMock(GeoIpAdapterInterface::class);
+        $adapter          = $this->createMock(GeoIpAdapterInterface::class);
         $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn($expectedLocation);
 
         $service = new GeoLocationService($adapter);
-        $result = $service->getLocationForIp('8.8.8.8');
+        $result  = $service->getLocationForIp('8.8.8.8');
 
         self::assertSame($expectedLocation, $result);
     }
@@ -86,7 +86,7 @@ final class GeoLocationServiceTest extends TestCase
         $adapter->expects(self::never())->method('lookup');
 
         $service = new GeoLocationService($adapter);
-        $result = $service->getLocationForIp('192.168.1.1');
+        $result  = $service->getLocationForIp('192.168.1.1');
 
         self::assertNull($result);
     }
@@ -153,7 +153,7 @@ final class GeoLocationServiceTest extends TestCase
         $service = new GeoLocationService($adapter);
 
         $request = $this->createRequestWithNormalizedParams([
-            'reverseProxyIP' => '203.0.113.10',
+            'reverseProxyIP'               => '203.0.113.10',
             'reverseProxyHeaderMultiValue' => 'first',
         ]);
 
@@ -196,7 +196,7 @@ final class GeoLocationServiceTest extends TestCase
         $adapter->expects(self::never())->method('lookup');
 
         $service = new GeoLocationService($adapter);
-        $result = $service->getLocationForRequest();
+        $result  = $service->getLocationForRequest();
 
         self::assertNull($result);
     }
@@ -217,7 +217,7 @@ final class GeoLocationServiceTest extends TestCase
             $adapter->expects(self::atLeastOnce())->method('lookup')->with('8.8.8.8')->willReturn($expectedLocation);
 
             $service = new GeoLocationService($adapter);
-            $result = $service->getLocationForRequest();
+            $result  = $service->getLocationForRequest();
 
             self::assertSame($expectedLocation, $result);
         } finally {
@@ -239,7 +239,7 @@ final class GeoLocationServiceTest extends TestCase
             $adapter->expects(self::never())->method('lookup');
 
             $service = new GeoLocationService($adapter);
-            $result = $service->getLocationForRequest();
+            $result  = $service->getLocationForRequest();
 
             self::assertNull($result);
         } finally {
@@ -256,7 +256,7 @@ final class GeoLocationServiceTest extends TestCase
     private function createRequestWithNormalizedParams(array $systemConfiguration): ServerRequestInterface
     {
         $serverParams = [
-            'REMOTE_ADDR' => '203.0.113.10',
+            'REMOTE_ADDR'          => '203.0.113.10',
             'HTTP_X_FORWARDED_FOR' => '198.51.100.7',
         ];
         $normalizedParams = new NormalizedParams($serverParams, $systemConfiguration, '', '');
@@ -264,7 +264,7 @@ final class GeoLocationServiceTest extends TestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getServerParams')->willReturn($serverParams);
         $request->method('getAttribute')->willReturnCallback(
-            static fn(string $name): ?NormalizedParams => $name === 'normalizedParams' ? $normalizedParams : null,
+            static fn (string $name): ?NormalizedParams => $name === 'normalizedParams' ? $normalizedParams : null,
         );
 
         return $request;

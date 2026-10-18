@@ -122,7 +122,7 @@ final class AbstractGeolocationContextTest extends FunctionalTestCase
         self::assertInstanceOf(GeoLocationService::class, $service);
 
         $serverParams = ['REMOTE_ADDR' => '203.0.113.10', 'HTTP_X_FORWARDED_FOR' => '198.51.100.7'];
-        $request = (new ServerRequest(
+        $request      = (new ServerRequest(
             'https://example.org/',
             'GET',
             'php://temp',

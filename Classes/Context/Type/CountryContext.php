@@ -18,6 +18,8 @@ namespace Netresearch\ContextsGeolocation\Context\Type;
 
 use Netresearch\ContextsGeolocation\Service\GeoLocationService;
 
+use function in_array;
+
 /**
  * Context type that matches based on visitor's country.
  *
@@ -29,7 +31,8 @@ use Netresearch\ContextsGeolocation\Service\GeoLocationService;
  * - field_countries: Comma-separated list of country codes
  *
  * @author Netresearch DTT GmbH
- * @link https://www.netresearch.de
+ *
+ * @see https://www.netresearch.de
  */
 class CountryContext extends AbstractGeolocationContext
 {
@@ -45,6 +48,7 @@ class CountryContext extends AbstractGeolocationContext
      * Check if the context matches the current request.
      *
      * @param array<int|string, mixed> $arDependencies Array of dependent context objects
+     *
      * @return bool True if the visitor's country is in the configured list
      */
     public function match(array $arDependencies = []): bool
@@ -90,7 +94,7 @@ class CountryContext extends AbstractGeolocationContext
 
         // Check if visitor's country is in the configured list
         $visitorCountry = strtoupper($countryCode);
-        $bMatch = \in_array($visitorCountry, $configuredCountries, true);
+        $bMatch         = in_array($visitorCountry, $configuredCountries, true);
 
         return $this->storeInSession($this->invert($bMatch));
     }

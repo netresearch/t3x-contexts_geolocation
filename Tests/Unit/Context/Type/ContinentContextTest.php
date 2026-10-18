@@ -278,10 +278,10 @@ final class ContinentContextTest extends TestCase
                 bool $invert,
             ) {
                 // Skip parent constructor to avoid TYPO3 dependencies
-                $this->testContinents = $continents;
-                $this->testInvert = $invert;
+                $this->testContinents     = $continents;
+                $this->testInvert         = $invert;
                 $this->geoLocationService = $service;
-                $this->use_session = false;
+                $this->use_session        = false;
             }
 
             protected function getConfValue(

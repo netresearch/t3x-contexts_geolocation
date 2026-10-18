@@ -32,7 +32,8 @@ use Netresearch\ContextsGeolocation\Service\GeoLocationService;
  * - field_radius: Radius in kilometers
  *
  * @author Netresearch DTT GmbH
- * @link https://www.netresearch.de
+ *
+ * @see https://www.netresearch.de
  */
 class DistanceContext extends AbstractGeolocationContext
 {
@@ -53,6 +54,7 @@ class DistanceContext extends AbstractGeolocationContext
      * Check if the context matches the current request.
      *
      * @param array<int|string, mixed> $arDependencies Array of dependent context objects
+     *
      * @return bool True if the visitor is within the configured radius
      */
     public function match(array $arDependencies = []): bool
@@ -64,9 +66,9 @@ class DistanceContext extends AbstractGeolocationContext
         }
 
         // Get configuration
-        $centerLatitude = $this->getConfValue('field_latitude');
+        $centerLatitude  = $this->getConfValue('field_latitude');
         $centerLongitude = $this->getConfValue('field_longitude');
-        $radius = $this->getConfValue('field_radius');
+        $radius          = $this->getConfValue('field_radius');
 
         // Validate configuration
         if (!$this->isValidConfiguration($centerLatitude, $centerLongitude, $radius)) {
@@ -97,7 +99,7 @@ class DistanceContext extends AbstractGeolocationContext
             return $this->storeInSession($this->invert(false));
         }
 
-        $visitorLatitude = $location->latitude;
+        $visitorLatitude  = $location->latitude;
         $visitorLongitude = $location->longitude;
 
         if ($visitorLatitude === null || $visitorLongitude === null) {
@@ -128,6 +130,7 @@ class DistanceContext extends AbstractGeolocationContext
      * @param float $lon1 Longitude of point 1 (decimal degrees)
      * @param float $lat2 Latitude of point 2 (decimal degrees)
      * @param float $lon2 Longitude of point 2 (decimal degrees)
+     *
      * @return float Distance in kilometers
      */
     public function calculateHaversineDistance(
@@ -137,8 +140,8 @@ class DistanceContext extends AbstractGeolocationContext
         float $lon2,
     ): float {
         // Convert to radians
-        $lat1Rad = deg2rad($lat1);
-        $lat2Rad = deg2rad($lat2);
+        $lat1Rad  = deg2rad($lat1);
+        $lat2Rad  = deg2rad($lat2);
         $deltaLat = deg2rad($lat2 - $lat1);
         $deltaLon = deg2rad($lon2 - $lon1);
 

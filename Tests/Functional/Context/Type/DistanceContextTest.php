@@ -54,7 +54,7 @@ final class DistanceContextTest extends FunctionalTestCase
 
         // Backup original $_SERVER values
         $this->originalServer = [
-            'HTTP_HOST' => $_SERVER['HTTP_HOST'] ?? null,
+            'HTTP_HOST'   => $_SERVER['HTTP_HOST'] ?? null,
             'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'] ?? null,
         ];
 
@@ -81,10 +81,10 @@ final class DistanceContextTest extends FunctionalTestCase
     #[Test]
     public function distanceContextCanBeLoadedFromDatabase(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -104,10 +104,10 @@ final class DistanceContextTest extends FunctionalTestCase
     #[Test]
     public function distanceContextCanBeFoundByAlias(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -124,10 +124,10 @@ final class DistanceContextTest extends FunctionalTestCase
     #[Test]
     public function contextTypeIsGeolocationDistance(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -159,24 +159,24 @@ final class DistanceContextTest extends FunctionalTestCase
 
         // Leipzig: 51.3397, 12.3731 with 100km radius
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_distance',
-            'title' => 'Test Leipzig',
-            'alias' => 'test_leipzig',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_distance',
+            'title'           => 'Test Leipzig',
+            'alias'           => 'test_leipzig',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new DistanceContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -203,24 +203,24 @@ final class DistanceContextTest extends FunctionalTestCase
 
         // Leipzig with 100km radius
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_distance',
-            'title' => 'Test Leipzig',
-            'alias' => 'test_leipzig',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_distance',
+            'title'           => 'Test Leipzig',
+            'alias'           => 'test_leipzig',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new DistanceContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -246,24 +246,24 @@ final class DistanceContextTest extends FunctionalTestCase
         $service = new GeoLocationService($adapter);
 
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_distance',
-            'title' => 'Test',
-            'alias' => 'test',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_distance',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new DistanceContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -283,24 +283,24 @@ final class DistanceContextTest extends FunctionalTestCase
         $service = new GeoLocationService($adapter);
 
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_distance',
-            'title' => 'Test',
-            'alias' => 'test',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_distance',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new DistanceContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '172.16.0.1'; // Private IP
 
-        $request = $this->createFrontendRequest('172.16.0.1');
+        $request                  = $this->createFrontendRequest('172.16.0.1');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -324,24 +324,24 @@ final class DistanceContextTest extends FunctionalTestCase
         $service = new GeoLocationService($adapter);
 
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_distance',
-            'title' => 'Test',
-            'alias' => 'test',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_distance',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">51.3397</value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new DistanceContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -362,24 +362,24 @@ final class DistanceContextTest extends FunctionalTestCase
 
         // Invalid: missing latitude
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_distance',
-            'title' => 'Test',
-            'alias' => 'test',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_distance',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF"></value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF"></value></field><field index="field_longitude"><value index="vDEF">12.3731</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new DistanceContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -397,16 +397,16 @@ final class DistanceContextTest extends FunctionalTestCase
         $service = new GeoLocationService($adapter);
 
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_distance',
-            'title' => 'Test',
-            'alias' => 'test',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_distance',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">0</value></field><field index="field_longitude"><value index="vDEF">0</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_latitude"><value index="vDEF">0</value></field><field index="field_longitude"><value index="vDEF">0</value></field><field index="field_radius"><value index="vDEF">100</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new DistanceContext($row, $service);

@@ -54,7 +54,7 @@ final class ContinentContextTest extends FunctionalTestCase
 
         // Backup original $_SERVER values
         $this->originalServer = [
-            'HTTP_HOST' => $_SERVER['HTTP_HOST'] ?? null,
+            'HTTP_HOST'   => $_SERVER['HTTP_HOST'] ?? null,
             'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'] ?? null,
         ];
 
@@ -81,10 +81,10 @@ final class ContinentContextTest extends FunctionalTestCase
     #[Test]
     public function continentContextCanBeLoadedFromDatabase(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -104,10 +104,10 @@ final class ContinentContextTest extends FunctionalTestCase
     #[Test]
     public function continentContextCanBeFoundByAlias(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -124,10 +124,10 @@ final class ContinentContextTest extends FunctionalTestCase
     #[Test]
     public function contextTypeIsGeolocationContinent(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -153,24 +153,24 @@ final class ContinentContextTest extends FunctionalTestCase
         $service = new GeoLocationService($adapter);
 
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_continent',
-            'title' => 'Test Europe',
-            'alias' => 'test_europe',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_continent',
+            'title'           => 'Test Europe',
+            'alias'           => 'test_europe',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_continents"><value index="vDEF">EU</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_continents"><value index="vDEF">EU</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new ContinentContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -191,24 +191,24 @@ final class ContinentContextTest extends FunctionalTestCase
         $service = new GeoLocationService($adapter);
 
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_continent',
-            'title' => 'Test Europe',
-            'alias' => 'test_europe',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_continent',
+            'title'           => 'Test Europe',
+            'alias'           => 'test_europe',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_continents"><value index="vDEF">EU</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_continents"><value index="vDEF">EU</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new ContinentContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -229,24 +229,24 @@ final class ContinentContextTest extends FunctionalTestCase
         $service = new GeoLocationService($adapter);
 
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_continent',
-            'title' => 'Test Multiple',
-            'alias' => 'test_multiple',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_continent',
+            'title'           => 'Test Multiple',
+            'alias'           => 'test_multiple',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_continents"><value index="vDEF">EU,NA</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_continents"><value index="vDEF">EU,NA</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new ContinentContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -266,24 +266,24 @@ final class ContinentContextTest extends FunctionalTestCase
         $service = new GeoLocationService($adapter);
 
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_continent',
-            'title' => 'Test',
-            'alias' => 'test',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_continent',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_continents"><value index="vDEF">EU</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_continents"><value index="vDEF">EU</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new ContinentContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1'; // Private IP
 
-        $request = $this->createFrontendRequest('10.0.0.1');
+        $request                  = $this->createFrontendRequest('10.0.0.1');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
