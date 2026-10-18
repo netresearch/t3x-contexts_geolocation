@@ -283,6 +283,9 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
         }
     }
 
+    /**
+     * @param Closure(MaxMindGeoIp2Adapter, string): (string|float|null) $getter
+     */
     #[Test]
     #[DataProvider('singleFieldGetterProvider')]
     public function singleFieldGetterReturnsNullWhenAddressNotFound(Closure $getter): void
@@ -295,6 +298,9 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
         self::assertNull($getter($adapter, '0.0.0.0'));
     }
 
+    /**
+     * @param Closure(MaxMindGeoIp2Adapter, string): (string|float|null) $getter
+     */
     #[Test]
     #[DataProvider('singleFieldGetterProvider')]
     public function singleFieldGetterReturnsNullWhenDatabaseIsInvalid(Closure $getter): void
