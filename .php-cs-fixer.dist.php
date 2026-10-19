@@ -70,19 +70,9 @@ return $createConfig(
 
         // Control structures and statements
         'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
-        'no_extra_blank_lines'                   => [
-            'tokens' => [
-                'curly_brace_block',
-                'extra',
-                'parenthesis_brace_block',
-                'square_brace_block',
-                'throw',
-                'use',
-            ],
-        ],
-        'no_superfluous_elseif'  => true,
-        'simplified_if_return'   => true,
-        'simplified_null_return' => true,
+        'no_superfluous_elseif'                  => true,
+        'simplified_if_return'                   => true,
+        'simplified_null_return'                 => true,
 
         // Comments and strings
         'explicit_string_variable'          => true,

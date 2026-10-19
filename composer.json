@@ -28,7 +28,7 @@
         "a9f/typo3-fractor": "^1.0.0",
         "friendsofphp/php-cs-fixer": "^3.92",
         "infection/infection": "*",
-        "netresearch/typo3-ci-workflows": "^2.0.2",
+        "netresearch/typo3-ci-workflows": "^2.0.3",
         "phpat/phpat": "^0.12",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
