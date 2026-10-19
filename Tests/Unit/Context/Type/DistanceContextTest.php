@@ -439,12 +439,12 @@ final class DistanceContextTest extends TestCase
                 bool $invert,
             ) {
                 // Skip parent constructor to avoid TYPO3 dependencies
-                $this->testLatitude = $latitude;
-                $this->testLongitude = $longitude;
-                $this->testRadius = $radius;
-                $this->testInvert = $invert;
+                $this->testLatitude       = $latitude;
+                $this->testLongitude      = $longitude;
+                $this->testRadius         = $radius;
+                $this->testInvert         = $invert;
                 $this->geoLocationService = $service;
-                $this->use_session = false;
+                $this->use_session        = false;
             }
 
             protected function getConfValue(
@@ -455,10 +455,10 @@ final class DistanceContextTest extends TestCase
                 string $value = 'vDEF',
             ): string {
                 return match ($fieldName) {
-                    'field_latitude' => $this->testLatitude,
+                    'field_latitude'  => $this->testLatitude,
                     'field_longitude' => $this->testLongitude,
-                    'field_radius' => $this->testRadius,
-                    default => $default,
+                    'field_radius'    => $this->testRadius,
+                    default           => $default,
                 };
             }
 

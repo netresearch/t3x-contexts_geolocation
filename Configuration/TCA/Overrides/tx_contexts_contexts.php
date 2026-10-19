@@ -19,7 +19,7 @@ use Netresearch\ContextsGeolocation\Context\Type\ContinentContext;
 use Netresearch\ContextsGeolocation\Context\Type\CountryContext;
 use Netresearch\ContextsGeolocation\Context\Type\DistanceContext;
 
-defined('TYPO3') || die('Access denied.');
+defined('TYPO3') || exit('Access denied.');
 
 /**
  * Register geolocation context types with the base contexts extension.
@@ -29,7 +29,6 @@ defined('TYPO3') || die('Access denied.');
  * - Continent: Match visitors from specific continents
  * - Distance: Match visitors within a radius of a geographic point
  */
-
 Configuration::registerContextType(
     'geolocation_country',
     'LLL:EXT:contexts_geolocation/Resources/Private/Language/locallang.xlf:context.type.country',

@@ -22,6 +22,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function assert;
+
 /**
  * Abstract base class for geolocation context types.
  *
@@ -56,8 +58,8 @@ abstract class AbstractGeolocationContext extends AbstractContext
             try {
                 // Use the DI container to get the properly configured service
                 $container = GeneralUtility::getContainer();
-                $service = $container->get(GeoLocationService::class);
-                \assert($service instanceof GeoLocationService);
+                $service   = $container->get(GeoLocationService::class);
+                assert($service instanceof GeoLocationService);
                 $this->geoLocationService = $service;
             } catch (Throwable) {
                 // DI container not available or not properly initialized
@@ -117,6 +119,7 @@ abstract class AbstractGeolocationContext extends AbstractContext
      * Parse a comma-separated list of values into a normalized array.
      *
      * @param string $value Comma-separated string
+     *
      * @return array<int, string> Array of trimmed, uppercased values
      */
     protected function parseCommaSeparatedList(string $value): array
@@ -127,10 +130,10 @@ abstract class AbstractGeolocationContext extends AbstractContext
 
         return array_filter(
             array_map(
-                static fn(string $item): string => strtoupper(trim($item)),
+                static fn (string $item): string => strtoupper(trim($item)),
                 explode(',', $value),
             ),
-            static fn(string $item): bool => $item !== '',
+            static fn (string $item): bool => $item !== '',
         );
     }
 }

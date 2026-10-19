@@ -45,12 +45,12 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
      */
     public static function singleFieldGetterProvider(): iterable
     {
-        yield 'getCountryCode' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getCountryCode($ip)];
-        yield 'getCountryName' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getCountryName($ip)];
-        yield 'getContinentCode' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getContinentCode($ip)];
-        yield 'getLatitude' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?float => $adapter->getLatitude($ip)];
-        yield 'getLongitude' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?float => $adapter->getLongitude($ip)];
-        yield 'getCity' => [static fn(MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getCity($ip)];
+        yield 'getCountryCode' => [static fn (MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getCountryCode($ip)];
+        yield 'getCountryName' => [static fn (MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getCountryName($ip)];
+        yield 'getContinentCode' => [static fn (MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getContinentCode($ip)];
+        yield 'getLatitude' => [static fn (MaxMindGeoIp2Adapter $adapter, string $ip): ?float => $adapter->getLatitude($ip)];
+        yield 'getLongitude' => [static fn (MaxMindGeoIp2Adapter $adapter, string $ip): ?float => $adapter->getLongitude($ip)];
+        yield 'getCity' => [static fn (MaxMindGeoIp2Adapter $adapter, string $ip): ?string => $adapter->getCity($ip)];
     }
 
     #[Test]
@@ -104,16 +104,16 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     {
         $adapter = $this->createAdapterWithMockedReader(
             $this->createMockCityRecord([
-                'country_code' => 'US',
-                'country_name' => 'United States',
+                'country_code'   => 'US',
+                'country_name'   => 'United States',
                 'continent_code' => 'NA',
                 'continent_name' => 'North America',
-                'latitude' => 37.751,
-                'longitude' => -97.822,
-                'city' => 'Mountain View',
-                'postal_code' => '94035',
-                'region_code' => 'CA',
-                'region_name' => 'California',
+                'latitude'       => 37.751,
+                'longitude'      => -97.822,
+                'city'           => 'Mountain View',
+                'postal_code'    => '94035',
+                'region_code'    => 'CA',
+                'region_name'    => 'California',
             ]),
         );
 
@@ -244,7 +244,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
     public function lookupWrapsInvalidDatabaseExceptionInGeoIpException(): void
     {
         $previous = new InvalidDatabaseException('Expected an array when looking up 8.8.8.8 but received: string', 42);
-        $reader = self::createStub(Reader::class);
+        $reader   = self::createStub(Reader::class);
         $reader->method('city')->willThrowException($previous);
 
         $adapter = $this->createAdapterWithReader($reader);
@@ -283,6 +283,9 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
         }
     }
 
+    /**
+     * @param Closure(MaxMindGeoIp2Adapter, string): (string|float|null) $getter
+     */
     #[Test]
     #[DataProvider('singleFieldGetterProvider')]
     public function singleFieldGetterReturnsNullWhenAddressNotFound(Closure $getter): void
@@ -295,6 +298,9 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
         self::assertNull($getter($adapter, '0.0.0.0'));
     }
 
+    /**
+     * @param Closure(MaxMindGeoIp2Adapter, string): (string|float|null) $getter
+     */
     #[Test]
     #[DataProvider('singleFieldGetterProvider')]
     public function singleFieldGetterReturnsNullWhenDatabaseIsInvalid(Closure $getter): void
@@ -317,14 +323,14 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
         $rawData = [
             'country' => [
                 'iso_code' => $data['country_code'] ?? null,
-                'names' => ['en' => $data['country_name'] ?? null],
+                'names'    => ['en' => $data['country_name'] ?? null],
             ],
             'continent' => [
-                'code' => $data['continent_code'] ?? null,
+                'code'  => $data['continent_code'] ?? null,
                 'names' => ['en' => $data['continent_name'] ?? null],
             ],
             'location' => [
-                'latitude' => $data['latitude'] ?? null,
+                'latitude'  => $data['latitude'] ?? null,
                 'longitude' => $data['longitude'] ?? null,
             ],
             'city' => [
@@ -336,7 +342,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
             'subdivisions' => [
                 [
                     'iso_code' => $data['region_code'] ?? null,
-                    'names' => ['en' => $data['region_name'] ?? null],
+                    'names'    => ['en' => $data['region_name'] ?? null],
                 ],
             ],
         ];
@@ -371,7 +377,7 @@ final class MaxMindGeoIp2AdapterTest extends TestCase
 
         // Use reflection to inject the mocked reader
         $reflection = new ReflectionClass($adapter);
-        $property = $reflection->getProperty('reader');
+        $property   = $reflection->getProperty('reader');
         $property->setValue($adapter, $reader);
 
         return $adapter;

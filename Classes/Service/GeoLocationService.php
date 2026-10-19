@@ -16,6 +16,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 
+use const FILTER_FLAG_NO_PRIV_RANGE;
+use const FILTER_FLAG_NO_RES_RANGE;
+use const FILTER_VALIDATE_IP;
+
 /**
  * Service for geolocation lookups.
  *
@@ -28,7 +32,7 @@ final readonly class GeoLocationService
 {
     /**
      * @param GeoIpAdapterInterface $adapter The GeoIP adapter to use for lookups
-     * @param LoggerInterface|null $logger Receives failed lookups (missing or unreadable database)
+     * @param LoggerInterface|null  $logger  Receives failed lookups (missing or unreadable database)
      */
     public function __construct(
         private GeoIpAdapterInterface $adapter,
@@ -95,7 +99,7 @@ final readonly class GeoLocationService
             $remoteAddr = $normalizedParams->getRemoteAddress();
         } else {
             $serverParams = $request->getServerParams();
-            $remoteAddr = isset($serverParams['REMOTE_ADDR']) ? (string) $serverParams['REMOTE_ADDR'] : '';
+            $remoteAddr   = isset($serverParams['REMOTE_ADDR']) ? (string) $serverParams['REMOTE_ADDR'] : '';
         }
 
         return $this->isValidIpAddress($remoteAddr) ? $remoteAddr : null;
@@ -116,8 +120,8 @@ final readonly class GeoLocationService
         // FILTER_FLAG_NO_RES_RANGE excludes reserved ranges (loopback, link-local, etc.)
         $result = filter_var(
             $ip,
-            \FILTER_VALIDATE_IP,
-            \FILTER_FLAG_NO_PRIV_RANGE | \FILTER_FLAG_NO_RES_RANGE,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE,
         );
 
         // If filter returns false, the IP is either invalid or private/reserved
@@ -137,6 +141,6 @@ final readonly class GeoLocationService
      */
     private function isValidIpAddress(string $ip): bool
     {
-        return filter_var($ip, \FILTER_VALIDATE_IP) !== false;
+        return filter_var($ip, FILTER_VALIDATE_IP) !== false;
     }
 }

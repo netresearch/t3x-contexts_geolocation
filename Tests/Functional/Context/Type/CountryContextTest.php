@@ -54,7 +54,7 @@ final class CountryContextTest extends FunctionalTestCase
 
         // Backup original $_SERVER values we'll modify
         $this->originalServer = [
-            'HTTP_HOST' => $_SERVER['HTTP_HOST'] ?? null,
+            'HTTP_HOST'   => $_SERVER['HTTP_HOST'] ?? null,
             'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'] ?? null,
         ];
 
@@ -81,10 +81,10 @@ final class CountryContextTest extends FunctionalTestCase
     #[Test]
     public function countryContextCanBeLoadedFromDatabase(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -105,10 +105,10 @@ final class CountryContextTest extends FunctionalTestCase
     #[Test]
     public function countryContextCanBeFoundByAlias(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -125,10 +125,10 @@ final class CountryContextTest extends FunctionalTestCase
     #[Test]
     public function multipleCountryContextsCanBeLoaded(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -137,7 +137,7 @@ final class CountryContextTest extends FunctionalTestCase
             ->initAll();
 
         // Check that multiple contexts are loaded from fixtures
-        $germany = Container::get()->find('germany');
+        $germany  = Container::get()->find('germany');
         $multiple = Container::get()->find('multiple_countries');
         $inverted = Container::get()->find('inverted_country');
 
@@ -153,10 +153,10 @@ final class CountryContextTest extends FunctionalTestCase
     #[Test]
     public function disabledContextIsNotLoaded(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -173,10 +173,10 @@ final class CountryContextTest extends FunctionalTestCase
     #[Test]
     public function contextTypeIsGeolocationCountry(): void
     {
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Use initAll() to load all contexts without matching filter
@@ -203,24 +203,24 @@ final class CountryContextTest extends FunctionalTestCase
 
         // Create context directly with mocked service
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_country',
-            'title' => 'Test Germany',
-            'alias' => 'test_germany',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_country',
+            'title'           => 'Test Germany',
+            'alias'           => 'test_germany',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">DE</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">DE</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new CountryContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -242,24 +242,24 @@ final class CountryContextTest extends FunctionalTestCase
 
         // Create context configured for Germany
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_country',
-            'title' => 'Test Germany',
-            'alias' => 'test_germany',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_country',
+            'title'           => 'Test Germany',
+            'alias'           => 'test_germany',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">DE</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">DE</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new CountryContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
@@ -281,24 +281,24 @@ final class CountryContextTest extends FunctionalTestCase
 
         // Create inverted context configured for GB
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_country',
-            'title' => 'Test Inverted',
-            'alias' => 'test_inverted',
-            'tstamp' => time(),
-            'invert' => 1, // Inverted!
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_country',
+            'title'           => 'Test Inverted',
+            'alias'           => 'test_inverted',
+            'tstamp'          => time(),
+            'invert'          => 1, // Inverted!
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">GB</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">GB</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new CountryContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Normal match would be true (GB in GB), but inverted should be false
@@ -321,24 +321,24 @@ final class CountryContextTest extends FunctionalTestCase
 
         // Create context configured for DE, US, FR
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_country',
-            'title' => 'Test Multiple',
-            'alias' => 'test_multiple',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_country',
+            'title'           => 'Test Multiple',
+            'alias'           => 'test_multiple',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">DE,US,FR</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">DE,US,FR</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new CountryContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '8.8.8.8';
 
-        $request = $this->createFrontendRequest('8.8.8.8');
+        $request                  = $this->createFrontendRequest('8.8.8.8');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertTrue(
@@ -358,24 +358,24 @@ final class CountryContextTest extends FunctionalTestCase
         $service = new GeoLocationService($adapter);
 
         $row = [
-            'uid' => 100,
-            'type' => 'geolocation_country',
-            'title' => 'Test',
-            'alias' => 'test',
-            'tstamp' => time(),
-            'invert' => 0,
-            'use_session' => 0,
-            'disabled' => 0,
+            'uid'             => 100,
+            'type'            => 'geolocation_country',
+            'title'           => 'Test',
+            'alias'           => 'test',
+            'tstamp'          => time(),
+            'invert'          => 0,
+            'use_session'     => 0,
+            'disabled'        => 0,
             'hide_in_backend' => 0,
-            'type_conf' => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">DE</value></field></language></sheet></data></T3FlexForms>',
+            'type_conf'       => '<?xml version="1.0" encoding="utf-8"?><T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="field_countries"><value index="vDEF">DE</value></field></language></sheet></data></T3FlexForms>',
         ];
 
         $context = new CountryContext($row, $service);
 
-        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_HOST']   = 'localhost';
         $_SERVER['REMOTE_ADDR'] = '192.168.1.1'; // Private IP
 
-        $request = $this->createFrontendRequest('192.168.1.1');
+        $request                  = $this->createFrontendRequest('192.168.1.1');
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         self::assertFalse(
