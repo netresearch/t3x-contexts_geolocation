@@ -28,7 +28,7 @@
         "a9f/typo3-fractor": "^1.0.0",
         "friendsofphp/php-cs-fixer": "^3.92",
         "infection/infection": "*",
-        "netresearch/typo3-ci-workflows": "^2.0.3",
+        "netresearch/typo3-ci-workflows": "^2.3.2",
         "phpat/phpat": "^0.12",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
@@ -73,8 +73,13 @@
         }
     },
     "scripts": {
+        "changelog:collect": "changelog-fragments collect",
         "ci:cgl": ".Build/bin/php-cs-fixer fix",
-        "ci:test:php:cgl": ".Build/bin/php-cs-fixer fix --dry-run --diff",
+        "ci:test:changelog": "changelog-fragments check @no_additional_args",
+        "ci:test:php:cgl": [
+            "@ci:test:changelog",
+            ".Build/bin/php-cs-fixer fix --dry-run --diff"
+        ],
         "ci:test:php:functional": ".Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml",
         "ci:test:php:phpstan": ".Build/bin/phpstan analyse -c Build/phpstan.neon",
         "ci:test:php:rector": ".Build/bin/rector process --dry-run --config=rector.php",

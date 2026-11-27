@@ -4,7 +4,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.0.0] - Unreleased
+## [Unreleased]
 
 ### Added
 - TYPO3 v12 LTS and v13 LTS support

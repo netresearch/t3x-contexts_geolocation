@@ -41,3 +41,4 @@ CLAUDE.md               export-ignore
 /infection.json5        export-ignore
 /rector.php             export-ignore
 /renovate.json          export-ignore
+/changelog.d/           export-ignore
